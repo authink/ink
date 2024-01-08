@@ -14,17 +14,20 @@ import (
 )
 
 func main() {
-	port := os.Getenv("PORT")
+	env := loadEnv()
+
+	db := connectDB(env)
+
+	ink := &Ink{
+		env,
+		db,
+	}
 
 	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+	setupRouter(ink, r)
 
 	srv := &http.Server{
-		Addr:    fmt.Sprintf("127.0.0.1:%s", port),
+		Addr:    fmt.Sprintf("%s:%d", env.Host, env.Port),
 		Handler: r,
 	}
 
@@ -43,7 +46,7 @@ func main() {
 	log.Println("Shutting down ...")
 
 	// 设置 5 秒的超时时间
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(env.ShutdownTimeout)*time.Second)
 	defer cancel()
 
 	// 在超时时间内停止服务
