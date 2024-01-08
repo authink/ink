@@ -16,5 +16,5 @@ func main() {
 			"message": "pong",
 		})
 	})
-	r.Run(fmt.Sprintf(":%s", port))
+	r.Run(fmt.Sprintf("127.0.0.1:%s", port))
 }
