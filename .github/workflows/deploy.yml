@@ -16,14 +16,15 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  deployment:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    environment: prod
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - name: Checkout ink.go repository
+        uses: actions/checkout@v3
 
       - name: Setup Go environment
         uses: actions/setup-go@v5.0.0
@@ -41,3 +42,5 @@ jobs:
           REMOTE_HOST: ${{secrets.REMOTE_HOST}}
           REMOTE_USER: ${{secrets.REMOTE_USER}}
           SOURCE: ${{secrets.SOURCE}}
+          SCRIPT_AFTER: |
+            systemctl ink-go restart
