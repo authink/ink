@@ -1,9 +1,11 @@
 package sql
 
 type table struct {
-	App string
+	App   string
+	Staff string
 }
 
 var Table = &table{
-	App: "s_apps",
+	App:   "s_apps",
+	Staff: "s_staff",
 }
