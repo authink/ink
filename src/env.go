@@ -7,24 +7,25 @@ import (
 )
 
 type Env struct {
-	Host              string
-	Port              uint16
-	ShutdownTimeout   uint16
-	DbHost            string
-	DbPort            uint16
-	DbUser            string
-	DbPasswd          string
-	DbName            string
-	DbMaxOpenConns    uint16
-	DbMaxIdleConns    uint16
-	DbConnMaxLifeTime uint16
-	DbConnMaxIdleTime uint16
+	Host                string
+	Port                uint16
+	ShutdownTimeout     uint16
+	DbHost              string
+	DbPort              uint16
+	DbUser              string
+	DbPasswd            string
+	DbName              string
+	DbMaxOpenConns      uint16
+	DbMaxIdleConns      uint16
+	DbConnMaxLifeTime   uint16
+	DbConnMaxIdleTime   uint16
+	DbMigrateFileSource string
 }
 
 func getUint16(key string, value *uint16) {
 	if v := os.Getenv(key); len(v) > 0 {
 		if _, err := fmt.Sscanf(v, "%d", value); err != nil {
-			log.Fatal(err)
+			log.Fatalf("loadEnv(Int): %s\n", err)
 		}
 	}
 }
@@ -65,6 +66,9 @@ func loadEnv() *Env {
 	getUint16("DB_CONN_MAX_LIFE_TIME", &dbConnMaxLifeTime)
 	getUint16("DB_CONN_MAX_IDLE_TIME", &dbConnMaxIdleTime)
 
+	dbMigrateFileSource := "ink.schema/migrations"
+	getString("DB_MIGRATE_FILE_SOURCE", &dbMigrateFileSource)
+
 	return &Env{
 		host,
 		port,
@@ -78,5 +82,6 @@ func loadEnv() *Env {
 		dbMaxIdleConns,
 		dbConnMaxLifeTime,
 		dbConnMaxIdleTime,
+		dbMigrateFileSource,
 	}
 }

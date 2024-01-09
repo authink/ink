@@ -9,12 +9,22 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func connectDB(env *Env) *sqlx.DB {
+func createDatabaseUrl(env *Env, withSchema bool) string {
 	databaseUrl := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", env.DbUser, env.DbPasswd, env.DbHost, env.DbPort, env.DbName)
+
+	if withSchema {
+		return "mysql://" + databaseUrl
+	}
+
+	return databaseUrl
+}
+
+func connectDB(env *Env) *sqlx.DB {
+	databaseUrl := createDatabaseUrl(env, false)
 
 	db, err := sqlx.Open("mysql", databaseUrl)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("sqlx.Open: %s\n", err)
 	}
 
 	db.SetMaxOpenConns(10)

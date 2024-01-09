@@ -9,6 +9,8 @@ func main() {
 		db,
 	}
 
+	migrateSchema(ink)
+
 	setupGracefulShutdown(
 		ink,
 		createServer(ink),
