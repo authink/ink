@@ -27,6 +27,6 @@ func migrateSchema(ink *Ink) {
 	}
 
 	if err = m.Up(); err != nil {
-		log.Fatalf("Migrate Down: %s\n", err)
+		log.Fatalf("Migrate Up: %s\n", err)
 	}
 }

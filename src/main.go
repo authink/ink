@@ -1,18 +1,31 @@
 package main
 
+import (
+	"flag"
+)
+
 func main() {
-	env := loadEnv()
-	db := connectDB(env)
+	var cmd string
+	flag.StringVar(&cmd, "cmd", "run", "Specify a command, such as [run, migrate]")
+	flag.Parse()
 
-	ink := &Ink{
-		env,
-		db,
+	switch cmd {
+	case "migrate":
+		ink := newInk()
+		defer ink.Close()
+
+		migrateSchema(ink)
+
+	case "run":
+		ink := newInk()
+		defer ink.Close()
+
+		setupGracefulShutdown(
+			ink,
+			createServer(ink),
+		)
+
+	default:
+		flag.PrintDefaults()
 	}
-
-	migrateSchema(ink)
-
-	setupGracefulShutdown(
-		ink,
-		createServer(ink),
-	)
 }
