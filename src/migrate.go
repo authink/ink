@@ -13,7 +13,11 @@ func createSourceUrl(ink *Ink) string {
 	return fmt.Sprintf("file://%s", ink.env.DbMigrateFileSource)
 }
 
-func migrateSchema(ink *Ink) {
+func migrateSchema(ink *Ink, direction string) {
+	if direction != "up" && direction != "down" {
+		log.Fatalf("Migrate: unkwon direction %s\n", direction)
+	}
+
 	sourceUrl := createSourceUrl(ink)
 	databaseUrl := createDatabaseUrl(ink.env, true)
 
@@ -26,7 +30,14 @@ func migrateSchema(ink *Ink) {
 		log.Fatalf("Migrate Init: %s,%s,%s\n", sourceUrl, databaseUrl, err)
 	}
 
-	if err = m.Up(); err != nil {
-		log.Fatalf("Migrate Up: %s\n", err)
+	switch direction {
+	case "up":
+		err = m.Up()
+	case "down":
+		err = m.Down()
+	}
+
+	if err != nil {
+		log.Fatalf("Migrate: %s\n", err)
 	}
 }

@@ -1,22 +1,34 @@
 package main
 
 import (
-	"flag"
+	"log"
+
+	"github.com/spf13/cobra"
 )
 
-func main() {
-	var cmd string
-	flag.StringVar(&cmd, "cmd", "run", "Specify a command, such as [run, migrate]")
-	flag.Parse()
+var cmdInk = &cobra.Command{Use: "ink"}
 
-	switch cmd {
-	case "migrate":
+var cmdMigrate = &cobra.Command{
+	Use:   "migrate",
+	Short: "Migrate schema up or down",
+	Run: func(cmd *cobra.Command, args []string) {
+		direction, err := cmd.Flags().GetString("direction")
+
+		if err != nil {
+			log.Fatalf("CMD migrate: %s\n", err)
+		}
+
 		ink := newInk()
 		defer ink.Close()
 
-		migrateSchema(ink)
+		migrateSchema(ink, direction)
+	},
+}
 
-	case "run":
+var cmdRun = &cobra.Command{
+	Use:   "run",
+	Short: "Run ink server",
+	Run: func(cmd *cobra.Command, args []string) {
 		ink := newInk()
 		defer ink.Close()
 
@@ -24,8 +36,18 @@ func main() {
 			ink,
 			createServer(ink),
 		)
+	},
+}
 
-	default:
-		flag.PrintDefaults()
+func init() {
+	cmdMigrate.Flags().StringP("direction", "d", "up", "Specify migrate direction[up, down]")
+
+	cmdInk.AddCommand(cmdMigrate)
+	cmdInk.AddCommand(cmdRun)
+}
+
+func main() {
+	if err := cmdInk.Execute(); err != nil {
+		log.Fatalf("main: %s\n", err)
 	}
 }
