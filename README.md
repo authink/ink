@@ -23,3 +23,21 @@ CREATE TABLE users (
 INSERT IGNORE INTO users (id, username, email)
 VALUES (1, 'john_doe', 'john@example.com');
 ```
+
+## hot reload
+
+```bash
+# install
+go install github.com/cosmtrek/air@latest
+
+# create .air.toml
+air init
+
+# 配置环境变量
+source .env
+
+# run
+air run
+```
+
+## 升级 golang 1.22
