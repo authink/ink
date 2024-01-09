@@ -41,3 +41,7 @@ air run
 ```
 
 ## 升级 golang 1.22
+
+## 单元测试/go test/CI
+
+## 部署/go build/CD
