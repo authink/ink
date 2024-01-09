@@ -25,6 +25,17 @@ var cmdMigrate = &cobra.Command{
 	},
 }
 
+var cmdSeed = &cobra.Command{
+	Use:   "seed",
+	Short: "Seed the database",
+	Run: func(cmd *cobra.Command, args []string) {
+		ink := newInk()
+		defer ink.Close()
+
+		seed(ink)
+	},
+}
+
 var cmdRun = &cobra.Command{
 	Use:   "run",
 	Short: "Run ink server",
@@ -44,6 +55,7 @@ func init() {
 
 	cmdInk.AddCommand(cmdMigrate)
 	cmdInk.AddCommand(cmdRun)
+	cmdInk.AddCommand(cmdSeed)
 }
 
 func main() {
