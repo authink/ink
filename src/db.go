@@ -34,3 +34,11 @@ func connectDB(env *Env) *sqlx.DB {
 
 	return db
 }
+
+func txEnd(tx *sqlx.Tx, err error) {
+	if err != nil {
+		tx.Rollback()
+	} else {
+		tx.Commit()
+	}
+}

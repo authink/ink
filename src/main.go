@@ -32,7 +32,9 @@ var cmdSeed = &cobra.Command{
 		ink := newInk()
 		defer ink.Close()
 
-		seed(ink)
+		if err := seed(ink); err != nil {
+			log.Fatalf("Seed: %s\n", err)
+		}
 	},
 }
 
