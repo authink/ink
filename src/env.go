@@ -7,14 +7,18 @@ import (
 )
 
 type Env struct {
-	Host            string
-	Port            uint16
-	ShutdownTimeout uint16
-	DbHost          string
-	DbPort          uint16
-	DbUser          string
-	DbPasswd        string
-	DbName          string
+	Host              string
+	Port              uint16
+	ShutdownTimeout   uint16
+	DbHost            string
+	DbPort            uint16
+	DbUser            string
+	DbPasswd          string
+	DbName            string
+	DbMaxOpenConns    uint16
+	DbMaxIdleConns    uint16
+	DbConnMaxLifeTime uint16
+	DbConnMaxIdleTime uint16
 }
 
 func getUint16(key string, value *uint16) {
@@ -52,6 +56,15 @@ func loadEnv() *Env {
 	getString("DB_PASSWORD", &dbPasswd)
 	getString("DB_NAME", &dbName)
 
+	dbMaxOpenConns := uint16(20)
+	dbMaxIdleConns := uint16(10)
+	dbConnMaxLifeTime := uint16(3600)
+	dbConnMaxIdleTime := uint16(300)
+	getUint16("DB_MAX_OPEN_CONNS", &dbMaxOpenConns)
+	getUint16("DB_MAX_IDLE_CONNS", &dbMaxIdleConns)
+	getUint16("DB_CONN_MAX_LIFE_TIME", &dbConnMaxLifeTime)
+	getUint16("DB_CONN_MAX_IDLE_TIME", &dbConnMaxIdleTime)
+
 	return &Env{
 		host,
 		port,
@@ -61,5 +74,9 @@ func loadEnv() *Env {
 		dbUser,
 		dbPasswd,
 		dbName,
+		dbMaxOpenConns,
+		dbMaxIdleConns,
+		dbConnMaxLifeTime,
+		dbConnMaxIdleTime,
 	}
 }
