@@ -1,20 +1,18 @@
 package main
 
 import (
-	"net/http"
-
-	"github.com/authink/ink.go/src/err"
+	"github.com/authink/ink.go/src/ext"
 	"github.com/gin-gonic/gin"
 )
 
 func setupRouter(ink *Ink, r *gin.Engine) {
+	r.GET("/", func(c *gin.Context) {
+		extContext := (*ext.Context)(c)
+		extContext.AbortWithClientError(ext.ERR_CLI_BAD_EMAIL)
+	})
+
 	r.GET("/ping", func(c *gin.Context) {
-		c.AbortWithStatusJSON(
-			http.StatusBadRequest,
-			err.ERR_CLI_BAD_EMAIL,
-		)
-		// c.AbortWithError(
-		// 	http.StatusInternalServerError, err.ERR_SRV_DB_TIMEOUT,
-		// )
+		extContext := (*ext.Context)(c)
+		extContext.AbortWithServerError(ext.ERR_SRV_DB_TIMEOUT)
 	})
 }

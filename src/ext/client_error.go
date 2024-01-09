@@ -1,4 +1,4 @@
-package err
+package ext
 
 type ClientError struct {
 	Code    string
@@ -13,6 +13,6 @@ var _ error = (*ClientError)(nil)
 
 var (
 	ERR_CLI_BAD_EMAIL error = &ClientError{
-		Code: "invalid.email", Message: "Bad email format.",
+		Code: "invalid.email",
 	}
 )
