@@ -1,12 +1,14 @@
 package ext
 
+import "fmt"
+
 type ClientError struct {
 	Code    string
 	Message string
 }
 
 func (e *ClientError) Error() string {
-	return e.Message
+	return fmt.Sprintf("%s(%s)", e.Message, e.Code)
 }
 
 var _ error = (*ClientError)(nil)
