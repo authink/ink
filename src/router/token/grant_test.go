@@ -26,76 +26,44 @@ func grantToken(appId int, appSecret, email, password string, resObj any) (*http
 	)
 }
 
-func TestGrantToken(t *testing.T) {
-	resObj := &resGrant{}
-	w, err := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
+func TestGrant(t *testing.T) {
+	var (
+		ok                 = []any{http.StatusOK, &resGrant{TokenType: "Bearer", ExpiresIn: 7200}, 100000, "123456", "admin@huoyijie.cn", "123456", &resGrant{}}
+		invalidAppId       = []any{http.StatusBadRequest, ext.ERR_CLI_INVALID_APP, 999999, "123456", "admin@huoyijie.cn", "123456", &ext.ClientError{}}
+		invalidAppSecret   = []any{http.StatusBadRequest, ext.ERR_CLI_INVALID_APP, 100000, "1234567", "admin@huoyijie.cn", "123456", &ext.ClientError{}}
+		invalidEmailFormat = []any{http.StatusBadRequest, nil, 100000, "123456", "admin", "123456", &ext.ClientError{}}
+		invalidEmail       = []any{http.StatusBadRequest, ext.ERR_CLI_INVALID_ACCOUNT, 100000, "123456", "admin1@huoyijie.cn", "123456", &ext.ClientError{}}
+		invalidPassword    = []any{http.StatusBadRequest, ext.ERR_CLI_INVALID_ACCOUNT, 100000, "123456", "admin@huoyijie.cn", "1234567", &ext.ClientError{}}
+	)
 
-	if err != nil {
-		t.Errorf("Failed to decode JSON response: %v", err)
+	var tests = []any{
+		ok,
+		invalidAppId,
+		invalidAppSecret,
+		invalidEmailFormat,
+		invalidEmail,
+		invalidPassword,
 	}
 
-	assert.Equal(t, http.StatusOK, w.Code)
-	assert.Equal(t, "Bearer", resObj.TokenType)
-	assert.Equal(t, 7200, resObj.ExpiresIn)
-	assert.NotEmpty(t, resObj.AccessToken)
-	assert.NotEmpty(t, resObj.RefreshToken)
-}
+	for _, test := range tests {
+		tc := test.([]any)
 
-func TestGrantTokenInvalidAppId(t *testing.T) {
-	resObj := &ext.ClientError{}
-	w, err := grantToken(999999, "123456", "admin@huoyijie.cn", "123456", resObj)
+		w, _ := grantToken(tc[2].(int), tc[3].(string), tc[4].(string), tc[5].(string), tc[6])
+		assert.Equal(t, tc[0].(int), w.Code)
 
-	if err != nil {
-		t.Errorf("Failed to decode JSON response: %v", err)
+		switch tc[0].(int) {
+		case http.StatusOK:
+			resObj := tc[6].(*resGrant)
+			assert.Equal(t, tc[1].(*resGrant).TokenType, resObj.TokenType)
+			assert.Equal(t, tc[1].(*resGrant).ExpiresIn, resObj.ExpiresIn)
+			assert.NotEmpty(t, resObj.AccessToken)
+			assert.NotEmpty(t, resObj.RefreshToken)
+
+		case http.StatusBadRequest:
+			if tc[1] != nil {
+				resObj := tc[6].(*ext.ClientError)
+				assert.Equal(t, tc[1].(*ext.ClientError).Code, resObj.Code)
+			}
+		}
 	}
-
-	assert.Equal(t, http.StatusBadRequest, w.Code)
-	assert.Equal(t, ext.ERR_CLI_INVALID_APP.(*ext.ClientError).Code, resObj.Code)
-}
-
-func TestGrantTokenInvalidAppSecret(t *testing.T) {
-	resObj := &ext.ClientError{}
-	w, err := grantToken(100000, "1234567", "admin@huoyijie.cn", "123456", resObj)
-
-	if err != nil {
-		t.Errorf("Failed to decode JSON response: %v", err)
-	}
-
-	assert.Equal(t, http.StatusBadRequest, w.Code)
-	assert.Equal(t, ext.ERR_CLI_INVALID_APP.(*ext.ClientError).Code, resObj.Code)
-}
-
-func TestGrantTokenInvalidEmailFormat(t *testing.T) {
-	resObj := &ext.ClientError{}
-	w, err := grantToken(100000, "123456", "admin", "123456", resObj)
-
-	if err != nil {
-		t.Errorf("Failed to decode JSON response: %v", err)
-	}
-
-	assert.Equal(t, http.StatusBadRequest, w.Code)
-}
-
-func TestGrantTokenInvalidEmail(t *testing.T) {
-	resObj := &ext.ClientError{}
-	w, err := grantToken(100000, "123456", "admin1@huoyijie.cn", "123456", resObj)
-
-	if err != nil {
-		t.Errorf("Failed to decode JSON response: %v", err)
-	}
-
-	assert.Equal(t, http.StatusBadRequest, w.Code)
-	assert.Equal(t, ext.ERR_CLI_INVALID_ACCOUNT.(*ext.ClientError).Code, resObj.Code)
-}
-
-func TestGrantTokenInvalidPassword(t *testing.T) {
-	resObj := &ext.ClientError{}
-	w, err := grantToken(100000, "123456", "admin@huoyijie.cn", "1234567", resObj)
-
-	if err != nil {
-		t.Errorf("Failed to decode JSON response: %v", err)
-	}
-
-	assert.Equal(t, http.StatusBadRequest, w.Code)
-	assert.Equal(t, ext.ERR_CLI_INVALID_ACCOUNT.(*ext.ClientError).Code, resObj.Code)
 }
