@@ -71,7 +71,23 @@ func grant(c *gin.Context) {
 			return
 		}
 
-		c.JSON(http.StatusOK, app)
+		uuid := util.GenerateUUID()
+		// accessToken identified by uuid
+		accessToken, err := util.GenerateToken([]byte(""), app.Id, app.Name, staff.Id, staff.Email, uuid)
+		if err != nil {
+			extCtx.AbortWithServerError(err)
+			return
+		}
+
+		refreshToken := util.GenerateUUID()
+
+		c.JSON(http.StatusOK, gin.H{
+			"access_token":  accessToken,
+			"token_type":    "Bearer",
+			// todo move to Env
+			"expires_in":    7200,
+			"refresh_token": refreshToken,
+		})
 
 	default:
 		extCtx.AbortWithClientError(ext.ERR_CLI_UNSUPPORTED_APP)
