@@ -49,3 +49,5 @@ air run
 ## API swagger 文档
 
 ## 搭建 Markdown Docs
+
+## i18n
