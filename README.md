@@ -48,6 +48,8 @@ air run
 go test ./src/...
 ```
 
+- todo 单元测试开始执行，先在另一个测试库执行 migrate up，seed 测试数据，执行单元测试，完成后 migrate down，清理所有表。
+
 ## 部署/go build/CD
 
 ## API swagger 文档
