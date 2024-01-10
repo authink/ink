@@ -5,7 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
+	"github.com/authink/ink.go/src/core"
+	"github.com/authink/ink.go/src/router"
 )
 
 func startServer(srv *http.Server) {
@@ -14,13 +15,11 @@ func startServer(srv *http.Server) {
 	}
 }
 
-func createServer(ink *Ink) (srv *http.Server) {
-	r := gin.Default()
-	setupRouter(ink, r)
+func createServer(ink *core.Ink) (srv *http.Server) {
 
 	srv = &http.Server{
-		Addr:    fmt.Sprintf("%s:%d", ink.env.Host, ink.env.Port),
-		Handler: r,
+		Addr:    fmt.Sprintf("%s:%d", ink.Env.Host, ink.Env.Port),
+		Handler: router.SetupRouter(ink),
 	}
 
 	go startServer(srv)

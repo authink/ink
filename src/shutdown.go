@@ -8,9 +8,11 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/authink/ink.go/src/core"
 )
 
-func setupGracefulShutdown(ink *Ink, srv *http.Server) {
+func setupGracefulShutdown(ink *core.Ink, srv *http.Server) {
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 
@@ -19,7 +21,7 @@ func setupGracefulShutdown(ink *Ink, srv *http.Server) {
 	log.Println("Shutting down ...")
 
 	// 设置 5 秒的超时时间
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(ink.env.ShutdownTimeout)*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(ink.Env.ShutdownTimeout)*time.Second)
 	defer cancel()
 
 	// 在超时时间内停止服务

@@ -1,11 +1,12 @@
-package main
+package migrate
 
 import (
+	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/sql"
 )
 
-func seed(ink *Ink) (err error) {
+func Seed(ink *core.Ink) (err error) {
 	admin, err := model.NewStaff(
 		"admin@huoyijie.cn", "123456",
 		"18222222222",
@@ -15,8 +16,8 @@ func seed(ink *Ink) (err error) {
 		return
 	}
 
-	tx := ink.db.MustBegin()
-	defer txEnd(tx, err)
+	tx := ink.DB.MustBegin()
+	defer core.TxEnd(tx, err)
 
 	if _, err = tx.NamedExec(
 		sql.Query.InsertStaff,

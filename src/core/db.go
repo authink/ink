@@ -1,4 +1,4 @@
-package main
+package core
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func createDatabaseUrl(env *Env, withSchema bool) string {
+func CreateDatabaseUrl(env *Env, withSchema bool) string {
 	databaseUrl := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", env.DbUser, env.DbPasswd, env.DbHost, env.DbPort, env.DbName)
 
 	if withSchema {
@@ -19,8 +19,8 @@ func createDatabaseUrl(env *Env, withSchema bool) string {
 	return databaseUrl
 }
 
-func connectDB(env *Env) *sqlx.DB {
-	databaseUrl := createDatabaseUrl(env, false)
+func ConnectDB(env *Env) *sqlx.DB {
+	databaseUrl := CreateDatabaseUrl(env, false)
 
 	db, err := sqlx.Open("mysql", databaseUrl)
 	if err != nil {
@@ -35,7 +35,7 @@ func connectDB(env *Env) *sqlx.DB {
 	return db
 }
 
-func txEnd(tx *sqlx.Tx, err error) {
+func TxEnd(tx *sqlx.Tx, err error) {
 	if err != nil {
 		tx.Rollback()
 	} else {

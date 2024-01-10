@@ -1,15 +1,15 @@
-package main
+package core
 
 import "github.com/jmoiron/sqlx"
 
 type Ink struct {
-	env *Env
-	db  *sqlx.DB
+	Env *Env
+	DB  *sqlx.DB
 }
 
-func newInk() *Ink {
+func NewInk() *Ink {
 	env := loadEnv()
-	db := connectDB(env)
+	db := ConnectDB(env)
 
 	return &Ink{
 		env,
@@ -18,5 +18,5 @@ func newInk() *Ink {
 }
 
 func (ink *Ink) Close() {
-	ink.db.Close()
+	ink.DB.Close()
 }

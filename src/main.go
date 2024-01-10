@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 
+	"github.com/authink/ink.go/src/core"
+	"github.com/authink/ink.go/src/migrate"
 	"github.com/spf13/cobra"
 )
 
@@ -18,10 +20,10 @@ var cmdMigrate = &cobra.Command{
 			log.Fatalf("CMD migrate: %s\n", err)
 		}
 
-		ink := newInk()
+		ink := core.NewInk()
 		defer ink.Close()
 
-		migrateSchema(ink, direction)
+		migrate.Schema(ink, direction)
 	},
 }
 
@@ -29,10 +31,10 @@ var cmdSeed = &cobra.Command{
 	Use:   "seed",
 	Short: "Seed the database",
 	Run: func(cmd *cobra.Command, args []string) {
-		ink := newInk()
+		ink := core.NewInk()
 		defer ink.Close()
 
-		if err := seed(ink); err != nil {
+		if err := migrate.Seed(ink); err != nil {
 			log.Fatalf("Seed: %s\n", err)
 		}
 	},
@@ -42,7 +44,7 @@ var cmdRun = &cobra.Command{
 	Use:   "run",
 	Short: "Run ink server",
 	Run: func(cmd *cobra.Command, args []string) {
-		ink := newInk()
+		ink := core.NewInk()
 		defer ink.Close()
 
 		setupGracefulShutdown(
