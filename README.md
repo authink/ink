@@ -44,6 +44,10 @@ air run
 
 ## 单元测试/go test/CI
 
+```bash
+go test ./src/...
+```
+
 ## 部署/go build/CD
 
 ## API swagger 文档

@@ -28,10 +28,17 @@ func inkEmailValidation(fl validator.FieldLevel) bool {
 }
 
 type reqGrant struct {
-	AppId     uint32 `json:"appId" binding:"required,min=1"`
+	AppId     int    `json:"appId" binding:"required,min=1"`
 	AppSecret string `json:"appSecret" binding:"required,min=1"`
 	Email     string `json:"email" binding:"required,inkEmail"`
 	Password  string `json:"password" binding:"required,min=6"`
+}
+
+type resGrant struct {
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
+	TokenType    string `json:"token_type"`
+	ExpiresIn    int    `json:"expires_in"`
 }
 
 func grant(c *gin.Context) {
@@ -90,13 +97,13 @@ func grant(c *gin.Context) {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{
-			"access_token": accessToken,
-			"token_type":   "Bearer",
-			// todo move to Env
-			"expires_in":    7200,
-			"refresh_token": refreshToken,
-		})
+		res := &resGrant{
+			AccessToken:  accessToken,
+			RefreshToken: refreshToken,
+			TokenType:    "Bearer",
+			ExpiresIn:    7200,
+		}
+		c.JSON(http.StatusOK, res)
 
 	default:
 		extCtx.AbortWithClientError(ext.ERR_CLI_UNSUPPORTED_APP)
