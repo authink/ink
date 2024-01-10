@@ -12,7 +12,15 @@ func (e *ClientError) Error() string {
 var _ error = (*ClientError)(nil)
 
 var (
-	ERR_CLI_BAD_EMAIL error = &ClientError{
-		Code: "invalid.email",
+	ERR_CLI_INVALID_APP error = &ClientError{
+		Code: "InvalidApp",
+	}
+
+	ERR_CLI_UNSUPPORTED_APP error = &ClientError{
+		Code: "UnsupportedApp",
+	}
+
+	ERR_CLI_INVALID_ACCOUNT error = &ClientError{
+		Code: "InvalidEmailOrPassword",
 	}
 )

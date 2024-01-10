@@ -6,6 +6,7 @@ type App struct {
 	Model
 	Name   string
 	Secret string
+	Active bool
 }
 
 func NewApp(name, secret string) *App {

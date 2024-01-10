@@ -8,6 +8,12 @@ import (
 
 func SetupRouter(ink *core.Ink) (r *gin.Engine) {
 	r = gin.Default()
+
+	r.Use(func(c *gin.Context) {
+		c.Set("ink", ink)
+		c.Next()
+	})
+
 	token.SetupTokenGroup(r)
 	return
 }
