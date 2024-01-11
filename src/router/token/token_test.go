@@ -5,12 +5,15 @@ import (
 	"testing"
 
 	"github.com/authink/ink.go/src/core"
+	"github.com/authink/ink.go/src/migrate"
 	"github.com/gin-gonic/gin"
 )
 
 var r *gin.Engine
 
 func setup(ink *core.Ink) {
+	migrate.Schema(ink, "up")
+	migrate.Seed(ink)
 	r = gin.Default()
 	r.Use(func(c *gin.Context) {
 		c.Set("ink", ink)
@@ -19,7 +22,10 @@ func setup(ink *core.Ink) {
 	SetupTokenGroup(r)
 }
 
-func teardown() {}
+func teardown(ink *core.Ink) {
+	r = nil
+	migrate.Schema(ink, "down")
+}
 
 func TestMain(m *testing.M) {
 	ink := core.NewInk()
@@ -29,7 +35,9 @@ func TestMain(m *testing.M) {
 
 	exitCode := m.Run()
 
-	teardown()
+	teardown(ink)
 
-	os.Exit(exitCode)
+	if exitCode != 0 {
+		os.Exit(exitCode)
+	}
 }

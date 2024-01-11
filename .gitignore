@@ -24,4 +24,4 @@ bin/
 tmp/
 __debug*
 
-.env.test
+!.env.test

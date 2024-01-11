@@ -34,9 +34,7 @@ var cmdSeed = &cobra.Command{
 		ink := core.NewInk()
 		defer ink.Close()
 
-		if err := migrate.Seed(ink); err != nil {
-			log.Fatalf("Seed: %s\n", err)
-		}
+		migrate.Seed(ink)
 	},
 }
 
