@@ -32,10 +32,15 @@ go install github.com/cosmtrek/air@latest
 
 # create .air.toml
 air init
+```
 
-# 配置环境变量
-source .env
+```toml
+# .air.toml 增加如下一行
+[envfile]
+  path = ".env"
+```
 
+```bash
 # run
 air run
 ```
@@ -44,11 +49,36 @@ air run
 
 ## 单元测试/go test/CI
 
+设置 -> 搜(Test Env File)
+
+`值: ${workspaceFolder}/.env`
+
+可以通过 vscode 点击 Run Test，且加载 .env。
+
+如果手动运行测试可安装 dotenv
+
 ```bash
-go test ./src/...
+go install github.com/joho/godotenv/cmd/godotenv@latest
+
+godotenv go test ./src/...
+
+#手动运行程序
+godotenv go run ./src/... run
 ```
 
 - todo 单元测试开始执行，先在另一个测试库执行 migrate up，seed 测试数据，执行单元测试，完成后 migrate down，清理所有表。
+
+```json
+{
+  "name": "Launch Ink",
+  "type": "go",
+  "request": "launch",
+  "mode": "auto",
+  "program": "${workspaceFolder}/src",
+  "args": ["run"],
+  "envFile": "${workspaceFolder}/.env"
+}
+```
 
 ## 部署/go build/CD
 

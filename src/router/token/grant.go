@@ -1,6 +1,8 @@
 package token
 
 import (
+	libsql "database/sql"
+	"errors"
 	"net/http"
 	"regexp"
 
@@ -61,6 +63,10 @@ func grant(c *gin.Context) {
 		sql.Query.GetApp,
 		req.AppId,
 	); err != nil || !app.Active || app.Secret != util.Sha256(req.AppSecret) {
+		if err != nil && !errors.Is(err, libsql.ErrNoRows) {
+			extCtx.AbortWithServerError(err)
+			return
+		}
 		extCtx.AbortWithClientError(ext.ERR_CLI_INVALID_APP)
 		return
 	}
@@ -74,6 +80,10 @@ func grant(c *gin.Context) {
 			sql.Query.GetStaff,
 			req.Email,
 		); err != nil || !staff.Active || staff.Departure || util.CheckPassword(staff.Password, req.Password) != nil {
+			if err != nil && !errors.Is(err, libsql.ErrNoRows) {
+				extCtx.AbortWithServerError(err)
+				return
+			}
 			extCtx.AbortWithClientError(ext.ERR_CLI_INVALID_ACCOUNT)
 			return
 		}

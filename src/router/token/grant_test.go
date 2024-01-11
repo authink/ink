@@ -28,7 +28,7 @@ func grantToken(appId int, appSecret, email, password string, resObj any) (*http
 
 func TestGrant(t *testing.T) {
 	var (
-		ok                 = []any{http.StatusOK, &resGrant{TokenType: "Bearer", ExpiresIn: 7200}, 100000, "123456", "admin@huoyijie.cn", "123456", &resGrant{}}
+		ok                 = []any{http.StatusOK, &resGrant{TokenType: "Bearer", ExpiresIn: 7200}, 100000, "1234567", "admin@huoyijie.cn", "123456", &resGrant{}}
 		invalidAppId       = []any{http.StatusBadRequest, ext.ERR_CLI_INVALID_APP, 999999, "123456", "admin@huoyijie.cn", "123456", &ext.ClientError{}}
 		invalidAppSecret   = []any{http.StatusBadRequest, ext.ERR_CLI_INVALID_APP, 100000, "1234567", "admin@huoyijie.cn", "123456", &ext.ClientError{}}
 		invalidEmailFormat = []any{http.StatusBadRequest, nil, 100000, "123456", "admin", "123456", &ext.ClientError{}}
