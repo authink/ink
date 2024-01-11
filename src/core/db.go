@@ -10,7 +10,7 @@ import (
 )
 
 func CreateDatabaseUrl(env *Env, withSchema bool) string {
-	databaseUrl := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", env.DbUser, env.DbPasswd, env.DbHost, env.DbPort, env.DbName)
+	databaseUrl := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", env.DbUser, env.DbPasswd, env.DbHost, env.DbPort, env.DbName)
 
 	if withSchema {
 		return "mysql://" + databaseUrl

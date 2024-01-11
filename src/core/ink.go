@@ -1,6 +1,8 @@
 package core
 
-import "github.com/jmoiron/sqlx"
+import (
+	"github.com/jmoiron/sqlx"
+)
 
 type Ink struct {
 	Env *Env

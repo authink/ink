@@ -4,6 +4,11 @@ import "fmt"
 
 type app struct{}
 
+// Delete implements query.
+func (*app) Delete() string {
+	panic("unimplemented")
+}
+
 // Get implements query.
 func (*app) Get() string {
 	return fmt.Sprintf("SELECT id, name, secret, active FROM %s WHERE id = ?", table.App)

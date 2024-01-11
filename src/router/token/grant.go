@@ -9,7 +9,6 @@ import (
 	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/ext"
 	"github.com/authink/ink.go/src/model"
-	"github.com/authink/ink.go/src/sql"
 	"github.com/authink/ink.go/src/util"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -56,13 +55,8 @@ func grant(c *gin.Context) {
 	extCtx := (*ext.Context)(c)
 	ink := c.MustGet("ink").(*core.Ink)
 
-	app := &model.App{}
-
-	if err := ink.DB.Get(
-		app,
-		sql.App.Get(),
-		req.AppId,
-	); err != nil || !app.Active || app.Secret != util.Sha256(req.AppSecret) {
+	app, err := ink.GetApp(req.AppId)
+	if err != nil || !app.Active || app.Secret != util.Sha256(req.AppSecret) {
 		if err != nil && !errors.Is(err, libsql.ErrNoRows) {
 			extCtx.AbortWithServerError(err)
 			return
@@ -73,13 +67,8 @@ func grant(c *gin.Context) {
 
 	switch app.Name {
 	case "admin.dev":
-		staff := &model.Staff{}
-
-		if err := ink.DB.Get(
-			staff,
-			sql.Staff.Get(),
-			req.Email,
-		); err != nil || !staff.Active || staff.Departure || util.CheckPassword(staff.Password, req.Password) != nil {
+		staff, err := ink.GetStaffByEmail(req.Email)
+		if err != nil || !staff.Active || staff.Departure || util.CheckPassword(staff.Password, req.Password) != nil {
 			if err != nil && !errors.Is(err, libsql.ErrNoRows) {
 				extCtx.AbortWithServerError(err)
 				return
@@ -99,10 +88,7 @@ func grant(c *gin.Context) {
 		// accessToken identified by uuid
 		authToken := model.NewAuthToken(uuid, refreshToken, app.Id, staff.Id)
 
-		if _, err = ink.DB.NamedExec(
-			sql.AuthToken.Insert(),
-			authToken,
-		); err != nil {
+		if _, err = ink.SaveToken(authToken); err != nil {
 			extCtx.AbortWithServerError(err)
 			return
 		}

@@ -4,6 +4,11 @@ import "fmt"
 
 type authToken struct{}
 
+// Delete implements query.
+func (*authToken) Delete() string {
+	return fmt.Sprintf("DELETE FROM %s WHERE id = ?", table.AuthToken)
+}
+
 func (*authToken) GetByRefreshToken() string {
 	return fmt.Sprintf("SELECT id, created_at, access_token, refresh_token, app_id, account_id FROM %s WHERE refresh_token = ?", table.AuthToken)
 }

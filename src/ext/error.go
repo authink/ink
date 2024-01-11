@@ -29,4 +29,8 @@ var (
 	ERR_INVALID_REFRESH_TOKEN error = &ClientError{
 		Code: "InvalidRefreshToken",
 	}
+
+	ERR_INVALID_ACCESS_TOKEN error = &ClientError{
+		Code: "InvalidAccessToken",
+	}
 )

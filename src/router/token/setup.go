@@ -7,4 +7,5 @@ import (
 func SetupTokenGroup(r *gin.Engine) {
 	gToken := r.Group("token")
 	gToken.POST("grant", grant)
+	gToken.POST("refresh", refresh)
 }

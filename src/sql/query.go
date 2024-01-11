@@ -2,5 +2,6 @@ package sql
 
 type query interface {
 	Insert() string
-	Get()    string
+	Get() string
+	Delete() string
 }

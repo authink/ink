@@ -22,10 +22,10 @@ func GenerateToken(key string, appId uint32, appName string, accountId uint32, e
 				IssuedAt: jwt.NewNumericDate(time.Now()),
 				// todo move to Env
 				ExpiresAt: jwt.NewNumericDate(time.Now().Add(2 * time.Hour)),
+				ID:        uuid,
 			},
 			AppId:     int(appId),
 			AccountId: int(accountId),
-			Uuid:      uuid,
 		},
 	)
 
