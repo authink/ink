@@ -60,7 +60,7 @@ air run
 ```bash
 go install github.com/joho/godotenv/cmd/godotenv@latest
 
-godotenv go test ./src/...
+godotenv -f .env.test go test ./src/...
 
 #手动运行程序
 godotenv go run ./src/... run
