@@ -18,15 +18,17 @@ func grantToken(appId int, appSecret, email, password string, resObj any) (*http
 	}
 
 	return ext.TestFetch(
+		r,
 		"POST",
 		"/token/grant",
 		reqObj,
 		resObj,
-		SetupTokenGroup,
 	)
 }
 
 func TestGrant(t *testing.T) {
+	// t.Parallel()
+	// go test -v -p 2 # 缺省 -p 参数会根据 cpu 核心数量设置
 	var (
 		ok                 = []any{http.StatusOK, &resGrant{TokenType: "Bearer", ExpiresIn: 7200}, 100000, "123456", "admin@huoyijie.cn", "123456", &resGrant{}}
 		invalidAppId       = []any{http.StatusBadRequest, ext.ERR_CLI_INVALID_APP, 999999, "123456", "admin@huoyijie.cn", "123456", &ext.ClientError{}}
@@ -45,7 +47,8 @@ func TestGrant(t *testing.T) {
 		invalidPassword,
 	}
 
-	for _, test := range tests {
+	for i, test := range tests {
+		t.Logf("TestGrant: [%d]\n", i)
 		tc := test.([]any)
 
 		w, _ := grantToken(tc[2].(int), tc[3].(string), tc[4].(string), tc[5].(string), tc[6])

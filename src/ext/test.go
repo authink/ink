@@ -7,23 +7,10 @@ import (
 	"net/http/httptest"
 	"strings"
 
-	"github.com/authink/ink.go/src/core"
 	"github.com/gin-gonic/gin"
 )
 
-type SetupGroup func(*gin.Engine)
-
-func TestFetch(method, path string, reqObj, resObj any, setupGroup SetupGroup) (w *httptest.ResponseRecorder, err error) {
-	ink := core.NewInk()
-	defer ink.Close()
-
-	r := gin.Default()
-	r.Use(func(c *gin.Context) {
-		c.Set("ink", ink)
-		c.Next()
-	})
-	setupGroup(r)
-
+func TestFetch(r *gin.Engine, method, path string, reqObj, resObj any) (w *httptest.ResponseRecorder, err error) {
 	var reader io.Reader
 	if reqObj != nil {
 		reqBody, _ := json.Marshal(reqObj)
