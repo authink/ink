@@ -31,11 +31,11 @@ func TestGrant(t *testing.T) {
 	// go test -v -p 2 # 缺省 -p 参数会根据 cpu 核心数量设置
 	var (
 		ok                 = []any{http.StatusOK, &resGrant{TokenType: "Bearer", ExpiresIn: 7200}, 100000, "123456", "admin@huoyijie.cn", "123456", &resGrant{}}
-		invalidAppId       = []any{http.StatusBadRequest, ext.ERR_CLI_INVALID_APP, 999999, "123456", "admin@huoyijie.cn", "123456", &ext.ClientError{}}
-		invalidAppSecret   = []any{http.StatusBadRequest, ext.ERR_CLI_INVALID_APP, 100000, "1234567", "admin@huoyijie.cn", "123456", &ext.ClientError{}}
+		invalidAppId       = []any{http.StatusBadRequest, ext.ERR_INVALID_APP, 999999, "123456", "admin@huoyijie.cn", "123456", &ext.ClientError{}}
+		invalidAppSecret   = []any{http.StatusBadRequest, ext.ERR_INVALID_APP, 100000, "1234567", "admin@huoyijie.cn", "123456", &ext.ClientError{}}
 		invalidEmailFormat = []any{http.StatusBadRequest, nil, 100000, "123456", "admin", "123456", &ext.ClientError{}}
-		invalidEmail       = []any{http.StatusBadRequest, ext.ERR_CLI_INVALID_ACCOUNT, 100000, "123456", "admin1@huoyijie.cn", "123456", &ext.ClientError{}}
-		invalidPassword    = []any{http.StatusBadRequest, ext.ERR_CLI_INVALID_ACCOUNT, 100000, "123456", "admin@huoyijie.cn", "1234567", &ext.ClientError{}}
+		invalidEmail       = []any{http.StatusBadRequest, ext.ERR_INVALID_ACCOUNT, 100000, "123456", "admin1@huoyijie.cn", "123456", &ext.ClientError{}}
+		invalidPassword    = []any{http.StatusBadRequest, ext.ERR_INVALID_ACCOUNT, 100000, "123456", "admin@huoyijie.cn", "1234567", &ext.ClientError{}}
 	)
 
 	var tests = []any{

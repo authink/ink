@@ -67,7 +67,7 @@ func grant(c *gin.Context) {
 			extCtx.AbortWithServerError(err)
 			return
 		}
-		extCtx.AbortWithClientError(ext.ERR_CLI_INVALID_APP)
+		extCtx.AbortWithClientError(ext.ERR_INVALID_APP)
 		return
 	}
 
@@ -84,12 +84,12 @@ func grant(c *gin.Context) {
 				extCtx.AbortWithServerError(err)
 				return
 			}
-			extCtx.AbortWithClientError(ext.ERR_CLI_INVALID_ACCOUNT)
+			extCtx.AbortWithClientError(ext.ERR_INVALID_ACCOUNT)
 			return
 		}
 
 		uuid := util.GenerateUUID()
-		accessToken, err := util.GenerateToken([]byte(""), app.Id, app.Name, staff.Id, staff.Email, uuid)
+		accessToken, err := util.GenerateToken(ink.Env.SecretKey, app.Id, app.Name, staff.Id, staff.Email, uuid)
 		if err != nil {
 			extCtx.AbortWithServerError(err)
 			return
@@ -116,6 +116,6 @@ func grant(c *gin.Context) {
 		c.JSON(http.StatusOK, res)
 
 	default:
-		extCtx.AbortWithClientError(ext.ERR_CLI_UNSUPPORTED_APP)
+		extCtx.AbortWithClientError(ext.ERR_UNSUPPORTED_APP)
 	}
 }

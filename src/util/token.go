@@ -4,27 +4,45 @@ import (
 	"strings"
 	"time"
 
+	"github.com/authink/ink.go/src/ext"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 )
 
-func GenerateToken(key []byte, appId uint32, appName string, accountId uint32, email, uuid string) (string, error) {
+func GenerateToken(key string, appId uint32, appName string, accountId uint32, email, uuid string) (string, error) {
 	t := jwt.NewWithClaims(
 		jwt.SigningMethodHS256,
-		jwt.MapClaims{
-			"iss": "ink.go-server",
-			"aud": appName,
-			"sub": email,
-			"iat": time.Now().Unix(),
-			// todo move to Env
-			"exp":       time.Now().Add(2 * time.Hour).Unix(),
-			"appId":     appId,
-			"accountId": accountId,
-			"uuid":      uuid,
+		ext.JwtClaims{
+			RegisteredClaims: jwt.RegisteredClaims{
+				Issuer: "ink.go-server",
+				Audience: jwt.ClaimStrings{
+					appName,
+				},
+				Subject:  email,
+				IssuedAt: jwt.NewNumericDate(time.Now()),
+				// todo move to Env
+				ExpiresAt: jwt.NewNumericDate(time.Now().Add(2 * time.Hour)),
+			},
+			AppId:     int(appId),
+			AccountId: int(accountId),
+			Uuid:      uuid,
 		},
 	)
 
-	return t.SignedString(key)
+	return t.SignedString([]byte(key))
+}
+
+func VerifyToken(key string, accessToken string) (jwtClaims *ext.JwtClaims, err error) {
+	jwtClaims = &ext.JwtClaims{}
+
+	_, err = jwt.ParseWithClaims(
+		accessToken,
+		jwtClaims,
+		func(token *jwt.Token) (any, error) {
+			return []byte(key), nil
+		},
+	)
+	return
 }
 
 func GenerateUUID() string {

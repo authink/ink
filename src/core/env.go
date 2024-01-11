@@ -7,6 +7,7 @@ import (
 )
 
 type Env struct {
+	SecretKey           string
 	Host                string
 	Port                uint16
 	ShutdownTimeout     uint16
@@ -37,10 +38,12 @@ func getString(key string, value *string) {
 }
 
 func loadEnv() *Env {
+	secretKey := "your-secret-key"
 	host := "localhost"
 	port := uint16(8080)
 	shutdownTimeout := uint16(5)
 
+	getString("SECRET_KEY", &secretKey)
 	getString("HOST", &host)
 	getUint16("PORT", &port)
 	getUint16("SHUTDOWN_TIMEOUT", &shutdownTimeout)
@@ -70,6 +73,7 @@ func loadEnv() *Env {
 	getString("DB_MIGRATE_FILE_SOURCE", &dbMigrateFileSource)
 
 	return &Env{
+		secretKey,
 		host,
 		port,
 		shutdownTimeout,
