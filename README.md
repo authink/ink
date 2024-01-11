@@ -2,6 +2,12 @@
 
 ## schema
 
+```sql
+CREATE DATABASE `ink` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+
+CREATE DATABASE `ink_test` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+```
+
 ```bash
 migrate -database "mysql://username:password@tcp(localhost:3306)/ink" -path db/migrations up
 ```
@@ -51,7 +57,7 @@ air run
 
 设置 -> 搜(Test Env File)
 
-`值: ${workspaceFolder}/.env`
+`值: ${workspaceFolder}/.env.test`
 
 可以通过 vscode 点击 Run Test，且加载 .env。
 
