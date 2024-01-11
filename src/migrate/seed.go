@@ -22,14 +22,14 @@ func Seed(ink *core.Ink) {
 	defer core.TxEnd(tx, err)
 
 	if _, err = tx.NamedExec(
-		sql.Query.InsertStaff,
+		sql.Staff.Insert(),
 		admin,
 	); err != nil {
 		log.Fatalf("Seed: %s\n", err)
 	}
 
 	if _, err = tx.NamedExec(
-		sql.Query.InsertApp,
+		sql.App.Insert(),
 		model.NewApp(
 			"admin.dev",
 			"123456",

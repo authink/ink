@@ -8,6 +8,7 @@ import (
 	"github.com/authink/ink.go/src/ext"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/sql"
+
 	//"github.com/authink/ink.go/src/util"
 	"github.com/gin-gonic/gin"
 )
@@ -29,7 +30,7 @@ func refresh(c *gin.Context) {
 	var authToken model.AuthToken
 	if err := ink.DB.Get(
 		&authToken,
-		sql.Query.GetAuthTokenByRefreshToken,
+		sql.AuthToken.GetByRefreshToken(),
 		req.RefreshToken,
 	); err != nil {
 		if !errors.Is(err, libsql.ErrNoRows) {

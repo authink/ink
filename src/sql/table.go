@@ -1,12 +1,12 @@
 package sql
 
-type table struct {
+type tableName struct {
 	App       string
 	Staff     string
 	AuthToken string
 }
 
-var Table = &table{
+var table = &tableName{
 	App:       "s_apps",
 	Staff:     "s_staff",
 	AuthToken: "s_auth_tokens",

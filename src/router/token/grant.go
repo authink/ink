@@ -60,7 +60,7 @@ func grant(c *gin.Context) {
 
 	if err := ink.DB.Get(
 		app,
-		sql.Query.GetApp,
+		sql.App.Get(),
 		req.AppId,
 	); err != nil || !app.Active || app.Secret != util.Sha256(req.AppSecret) {
 		if err != nil && !errors.Is(err, libsql.ErrNoRows) {
@@ -77,7 +77,7 @@ func grant(c *gin.Context) {
 
 		if err := ink.DB.Get(
 			staff,
-			sql.Query.GetStaff,
+			sql.Staff.Get(),
 			req.Email,
 		); err != nil || !staff.Active || staff.Departure || util.CheckPassword(staff.Password, req.Password) != nil {
 			if err != nil && !errors.Is(err, libsql.ErrNoRows) {
@@ -100,7 +100,7 @@ func grant(c *gin.Context) {
 		authToken := model.NewAuthToken(uuid, refreshToken, app.Id, staff.Id)
 
 		if _, err = ink.DB.NamedExec(
-			sql.Query.InsertAuthToken,
+			sql.AuthToken.Insert(),
 			authToken,
 		); err != nil {
 			extCtx.AbortWithServerError(err)
