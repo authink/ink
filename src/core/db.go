@@ -27,10 +27,10 @@ func ConnectDB(env *Env) *sqlx.DB {
 		log.Fatalf("sqlx.Open: %s\n", err)
 	}
 
-	db.SetMaxOpenConns(10)
-	db.SetMaxIdleConns(10)
-	db.SetConnMaxLifetime(time.Second)
-	db.SetConnMaxIdleTime(time.Second)
+	db.SetMaxOpenConns(int(env.DbMaxOpenConns))
+	db.SetMaxIdleConns(int(env.DbMaxIdleConns))
+	db.SetConnMaxLifetime(time.Duration(env.DbConnMaxLifeTime) * time.Second)
+	db.SetConnMaxIdleTime(time.Duration(env.DbConnMaxIdleTime) * time.Second)
 
 	return db
 }
