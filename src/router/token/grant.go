@@ -1,14 +1,11 @@
 package token
 
 import (
-	libsql "database/sql"
-	"errors"
 	"net/http"
 	"regexp"
 
 	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/ext"
-	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/util"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -55,53 +52,21 @@ func grant(c *gin.Context) {
 	extCtx := (*ext.Context)(c)
 	ink := c.MustGet("ink").(*core.Ink)
 
-	app, err := ink.GetApp(req.AppId)
-	if err != nil || !app.Active || app.Secret != util.Sha256(req.AppSecret) {
-		if err != nil && !errors.Is(err, libsql.ErrNoRows) {
-			extCtx.AbortWithServerError(err)
-			return
-		}
-		extCtx.AbortWithClientError(ext.ERR_INVALID_APP)
-		return
-	}
+	if app, err := ink.GetApp(req.AppId); util.CheckApp(extCtx, err, app.Active, func() bool { return util.CompareSecrets(app.Secret, req.AppSecret) }) {
+		switch app.Name {
+		case "admin.dev":
+			staff, err := ink.GetStaffByEmail(req.Email)
 
-	switch app.Name {
-	case "admin.dev":
-		staff, err := ink.GetStaffByEmail(req.Email)
-		if err != nil || !staff.Active || staff.Departure || util.CheckPassword(staff.Password, req.Password) != nil {
-			if err != nil && !errors.Is(err, libsql.ErrNoRows) {
-				extCtx.AbortWithServerError(err)
+			if ok := util.CheckStaff(extCtx, err, staff.Active, staff.Departure, func() bool { return util.CheckPassword(staff.Password, req.Password) == nil }); !ok {
 				return
 			}
-			extCtx.AbortWithClientError(ext.ERR_INVALID_ACCOUNT)
-			return
+
+			if res := generateAuthToken(extCtx, ink, app, staff); res != nil {
+				c.JSON(http.StatusOK, res)
+			}
+
+		default:
+			extCtx.AbortWithClientError(ext.ERR_UNSUPPORTED_APP)
 		}
-
-		uuid := util.GenerateUUID()
-		accessToken, err := util.GenerateToken(ink.Env.SecretKey, app.Id, app.Name, staff.Id, staff.Email, uuid)
-		if err != nil {
-			extCtx.AbortWithServerError(err)
-			return
-		}
-
-		refreshToken := util.GenerateUUID()
-		// accessToken identified by uuid
-		authToken := model.NewAuthToken(uuid, refreshToken, app.Id, staff.Id)
-
-		if _, err = ink.SaveToken(authToken); err != nil {
-			extCtx.AbortWithServerError(err)
-			return
-		}
-
-		res := &resGrant{
-			AccessToken:  accessToken,
-			RefreshToken: refreshToken,
-			TokenType:    "Bearer",
-			ExpiresIn:    7200,
-		}
-		c.JSON(http.StatusOK, res)
-
-	default:
-		extCtx.AbortWithClientError(ext.ERR_UNSUPPORTED_APP)
 	}
 }

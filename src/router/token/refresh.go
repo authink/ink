@@ -1,17 +1,12 @@
 package token
 
 import (
-	libsql "database/sql"
-	"errors"
 	"net/http"
-	"time"
 
 	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/ext"
-	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/util"
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v5"
 )
 
 type reqRefresh struct {
@@ -28,85 +23,31 @@ func refresh(c *gin.Context) {
 	extCtx := (*ext.Context)(c)
 	ink := c.MustGet("ink").(*core.Ink)
 
-	authToken, err := ink.GetByRefreshToken(req.RefreshToken)
-	if err != nil {
-		if !errors.Is(err, libsql.ErrNoRows) {
-			extCtx.AbortWithServerError(err)
-			return
-		}
-		extCtx.AbortWithClientError(ext.ERR_INVALID_REFRESH_TOKEN)
+	authToken, ok := checkRefreshToken(extCtx, ink, req.RefreshToken)
+	if !ok {
 		return
 	}
 
-	_, err = ink.DeleteToken(int(authToken.Id))
-	if err != nil {
-		extCtx.AbortWithServerError(err)
+	jwtClaims, ok := util.CheckAccessToken(extCtx, ink.Env.SecretKey, req.AccessToken, authToken.AccessToken)
+	if !ok {
 		return
 	}
 
-	if time.Now().After(authToken.CreatedAt.Add(7 * 24 * time.Hour)) {
-		extCtx.AbortWithClientError(ext.ERR_INVALID_REFRESH_TOKEN)
-		return
-	}
+	if app, err := ink.GetApp(jwtClaims.AppId); util.CheckApp(extCtx, err, app.Active, func() bool { return true }) {
+		switch app.Name {
+		case "admin.dev":
+			staff, err := ink.GetStaff(jwtClaims.AccountId)
 
-	jwtClaims, err := util.VerifyToken(
-		ink.Env.SecretKey,
-		req.AccessToken,
-	)
-
-	if (err != nil && !errors.Is(err, jwt.ErrTokenExpired)) || jwtClaims.ID != authToken.AccessToken {
-		extCtx.AbortWithClientError(ext.ERR_INVALID_ACCESS_TOKEN)
-		return
-	}
-
-	app, err := ink.GetApp(jwtClaims.AppId)
-	if err != nil || !app.Active {
-		if err != nil && !errors.Is(err, libsql.ErrNoRows) {
-			extCtx.AbortWithServerError(err)
-			return
-		}
-		extCtx.AbortWithClientError(ext.ERR_INVALID_APP)
-		return
-	}
-
-	switch app.Name {
-	case "admin.dev":
-		staff, err := ink.GetStaff(jwtClaims.AccountId)
-
-		if err != nil || !staff.Active || staff.Departure {
-			if err != nil && !errors.Is(err, libsql.ErrNoRows) {
-				extCtx.AbortWithServerError(err)
+			if ok := util.CheckStaff(extCtx, err, staff.Active, staff.Departure, func() bool { return true }); !ok {
 				return
 			}
-			extCtx.AbortWithClientError(ext.ERR_INVALID_ACCOUNT)
-			return
-		}
 
-		// generate new token
-		uuid := util.GenerateUUID()
-		accessToken, err := util.GenerateToken(ink.Env.SecretKey, app.Id, app.Name, staff.Id, staff.Email, uuid)
-		if err != nil {
-			extCtx.AbortWithServerError(err)
-			return
-		}
+			if res := generateAuthToken(extCtx, ink, app, staff); res != nil {
+				c.JSON(http.StatusOK, res)
+			}
 
-		refreshToken := util.GenerateUUID()
-		// accessToken identified by uuid
-		authToken := model.NewAuthToken(uuid, refreshToken, app.Id, staff.Id)
-
-		if _, err = ink.SaveToken(authToken); err != nil {
-			extCtx.AbortWithServerError(err)
-			return
+		default:
+			extCtx.AbortWithClientError(ext.ERR_UNSUPPORTED_APP)
 		}
-
-		res := &resGrant{
-			AccessToken:  accessToken,
-			RefreshToken: refreshToken,
-			TokenType:    "Bearer",
-			ExpiresIn:    7200,
-		}
-		c.JSON(http.StatusOK, res)
-	default:
-		extCtx.AbortWithClientError(ext.ERR_UNSUPPORTED_APP)
 	}
 }
