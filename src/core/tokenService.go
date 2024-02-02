@@ -9,14 +9,14 @@ import (
 
 type tokenService interface {
 	SaveToken(*model.AuthToken) (libsql.Result, error)
-	GetByRefreshToken(refreshToken string) (*model.AuthToken, error)
-	DeleteToken(id int) (libsql.Result, error)
+	GetByRefreshToken(string) (*model.AuthToken, error)
+	DeleteToken(int) (libsql.Result, error)
 }
 
 // GetByRefreshToken implements tokenService.
 func (ink *Ink) GetByRefreshToken(refreshToken string) (token *model.AuthToken, err error) {
 	token = &model.AuthToken{}
-	err = ink.DB.Get(
+	err = ink.db.Get(
 		token,
 		sql.AuthToken.GetByRefreshToken(),
 		refreshToken,
@@ -26,7 +26,7 @@ func (ink *Ink) GetByRefreshToken(refreshToken string) (token *model.AuthToken, 
 
 // SaveToken implements tokenService.
 func (ink *Ink) SaveToken(token *model.AuthToken) (libsql.Result, error) {
-	return ink.DB.NamedExec(
+	return ink.db.NamedExec(
 		sql.AuthToken.Insert(),
 		token,
 	)
@@ -34,7 +34,7 @@ func (ink *Ink) SaveToken(token *model.AuthToken) (libsql.Result, error) {
 
 // DeleteToken implements tokenService.
 func (ink *Ink) DeleteToken(id int) (libsql.Result, error) {
-	return ink.DB.Exec(
+	return ink.db.Exec(
 		sql.AuthToken.Delete(),
 		id,
 	)

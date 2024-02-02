@@ -2,7 +2,6 @@ package core
 
 import (
 	"fmt"
-	"log"
 	"os"
 )
 
@@ -26,7 +25,7 @@ type Env struct {
 func getUint16(key string, value *uint16) {
 	if v := os.Getenv(key); len(v) > 0 {
 		if _, err := fmt.Sscanf(v, "%d", value); err != nil {
-			log.Fatalf("loadEnv(Int): %s\n", err)
+			panic(err)
 		}
 	}
 }

@@ -4,9 +4,11 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+type TxFunc func(tx *sqlx.Tx) error
+
 type Ink struct {
+	db  *sqlx.DB
 	Env *Env
-	DB  *sqlx.DB
 }
 
 func NewInk() *Ink {
@@ -14,11 +16,22 @@ func NewInk() *Ink {
 	db := ConnectDB(env)
 
 	return &Ink{
-		env,
 		db,
+		env,
 	}
 }
 
 func (ink *Ink) Close() {
-	ink.DB.Close()
+	ink.db.Close()
+}
+
+func (ink *Ink) Transaction(txFunc TxFunc) (err error) {
+	tx := ink.db.MustBegin()
+
+	if err = txFunc(tx); err != nil {
+		tx.Rollback()
+	} else {
+		tx.Commit()
+	}
+	return
 }

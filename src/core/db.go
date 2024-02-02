@@ -2,7 +2,6 @@ package core
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -24,7 +23,7 @@ func ConnectDB(env *Env) *sqlx.DB {
 
 	db, err := sqlx.Open("mysql", databaseUrl)
 	if err != nil {
-		log.Fatalf("sqlx.Open: %s\n", err)
+		panic(err)
 	}
 
 	db.SetMaxOpenConns(int(env.DbMaxOpenConns))
@@ -33,12 +32,4 @@ func ConnectDB(env *Env) *sqlx.DB {
 	db.SetConnMaxIdleTime(time.Duration(env.DbConnMaxIdleTime) * time.Second)
 
 	return db
-}
-
-func TxEnd(tx *sqlx.Tx, err error) {
-	if err != nil {
-		tx.Rollback()
-	} else {
-		tx.Commit()
-	}
 }

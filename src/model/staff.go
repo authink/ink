@@ -12,17 +12,16 @@ type Staff struct {
 	Departure bool
 }
 
-func NewStaff(email, password, phone string, super bool) (staff *Staff, err error) {
+func NewStaff(email, password, phone string, super bool) *Staff {
 	hashedPassword, err := util.HashPassword(password)
 	if err != nil {
-		return
+		panic(err)
 	}
 
-	staff = &Staff{
+	return &Staff{
 		Email:    email,
 		Password: hashedPassword,
 		Phone:    phone,
 		Super:    super,
 	}
-	return
 }

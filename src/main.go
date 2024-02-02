@@ -1,8 +1,6 @@
 package main
 
 import (
-	"log"
-
 	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/migrate"
 	"github.com/spf13/cobra"
@@ -17,7 +15,7 @@ var cmdMigrate = &cobra.Command{
 		direction, err := cmd.Flags().GetString("direction")
 
 		if err != nil {
-			log.Fatalf("CMD migrate: %s\n", err)
+			panic(err)
 		}
 
 		ink := core.NewInk()
@@ -62,6 +60,6 @@ func init() {
 
 func main() {
 	if err := cmdInk.Execute(); err != nil {
-		log.Fatalf("main: %s\n", err)
+		panic(err)
 	}
 }

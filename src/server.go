@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/authink/ink.go/src/core"
@@ -11,7 +10,7 @@ import (
 
 func startServer(srv *http.Server) {
 	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-		log.Fatalf("Server: %s\n", err)
+		panic(err)
 	}
 }
 

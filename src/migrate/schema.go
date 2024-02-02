@@ -2,7 +2,6 @@ package migrate
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/authink/ink.go/src/core"
 	"github.com/golang-migrate/migrate/v4"
@@ -16,7 +15,7 @@ func createSourceUrl(ink *core.Ink) string {
 
 func Schema(ink *core.Ink, direction string) {
 	if direction != "up" && direction != "down" {
-		log.Fatalf("Migrate: unkwon direction %s\n", direction)
+		panic(fmt.Errorf("migrate: unkwon direction %s", direction))
 	}
 
 	sourceUrl := createSourceUrl(ink)
@@ -28,7 +27,7 @@ func Schema(ink *core.Ink, direction string) {
 	)
 
 	if err != nil {
-		log.Fatalf("Migrate Init: %s,%s,%s\n", sourceUrl, databaseUrl, err)
+		panic(err)
 	}
 
 	switch direction {
@@ -39,6 +38,6 @@ func Schema(ink *core.Ink, direction string) {
 	}
 
 	if err != nil {
-		log.Fatalf("Migrate: %s\n", err)
+		panic(err)
 	}
 }
