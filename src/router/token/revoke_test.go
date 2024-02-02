@@ -18,7 +18,7 @@ func revokeToken(accessToken, refreshToken string) (*httptest.ResponseRecorder, 
 	return ext.TestFetch(
 		r,
 		"POST",
-		"/token/revoke",
+		"/api/token/revoke",
 		reqObj,
 		nil,
 	)

@@ -14,6 +14,6 @@ func SetupRouter(ink *core.Ink) (r *gin.Engine) {
 		c.Next()
 	})
 
-	token.SetupTokenGroup(r)
+	token.SetupTokenGroup(r.Group("api"))
 	return
 }

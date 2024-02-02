@@ -19,7 +19,7 @@ func setup(ink *core.Ink) {
 		c.Set("ink", ink)
 		c.Next()
 	})
-	SetupTokenGroup(r)
+	SetupTokenGroup(r.Group("api"))
 }
 
 func teardown(ink *core.Ink) {

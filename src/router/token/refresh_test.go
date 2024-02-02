@@ -18,7 +18,7 @@ func refreshToken(accessToken, refreshToken string, resObj any) (*httptest.Respo
 	return ext.TestFetch(
 		r,
 		"POST",
-		"/token/refresh",
+		"/api/token/refresh",
 		reqObj,
 		resObj,
 	)

@@ -12,8 +12,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupTokenGroup(r *gin.Engine) {
-	gToken := r.Group("token")
+func SetupTokenGroup(rg *gin.RouterGroup) {
+	gToken := rg.Group("token")
 	gToken.POST("grant", grant)
 	gToken.POST("refresh", refresh)
 	gToken.POST("revoke", revoke)
