@@ -16,6 +16,7 @@ func SetupTokenGroup(r *gin.Engine) {
 	gToken := r.Group("token")
 	gToken.POST("grant", grant)
 	gToken.POST("refresh", refresh)
+	gToken.POST("revoke", revoke)
 }
 
 func generateAuthToken(extCtx *ext.Context, ink *core.Ink, app *model.App, staff *model.Staff) (res *resGrant) {
