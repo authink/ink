@@ -3,8 +3,8 @@ package ext
 import "fmt"
 
 type ClientError struct {
-	Code    string
-	Message string
+	Code    string `json:"code"`
+	Message string `json:"message"`
 }
 
 func (e *ClientError) Error() string {
@@ -14,6 +14,10 @@ func (e *ClientError) Error() string {
 var _ error = (*ClientError)(nil)
 
 var (
+	ERR_BAD_REQUEST error = &ClientError{
+		Code: "BadRequest",
+	}
+
 	ERR_INVALID_APP error = &ClientError{
 		Code: "InvalidApp",
 	}

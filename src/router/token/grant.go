@@ -44,12 +44,14 @@ func grant(c *gin.Context) {
 		v.RegisterValidation("inkEmail", inkEmailValidation)
 	}
 
+	extCtx := (*ext.Context)(c)
+
 	req := &reqGrant{}
-	if err := c.BindJSON(req); err != nil {
+	if err := c.ShouldBindJSON(req); err != nil {
+		extCtx.AbortWithClientError(ext.ERR_BAD_REQUEST)
 		return
 	}
 
-	extCtx := (*ext.Context)(c)
 	ink := c.MustGet("ink").(*core.Ink)
 
 	if app, err := ink.GetApp(req.AppId); util.CheckApp(extCtx, err, app.Active, func() bool { return util.CompareSecrets(app.Secret, req.AppSecret) }) {

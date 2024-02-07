@@ -15,12 +15,14 @@ type reqRefresh struct {
 }
 
 func refresh(c *gin.Context) {
+	extCtx := (*ext.Context)(c)
+
 	req := &reqRefresh{}
-	if err := c.BindJSON(req); err != nil {
+	if err := c.ShouldBindJSON(req); err != nil {
+		extCtx.AbortWithClientError(ext.ERR_BAD_REQUEST)
 		return
 	}
 
-	extCtx := (*ext.Context)(c)
 	ink := c.MustGet("ink").(*core.Ink)
 
 	authToken, ok := checkRefreshToken(extCtx, ink, req.RefreshToken)
