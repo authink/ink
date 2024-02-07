@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/authink/ink.go/src/core"
+	"github.com/authink/ink.go/src/router/admin"
 	"github.com/authink/ink.go/src/router/token"
 	"github.com/gin-gonic/gin"
 )
@@ -14,6 +15,8 @@ func SetupRouter(ink *core.Ink) (r *gin.Engine) {
 		c.Next()
 	})
 
-	token.SetupTokenGroup(r.Group("api"))
+	gApi := r.Group("api")
+	token.SetupTokenGroup(gApi)
+	admin.SetupAdminGroup(gApi)
 	return
 }
