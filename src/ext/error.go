@@ -37,4 +37,16 @@ var (
 	ERR_INVALID_ACCESS_TOKEN error = &ClientError{
 		Code: "InvalidAccessToken",
 	}
+
+	ERR_MISSING_ACCESS_TOKEN error = &ClientError{
+		Code: "MissingAccessToken",
+	}
+
+	ERR_REVOKED_ACCESS_TOKEN error = &ClientError{
+		Code: "RevokedAccessToken",
+	}
+
+	ERR_EXPIRED_ACCESS_TOKEN error = &ClientError{
+		Code: "ExpiredAccessToken",
+	}
 )

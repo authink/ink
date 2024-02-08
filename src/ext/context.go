@@ -8,15 +8,39 @@ import (
 
 type Context gin.Context
 
-func (c *Context) AbortWithClientError(err error) {
+func translateErrorMsg(err error) {
 	if e, ok := err.(*ClientError); ok {
 		// todo: Get i18n message by this code
 		e.Message = e.Code
 	}
+}
+
+func (c *Context) AbortWithClientError(err error) {
+	translateErrorMsg(err)
 
 	ginContext := (*gin.Context)(c)
 	ginContext.AbortWithStatusJSON(
 		http.StatusBadRequest,
+		err,
+	)
+}
+
+func (c *Context) AbortWithUnauthorized(err error) {
+	translateErrorMsg(err)
+
+	ginContext := (*gin.Context)(c)
+	ginContext.AbortWithStatusJSON(
+		http.StatusUnauthorized,
+		err,
+	)
+}
+
+func (c *Context) AbortWithForbidden(err error) {
+	translateErrorMsg(err)
+
+	ginContext := (*gin.Context)(c)
+	ginContext.AbortWithStatusJSON(
+		http.StatusForbidden,
 		err,
 	)
 }

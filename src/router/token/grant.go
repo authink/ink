@@ -54,12 +54,12 @@ func grant(c *gin.Context) {
 
 	ink := c.MustGet("ink").(*core.Ink)
 
-	if app, err := ink.GetApp(req.AppId); util.CheckApp(extCtx, err, app.Active, func() bool { return util.CompareSecrets(app.Secret, req.AppSecret) }) {
+	if app, err := ink.GetApp(req.AppId); util.CheckApp(extCtx, err, app.Active, func() bool { return util.CompareSecrets(app.Secret, req.AppSecret) }, http.StatusBadRequest) {
 		switch app.Name {
-		case "admin.dev":
+		case core.APP_ADMIN_DEV:
 			staff, err := ink.GetStaffByEmail(req.Email)
 
-			if ok := util.CheckStaff(extCtx, err, staff.Active, staff.Departure, func() bool { return util.CheckPassword(staff.Password, req.Password) == nil }); !ok {
+			if ok := util.CheckStaff(extCtx, err, staff.Active, staff.Departure, func() bool { return util.CheckPassword(staff.Password, req.Password) == nil }, http.StatusBadRequest); !ok {
 				return
 			}
 

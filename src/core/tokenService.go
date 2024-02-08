@@ -10,6 +10,7 @@ import (
 type tokenService interface {
 	SaveToken(*model.AuthToken) (libsql.Result, error)
 	GetByRefreshToken(string) (*model.AuthToken, error)
+	GetByAccessToken(string) (*model.AuthToken, error)
 	DeleteToken(int) (libsql.Result, error)
 }
 
@@ -20,6 +21,17 @@ func (ink *Ink) GetByRefreshToken(refreshToken string) (token *model.AuthToken, 
 		token,
 		sql.AuthToken.GetByRefreshToken(),
 		refreshToken,
+	)
+	return
+}
+
+// GetByAccessToken implements tokenService.
+func (ink *Ink) GetByAccessToken(accessToken string) (token *model.AuthToken, err error) {
+	token = &model.AuthToken{}
+	err = ink.db.Get(
+		token,
+		sql.AuthToken.GetByAccessToken(),
+		accessToken,
 	)
 	return
 }

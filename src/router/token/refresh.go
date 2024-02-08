@@ -35,12 +35,12 @@ func refresh(c *gin.Context) {
 		return
 	}
 
-	if app, err := ink.GetApp(jwtClaims.AppId); util.CheckApp(extCtx, err, app.Active, func() bool { return true }) {
+	if app, err := ink.GetApp(jwtClaims.AppId); util.CheckApp(extCtx, err, app.Active, func() bool { return true }, http.StatusBadRequest) {
 		switch app.Name {
-		case "admin.dev":
+		case core.APP_ADMIN_DEV:
 			staff, err := ink.GetStaff(jwtClaims.AccountId)
 
-			if ok := util.CheckStaff(extCtx, err, staff.Active, staff.Departure, func() bool { return true }); !ok {
+			if ok := util.CheckStaff(extCtx, err, staff.Active, staff.Departure, func() bool { return true }, http.StatusBadRequest); !ok {
 				return
 			}
 

@@ -6,6 +6,10 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+const (
+	APP_ADMIN_DEV string = "admin.dev"
+)
+
 type appService interface {
 	SaveApp(*model.App) error
 	SaveAppWithTx(*model.App, *sqlx.Tx) error

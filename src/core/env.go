@@ -6,20 +6,22 @@ import (
 )
 
 type Env struct {
-	SecretKey           string
-	Host                string
-	Port                uint16
-	ShutdownTimeout     uint16
-	DbHost              string
-	DbPort              uint16
-	DbUser              string
-	DbPasswd            string
-	DbName              string
-	DbMaxOpenConns      uint16
-	DbMaxIdleConns      uint16
-	DbConnMaxLifeTime   uint16
-	DbConnMaxIdleTime   uint16
-	DbMigrateFileSource string
+	SecretKey            string
+	AccessTokenDuration  uint16
+	RefreshTokenDuration uint16
+	Host                 string
+	Port                 uint16
+	ShutdownTimeout      uint16
+	DbHost               string
+	DbPort               uint16
+	DbUser               string
+	DbPasswd             string
+	DbName               string
+	DbMaxOpenConns       uint16
+	DbMaxIdleConns       uint16
+	DbConnMaxLifeTime    uint16
+	DbConnMaxIdleTime    uint16
+	DbMigrateFileSource  string
 }
 
 func getUint16(key string, value *uint16) {
@@ -38,11 +40,16 @@ func getString(key string, value *string) {
 
 func loadEnv() *Env {
 	secretKey := "your-secret-key"
+	accessTokenDuration := uint16(7200)
+	refreshTokenDuration := uint16(7 * 24)
 	host := "localhost"
 	port := uint16(8080)
 	shutdownTimeout := uint16(5)
 
 	getString("SECRET_KEY", &secretKey)
+	getUint16("ACCESS_TOKEN_DURATION", &accessTokenDuration)
+	getUint16("REFRESH_TOKEN_DURATION", &refreshTokenDuration)
+
 	getString("HOST", &host)
 	getUint16("PORT", &port)
 	getUint16("SHUTDOWN_TIMEOUT", &shutdownTimeout)
@@ -73,6 +80,8 @@ func loadEnv() *Env {
 
 	return &Env{
 		secretKey,
+		accessTokenDuration,
+		refreshTokenDuration,
 		host,
 		port,
 		shutdownTimeout,

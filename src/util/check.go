@@ -2,6 +2,7 @@ package util
 
 import (
 	"errors"
+	"net/http"
 
 	"database/sql"
 
@@ -15,13 +16,20 @@ func CompareSecrets(secret, reqAppSecret string) (ok bool) {
 	return secret == Sha256(reqAppSecret)
 }
 
-func CheckApp(extCtx *ext.Context, err error, active bool, checkSecret CheckSecretFunc) (ok bool) {
+func CheckApp(extCtx *ext.Context, err error, active bool, checkSecret CheckSecretFunc, code int) (ok bool) {
 	if err != nil || !active || !checkSecret() {
 		if err != nil && !errors.Is(err, sql.ErrNoRows) {
 			extCtx.AbortWithServerError(err)
 			return
 		}
-		extCtx.AbortWithClientError(ext.ERR_INVALID_APP)
+
+		switch code {
+		case http.StatusUnauthorized:
+			extCtx.AbortWithUnauthorized(ext.ERR_INVALID_APP)
+		default:
+			extCtx.AbortWithClientError(ext.ERR_INVALID_APP)
+		}
+
 		return
 	}
 	return true
@@ -29,13 +37,20 @@ func CheckApp(extCtx *ext.Context, err error, active bool, checkSecret CheckSecr
 
 type CheckPasswordFunc func() bool
 
-func CheckStaff(extCtx *ext.Context, err error, active, departure bool, checkPassword CheckPasswordFunc) (ok bool) {
+func CheckStaff(extCtx *ext.Context, err error, active, departure bool, checkPassword CheckPasswordFunc, code int) (ok bool) {
 	if err != nil || !active || departure || !checkPassword() {
 		if err != nil && !errors.Is(err, sql.ErrNoRows) {
 			extCtx.AbortWithServerError(err)
 			return
 		}
-		extCtx.AbortWithClientError(ext.ERR_INVALID_ACCOUNT)
+
+		switch code {
+		case http.StatusUnauthorized:
+			extCtx.AbortWithUnauthorized(ext.ERR_INVALID_ACCOUNT)
+		default:
+			extCtx.AbortWithClientError(ext.ERR_INVALID_ACCOUNT)
+		}
+
 		return
 	}
 	return true

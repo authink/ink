@@ -9,7 +9,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func GenerateToken(key string, appId uint32, appName string, accountId uint32, email, uuid string) (string, error) {
+func GenerateToken(key string, duration time.Duration, appId uint32, appName string, accountId uint32, email, uuid string) (string, error) {
 	t := jwt.NewWithClaims(
 		jwt.SigningMethodHS256,
 		ext.JwtClaims{
@@ -18,10 +18,9 @@ func GenerateToken(key string, appId uint32, appName string, accountId uint32, e
 				Audience: jwt.ClaimStrings{
 					appName,
 				},
-				Subject:  email,
-				IssuedAt: jwt.NewNumericDate(time.Now()),
-				// todo move to Env
-				ExpiresAt: jwt.NewNumericDate(time.Now().Add(2 * time.Hour)),
+				Subject:   email,
+				IssuedAt:  jwt.NewNumericDate(time.Now()),
+				ExpiresAt: jwt.NewNumericDate(time.Now().Add(duration * time.Second)),
 				ID:        uuid,
 			},
 			AppId:     int(appId),

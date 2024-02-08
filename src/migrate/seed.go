@@ -15,7 +15,7 @@ func Seed(ink *core.Ink) {
 	)
 
 	app := model.NewApp(
-		"admin.dev",
+		core.APP_ADMIN_DEV,
 		"123456",
 	)
 

@@ -21,7 +21,7 @@ func SetupTokenGroup(rg *gin.RouterGroup) {
 
 func generateAuthToken(extCtx *ext.Context, ink *core.Ink, app *model.App, staff *model.Staff) (res *resGrant) {
 	uuid := util.GenerateUUID()
-	accessToken, err := util.GenerateToken(ink.Env.SecretKey, app.Id, app.Name, staff.Id, staff.Email, uuid)
+	accessToken, err := util.GenerateToken(ink.Env.SecretKey, time.Duration(ink.Env.AccessTokenDuration), app.Id, app.Name, staff.Id, staff.Email, uuid)
 	if err != nil {
 		extCtx.AbortWithServerError(err)
 		return
@@ -40,7 +40,7 @@ func generateAuthToken(extCtx *ext.Context, ink *core.Ink, app *model.App, staff
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 		TokenType:    "Bearer",
-		ExpiresIn:    7200,
+		ExpiresIn:    int(ink.Env.AccessTokenDuration),
 	}
 	return
 }
@@ -61,7 +61,7 @@ func checkRefreshToken(extCtx *ext.Context, ink *core.Ink, refreshToken string) 
 		return
 	}
 
-	if time.Now().After(authToken.CreatedAt.Add(7 * 24 * time.Hour)) {
+	if time.Now().After(authToken.CreatedAt.Add(time.Duration(ink.Env.RefreshTokenDuration) * time.Hour)) {
 		extCtx.AbortWithClientError(ext.ERR_INVALID_REFRESH_TOKEN)
 		return
 	}
