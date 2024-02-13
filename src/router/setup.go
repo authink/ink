@@ -12,6 +12,7 @@ func SetupRouter(ink *core.Ink) (r *gin.Engine) {
 	r = gin.Default()
 
 	r.Use(middleware.SetupInk(ink))
+	r.Use(middleware.SetupI18n(ink))
 
 	gApi := r.Group("api")
 	token.SetupTokenGroup(gApi)

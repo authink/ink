@@ -3,22 +3,22 @@ package ext
 import (
 	"net/http"
 
+	"github.com/authink/ink.go/src/i18n"
 	"github.com/gin-gonic/gin"
 )
 
 type Context gin.Context
 
-func translateErrorMsg(err error) {
+func translateErrorMsg(c *gin.Context, err error) {
 	if e, ok := err.(*ClientError); ok {
-		// todo: Get i18n message by this code
-		e.Message = e.Code
+		e.Message = i18n.Translate(c, e.Code)
 	}
 }
 
 func (c *Context) AbortWithClientError(err error) {
-	translateErrorMsg(err)
-
 	ginContext := (*gin.Context)(c)
+	translateErrorMsg(ginContext, err)
+
 	ginContext.AbortWithStatusJSON(
 		http.StatusBadRequest,
 		err,
@@ -26,9 +26,9 @@ func (c *Context) AbortWithClientError(err error) {
 }
 
 func (c *Context) AbortWithUnauthorized(err error) {
-	translateErrorMsg(err)
-
 	ginContext := (*gin.Context)(c)
+	translateErrorMsg(ginContext, err)
+
 	ginContext.AbortWithStatusJSON(
 		http.StatusUnauthorized,
 		err,
@@ -36,9 +36,9 @@ func (c *Context) AbortWithUnauthorized(err error) {
 }
 
 func (c *Context) AbortWithForbidden(err error) {
-	translateErrorMsg(err)
-
 	ginContext := (*gin.Context)(c)
+	translateErrorMsg(ginContext, err)
+
 	ginContext.AbortWithStatusJSON(
 		http.StatusForbidden,
 		err,

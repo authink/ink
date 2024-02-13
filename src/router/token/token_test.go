@@ -17,6 +17,7 @@ func setup(ink *core.Ink) {
 	migrate.Seed(ink)
 	r = gin.Default()
 	r.Use(middleware.SetupInk(ink))
+	r.Use(middleware.SetupI18n(ink))
 	SetupTokenGroup(r.Group("api"))
 }
 

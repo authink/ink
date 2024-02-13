@@ -3,6 +3,7 @@ module github.com/authink/ink.go
 go 1.21.4
 
 require (
+	github.com/BurntSushi/toml v1.3.2
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-playground/validator/v10 v10.14.0
 	github.com/go-sql-driver/mysql v1.7.1
@@ -10,9 +11,11 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.17.0
 	github.com/google/uuid v1.4.0
 	github.com/jmoiron/sqlx v1.3.5
+	github.com/nicksnyder/go-i18n/v2 v2.4.0
 	github.com/spf13/cobra v1.8.0
 	github.com/stretchr/testify v1.8.3
 	golang.org/x/crypto v0.17.0
+	golang.org/x/text v0.14.0
 )
 
 require (
@@ -43,7 +46,6 @@ require (
 	golang.org/x/arch v0.3.0 // indirect
 	golang.org/x/net v0.18.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
