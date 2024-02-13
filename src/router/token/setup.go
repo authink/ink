@@ -8,6 +8,7 @@ import (
 	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/ext"
 	"github.com/authink/ink.go/src/model"
+	"github.com/authink/ink.go/src/service"
 	"github.com/authink/ink.go/src/util"
 	"github.com/gin-gonic/gin"
 )
@@ -31,7 +32,7 @@ func generateAuthToken(extCtx *ext.Context, ink *core.Ink, app *model.App, staff
 	// accessToken identified by uuid
 	authToken := model.NewAuthToken(uuid, refreshToken, app.Id, staff.Id)
 
-	if _, err = ink.SaveToken(authToken); err != nil {
+	if _, err = (*service.TokenService)(ink).SaveToken(authToken); err != nil {
 		extCtx.AbortWithServerError(err)
 		return
 	}
@@ -46,7 +47,7 @@ func generateAuthToken(extCtx *ext.Context, ink *core.Ink, app *model.App, staff
 }
 
 func checkRefreshToken(extCtx *ext.Context, ink *core.Ink, refreshToken string) (authToken *model.AuthToken, ok bool) {
-	authToken, err := ink.GetByRefreshToken(refreshToken)
+	authToken, err := (*service.TokenService)(ink).GetByRefreshToken(refreshToken)
 	if err != nil {
 		if !errors.Is(err, sql.ErrNoRows) {
 			extCtx.AbortWithServerError(err)
@@ -56,7 +57,7 @@ func checkRefreshToken(extCtx *ext.Context, ink *core.Ink, refreshToken string) 
 		return
 	}
 
-	if _, err = ink.DeleteToken(int(authToken.Id)); err != nil {
+	if _, err = (*service.TokenService)(ink).DeleteToken(int(authToken.Id)); err != nil {
 		extCtx.AbortWithServerError(err)
 		return
 	}

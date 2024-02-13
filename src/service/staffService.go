@@ -1,6 +1,7 @@
-package core
+package service
 
 import (
+	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/sql"
 	"github.com/jmoiron/sqlx"
@@ -13,10 +14,12 @@ type staffService interface {
 	GetStaffByEmail(string) (*model.Staff, error)
 }
 
+type StaffService core.Ink
+
 // GetStaffByEmail implements staffService.
-func (ink *Ink) GetStaffByEmail(email string) (staff *model.Staff, err error) {
+func (ss *StaffService) GetStaffByEmail(email string) (staff *model.Staff, err error) {
 	staff = &model.Staff{}
-	err = ink.db.Get(
+	err = ss.DB.Get(
 		staff,
 		sql.Staff.GetByEmail(),
 		email,
@@ -25,9 +28,9 @@ func (ink *Ink) GetStaffByEmail(email string) (staff *model.Staff, err error) {
 }
 
 // GetStaff implements staffService.
-func (ink *Ink) GetStaff(id int) (staff *model.Staff, err error) {
+func (ss *StaffService) GetStaff(id int) (staff *model.Staff, err error) {
 	staff = &model.Staff{}
-	err = ink.db.Get(
+	err = ss.DB.Get(
 		staff,
 		sql.Staff.Get(),
 		id,
@@ -36,8 +39,8 @@ func (ink *Ink) GetStaff(id int) (staff *model.Staff, err error) {
 }
 
 // SaveStaff implements staffService.
-func (ink *Ink) SaveStaff(staff *model.Staff) (err error) {
-	_, err = ink.db.NamedExec(
+func (ss *StaffService) SaveStaff(staff *model.Staff) (err error) {
+	_, err = ss.DB.NamedExec(
 		sql.Staff.Insert(),
 		staff,
 	)
@@ -45,7 +48,7 @@ func (ink *Ink) SaveStaff(staff *model.Staff) (err error) {
 }
 
 // SaveStaffWithTx implements staffService.
-func (*Ink) SaveStaffWithTx(staff *model.Staff, tx *sqlx.Tx) (err error) {
+func (*StaffService) SaveStaffWithTx(staff *model.Staff, tx *sqlx.Tx) (err error) {
 	_, err = tx.NamedExec(
 		sql.Staff.Insert(),
 		staff,
@@ -53,4 +56,4 @@ func (*Ink) SaveStaffWithTx(staff *model.Staff, tx *sqlx.Tx) (err error) {
 	return
 }
 
-var _ staffService = (*Ink)(nil)
+var _ staffService = (*StaffService)(nil)

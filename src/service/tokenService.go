@@ -1,8 +1,9 @@
-package core
+package service
 
 import (
 	libsql "database/sql"
 
+	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/sql"
 )
@@ -14,10 +15,12 @@ type tokenService interface {
 	DeleteToken(int) (libsql.Result, error)
 }
 
+type TokenService core.Ink
+
 // GetByRefreshToken implements tokenService.
-func (ink *Ink) GetByRefreshToken(refreshToken string) (token *model.AuthToken, err error) {
+func (ts *TokenService) GetByRefreshToken(refreshToken string) (token *model.AuthToken, err error) {
 	token = &model.AuthToken{}
-	err = ink.db.Get(
+	err = ts.DB.Get(
 		token,
 		sql.AuthToken.GetByRefreshToken(),
 		refreshToken,
@@ -26,9 +29,9 @@ func (ink *Ink) GetByRefreshToken(refreshToken string) (token *model.AuthToken, 
 }
 
 // GetByAccessToken implements tokenService.
-func (ink *Ink) GetByAccessToken(accessToken string) (token *model.AuthToken, err error) {
+func (ts *TokenService) GetByAccessToken(accessToken string) (token *model.AuthToken, err error) {
 	token = &model.AuthToken{}
-	err = ink.db.Get(
+	err = ts.DB.Get(
 		token,
 		sql.AuthToken.GetByAccessToken(),
 		accessToken,
@@ -37,19 +40,19 @@ func (ink *Ink) GetByAccessToken(accessToken string) (token *model.AuthToken, er
 }
 
 // SaveToken implements tokenService.
-func (ink *Ink) SaveToken(token *model.AuthToken) (libsql.Result, error) {
-	return ink.db.NamedExec(
+func (ts *TokenService) SaveToken(token *model.AuthToken) (libsql.Result, error) {
+	return ts.DB.NamedExec(
 		sql.AuthToken.Insert(),
 		token,
 	)
 }
 
 // DeleteToken implements tokenService.
-func (ink *Ink) DeleteToken(id int) (libsql.Result, error) {
-	return ink.db.Exec(
+func (ts *TokenService) DeleteToken(id int) (libsql.Result, error) {
+	return ts.DB.Exec(
 		sql.AuthToken.Delete(),
 		id,
 	)
 }
 
-var _ tokenService = (*Ink)(nil)
+var _ tokenService = (*TokenService)(nil)

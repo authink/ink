@@ -5,6 +5,7 @@ import (
 
 	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/ext"
+	"github.com/authink/ink.go/src/service"
 	"github.com/authink/ink.go/src/util"
 	"github.com/gin-gonic/gin"
 )
@@ -35,10 +36,10 @@ func refresh(c *gin.Context) {
 		return
 	}
 
-	if app, err := ink.GetApp(jwtClaims.AppId); util.CheckApp(extCtx, err, app.Active, func() bool { return true }, http.StatusBadRequest) {
+	if app, err := (*service.AppService)(ink).GetApp(jwtClaims.AppId); util.CheckApp(extCtx, err, app.Active, func() bool { return true }, http.StatusBadRequest) {
 		switch app.Name {
-		case core.APP_ADMIN_DEV:
-			staff, err := ink.GetStaff(jwtClaims.AccountId)
+		case service.APP_ADMIN_DEV:
+			staff, err := (*service.StaffService)(ink).GetStaff(jwtClaims.AccountId)
 
 			if ok := util.CheckStaff(extCtx, err, staff.Active, staff.Departure, func() bool { return true }, http.StatusBadRequest); !ok {
 				return

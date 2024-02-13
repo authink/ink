@@ -6,6 +6,7 @@ import (
 
 	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/ext"
+	"github.com/authink/ink.go/src/service"
 	"github.com/authink/ink.go/src/util"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -54,10 +55,10 @@ func grant(c *gin.Context) {
 
 	ink := c.MustGet("ink").(*core.Ink)
 
-	if app, err := ink.GetApp(req.AppId); util.CheckApp(extCtx, err, app.Active, func() bool { return util.CompareSecrets(app.Secret, req.AppSecret) }, http.StatusBadRequest) {
+	if app, err := (*service.AppService)(ink).GetApp(req.AppId); util.CheckApp(extCtx, err, app.Active, func() bool { return util.CompareSecrets(app.Secret, req.AppSecret) }, http.StatusBadRequest) {
 		switch app.Name {
-		case core.APP_ADMIN_DEV:
-			staff, err := ink.GetStaffByEmail(req.Email)
+		case service.APP_ADMIN_DEV:
+			staff, err := (*service.StaffService)(ink).GetStaffByEmail(req.Email)
 
 			if ok := util.CheckStaff(extCtx, err, staff.Active, staff.Departure, func() bool { return util.CheckPassword(staff.Password, req.Password) == nil }, http.StatusBadRequest); !ok {
 				return

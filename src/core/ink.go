@@ -9,8 +9,8 @@ import (
 type TxFunc func(tx *sqlx.Tx) error
 
 type Ink struct {
-	db     *sqlx.DB
 	Env    *Env
+	DB     *sqlx.DB
 	Bundle *i18n.Bundle
 }
 
@@ -19,18 +19,18 @@ func NewInk() *Ink {
 	db := ConnectDB(env)
 
 	return &Ink{
-		db,
 		env,
+		db,
 		myI18n.NewBundle(),
 	}
 }
 
 func (ink *Ink) Close() {
-	ink.db.Close()
+	ink.DB.Close()
 }
 
 func (ink *Ink) Transaction(txFunc TxFunc) (err error) {
-	tx := ink.db.MustBegin()
+	tx := ink.DB.MustBegin()
 
 	if err = txFunc(tx); err != nil {
 		tx.Rollback()

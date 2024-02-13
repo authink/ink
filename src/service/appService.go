@@ -1,6 +1,7 @@
-package core
+package service
 
 import (
+	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/sql"
 	"github.com/jmoiron/sqlx"
@@ -16,10 +17,12 @@ type appService interface {
 	GetApp(int) (*model.App, error)
 }
 
+type AppService core.Ink
+
 // GetApp implements appService.
-func (ink *Ink) GetApp(id int) (app *model.App, err error) {
+func (as *AppService) GetApp(id int) (app *model.App, err error) {
 	app = &model.App{}
-	err = ink.db.Get(
+	err = as.DB.Get(
 		app,
 		sql.App.Get(),
 		id,
@@ -28,8 +31,8 @@ func (ink *Ink) GetApp(id int) (app *model.App, err error) {
 }
 
 // SaveApp implements appService.
-func (ink *Ink) SaveApp(app *model.App) (err error) {
-	_, err = ink.db.NamedExec(
+func (as *AppService) SaveApp(app *model.App) (err error) {
+	_, err = as.DB.NamedExec(
 		sql.App.Insert(),
 		app,
 	)
@@ -37,7 +40,7 @@ func (ink *Ink) SaveApp(app *model.App) (err error) {
 }
 
 // SaveAppWithTx implements appService.
-func (ink *Ink) SaveAppWithTx(app *model.App, tx *sqlx.Tx) (err error) {
+func (*AppService) SaveAppWithTx(app *model.App, tx *sqlx.Tx) (err error) {
 	_, err = tx.NamedExec(
 		sql.App.Insert(),
 		app,
@@ -45,4 +48,4 @@ func (ink *Ink) SaveAppWithTx(app *model.App, tx *sqlx.Tx) (err error) {
 	return
 }
 
-var _ appService = (*Ink)(nil)
+var _ appService = (*AppService)(nil)

@@ -3,6 +3,7 @@ package migrate
 import (
 	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/model"
+	"github.com/authink/ink.go/src/service"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -15,16 +16,16 @@ func Seed(ink *core.Ink) {
 	)
 
 	app := model.NewApp(
-		core.APP_ADMIN_DEV,
+		service.APP_ADMIN_DEV,
 		"123456",
 	)
 
 	if err := ink.Transaction(func(tx *sqlx.Tx) (err error) {
-		if err = ink.SaveStaffWithTx(admin, tx); err != nil {
+		if err = (*service.StaffService)(ink).SaveStaffWithTx(admin, tx); err != nil {
 			return
 		}
 
-		return ink.SaveAppWithTx(app, tx)
+		return (*service.AppService)(ink).SaveAppWithTx(app, tx)
 	}); err != nil {
 		panic(err)
 	}
