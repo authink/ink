@@ -18,6 +18,6 @@ func SetupRouter(ink *core.Ink) (r *gin.Engine) {
 
 	gApi := r.Group("api")
 	token.SetupTokenGroup(gApi)
-	admin.SetupAdminGroup(gApi)
+	admin.SetupAdminGroup(gApi, ink)
 	return
 }

@@ -1,5 +1,11 @@
 package sql
 
+type SQL interface {
+	Insert() string
+	Get() string
+	Delete() string
+}
+
 type tableName struct {
 	App       string
 	Staff     string

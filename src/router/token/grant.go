@@ -6,7 +6,7 @@ import (
 
 	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/ext"
-	"github.com/authink/ink.go/src/service"
+	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/ink.go/src/util"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
@@ -25,14 +25,14 @@ func inkEmailValidation(fl validator.FieldLevel) bool {
 	return matched
 }
 
-type reqGrant struct {
+type grantReq struct {
 	AppId     int    `json:"appId" binding:"required,min=1"`
 	AppSecret string `json:"appSecret" binding:"required,min=1"`
 	Email     string `json:"email" binding:"required,inkEmail"`
 	Password  string `json:"password" binding:"required,min=6"`
 }
 
-type resGrant struct {
+type grantRes struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 	TokenType    string `json:"token_type"`
@@ -44,7 +44,7 @@ func grant(c *ext.Context) {
 		v.RegisterValidation("inkEmail", inkEmailValidation)
 	}
 
-	req := &reqGrant{}
+	req := &grantReq{}
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(ext.ERR_BAD_REQUEST)
 		return
@@ -52,10 +52,10 @@ func grant(c *ext.Context) {
 
 	ink := c.MustGet("ink").(*core.Ink)
 
-	if app, err := (*service.AppService)(ink).GetApp(req.AppId); util.CheckApp(c, err, app.Active, func() bool { return util.CompareSecrets(app.Secret, req.AppSecret) }, http.StatusBadRequest) {
+	if app, err := orm.App(ink).Get(req.AppId); util.CheckApp(c, err, app.Active, func() bool { return util.CompareSecrets(app.Secret, req.AppSecret) }, http.StatusBadRequest) {
 		switch app.Name {
-		case service.APP_ADMIN_DEV:
-			staff, err := (*service.StaffService)(ink).GetStaffByEmail(req.Email)
+		case ink.Env.AppNameAdmin:
+			staff, err := orm.Staff(ink).GetByEmail(req.Email)
 
 			if ok := util.CheckStaff(c, err, staff.Active, staff.Departure, func() bool { return util.CheckPassword(staff.Password, req.Password) == nil }, http.StatusBadRequest); !ok {
 				return

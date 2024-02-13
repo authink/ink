@@ -5,17 +5,17 @@ import (
 
 	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/ext"
-	"github.com/authink/ink.go/src/service"
+	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/ink.go/src/util"
 )
 
-type reqRefresh struct {
+type refreshReq struct {
 	AccessToken  string `json:"access_token" binding:"required,min=1"`
 	RefreshToken string `json:"refresh_token" binding:"required,min=1"`
 }
 
 func refresh(c *ext.Context) {
-	req := &reqRefresh{}
+	req := &refreshReq{}
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(ext.ERR_BAD_REQUEST)
 		return
@@ -33,10 +33,10 @@ func refresh(c *ext.Context) {
 		return
 	}
 
-	if app, err := (*service.AppService)(ink).GetApp(jwtClaims.AppId); util.CheckApp(c, err, app.Active, func() bool { return true }, http.StatusBadRequest) {
+	if app, err := orm.App(ink).Get(jwtClaims.AppId); util.CheckApp(c, err, app.Active, func() bool { return true }, http.StatusBadRequest) {
 		switch app.Name {
-		case service.APP_ADMIN_DEV:
-			staff, err := (*service.StaffService)(ink).GetStaff(jwtClaims.AccountId)
+		case ink.Env.AppNameAdmin:
+			staff, err := orm.Staff(ink).Get(jwtClaims.AccountId)
 
 			if ok := util.CheckStaff(c, err, staff.Active, staff.Departure, func() bool { return true }, http.StatusBadRequest); !ok {
 				return

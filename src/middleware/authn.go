@@ -7,7 +7,7 @@ import (
 
 	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/ext"
-	"github.com/authink/ink.go/src/service"
+	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/ink.go/src/util"
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -35,20 +35,20 @@ func AuthN(c *ext.Context) {
 		return
 	}
 
-	if _, err = (*service.TokenService)(ink).GetByAccessToken(claims.ID); err != nil {
+	if _, err = orm.AuthToken(ink).GetByAccessToken(claims.ID); err != nil {
 		c.AbortWithUnauthorized(ext.ERR_REVOKED_ACCESS_TOKEN)
 		return
 	}
 
-	app, err := (*service.AppService)(ink).GetApp(claims.AppId)
+	app, err := orm.App(ink).Get(claims.AppId)
 	if !util.CheckApp(c, err, app.Active, func() bool { return true }, http.StatusUnauthorized) {
 		return
 	}
 	c.Set("app", app)
 
 	switch app.Name {
-	case service.APP_ADMIN_DEV:
-		staff, err := (*service.StaffService)(ink).GetStaff(claims.AccountId)
+	case ink.Env.AppNameAdmin:
+		staff, err := orm.Staff(ink).Get(claims.AccountId)
 
 		if ok := util.CheckStaff(c, err, staff.Active, staff.Departure, func() bool { return true }, http.StatusUnauthorized); !ok {
 			return

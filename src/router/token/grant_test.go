@@ -10,7 +10,7 @@ import (
 )
 
 func grantToken(appId int, appSecret, email, password string, resObj any) (*httptest.ResponseRecorder, error) {
-	reqObj := &reqGrant{
+	reqObj := &grantReq{
 		AppId:     appId,
 		AppSecret: appSecret,
 		Email:     email,
@@ -30,7 +30,7 @@ func TestGrant(t *testing.T) {
 	// t.Parallel()
 	// go test -v -p 2 # 缺省 -p 参数会根据 cpu 核心数量设置
 	var (
-		ok                 = []any{http.StatusOK, &resGrant{TokenType: "Bearer", ExpiresIn: 7200}, 100000, "123456", "admin@huoyijie.cn", "123456", &resGrant{}}
+		ok                 = []any{http.StatusOK, &grantRes{TokenType: "Bearer", ExpiresIn: 7200}, 100000, "123456", "admin@huoyijie.cn", "123456", &grantRes{}}
 		invalidAppId       = []any{http.StatusBadRequest, ext.ERR_INVALID_APP, 999999, "123456", "admin@huoyijie.cn", "123456", &ext.ClientError{}}
 		invalidAppSecret   = []any{http.StatusBadRequest, ext.ERR_INVALID_APP, 100000, "1234567", "admin@huoyijie.cn", "123456", &ext.ClientError{}}
 		invalidEmailFormat = []any{http.StatusBadRequest, nil, 100000, "123456", "admin", "123456", &ext.ClientError{}}
@@ -56,9 +56,9 @@ func TestGrant(t *testing.T) {
 
 		switch tc[0].(int) {
 		case http.StatusOK:
-			resObj := tc[6].(*resGrant)
-			assert.Equal(t, tc[1].(*resGrant).TokenType, resObj.TokenType)
-			assert.Equal(t, tc[1].(*resGrant).ExpiresIn, resObj.ExpiresIn)
+			resObj := tc[6].(*grantRes)
+			assert.Equal(t, tc[1].(*grantRes).TokenType, resObj.TokenType)
+			assert.Equal(t, tc[1].(*grantRes).ExpiresIn, resObj.ExpiresIn)
 			assert.NotEmpty(t, resObj.AccessToken)
 			assert.NotEmpty(t, resObj.RefreshToken)
 

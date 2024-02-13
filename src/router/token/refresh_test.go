@@ -10,7 +10,7 @@ import (
 )
 
 func refreshToken(accessToken, refreshToken string, resObj any) (*httptest.ResponseRecorder, error) {
-	reqObj := &reqRefresh{
+	reqObj := &refreshReq{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}
@@ -25,14 +25,14 @@ func refreshToken(accessToken, refreshToken string, resObj any) (*httptest.Respo
 }
 
 func TestRefresh(t *testing.T) {
-	resObj := &resGrant{}
+	resObj := &grantRes{}
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.NotEmpty(t, resObj.AccessToken)
 	assert.NotEmpty(t, resObj.RefreshToken)
 
-	resObj2 := &resGrant{}
+	resObj2 := &grantRes{}
 	w2, _ := refreshToken(resObj.AccessToken, resObj.RefreshToken, resObj2)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.NotEmpty(t, resObj2.AccessToken)

@@ -8,7 +8,7 @@ import (
 )
 
 func revoke(c *ext.Context) {
-	req := &reqRefresh{}
+	req := &refreshReq{}
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(ext.ERR_BAD_REQUEST)
 		return

@@ -15,9 +15,9 @@ func (*app) Get() string {
 }
 
 // Insert implements query.
-func (q *app) Insert() string {
+func (*app) Insert() string {
 	return fmt.Sprintf("INSERT INTO %s (name, secret) VALUES (:name, :secret)", table.App)
 }
 
-var _ query = (*app)(nil)
+var _ SQL = (*app)(nil)
 var App = &app{}

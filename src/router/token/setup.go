@@ -8,7 +8,7 @@ import (
 	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/ext"
 	"github.com/authink/ink.go/src/model"
-	"github.com/authink/ink.go/src/service"
+	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/ink.go/src/util"
 	"github.com/gin-gonic/gin"
 )
@@ -20,11 +20,11 @@ func SetupTokenGroup(rg *gin.RouterGroup) {
 	gToken.POST("revoke", ext.Handler(revoke))
 }
 
-func generateAuthToken(extCtx *ext.Context, ink *core.Ink, app *model.App, staff *model.Staff) (res *resGrant) {
+func generateAuthToken(c *ext.Context, ink *core.Ink, app *model.App, staff *model.Staff) (res *grantRes) {
 	uuid := util.GenerateUUID()
 	accessToken, err := util.GenerateToken(ink.Env.SecretKey, time.Duration(ink.Env.AccessTokenDuration), app.Id, app.Name, staff.Id, staff.Email, uuid)
 	if err != nil {
-		extCtx.AbortWithServerError(err)
+		c.AbortWithServerError(err)
 		return
 	}
 
@@ -32,12 +32,12 @@ func generateAuthToken(extCtx *ext.Context, ink *core.Ink, app *model.App, staff
 	// accessToken identified by uuid
 	authToken := model.NewAuthToken(uuid, refreshToken, app.Id, staff.Id)
 
-	if _, err = (*service.TokenService)(ink).SaveToken(authToken); err != nil {
-		extCtx.AbortWithServerError(err)
+	if _, err = orm.AuthToken(ink).Save(authToken); err != nil {
+		c.AbortWithServerError(err)
 		return
 	}
 
-	res = &resGrant{
+	res = &grantRes{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 		TokenType:    "Bearer",
@@ -46,24 +46,24 @@ func generateAuthToken(extCtx *ext.Context, ink *core.Ink, app *model.App, staff
 	return
 }
 
-func checkRefreshToken(extCtx *ext.Context, ink *core.Ink, refreshToken string) (authToken *model.AuthToken, ok bool) {
-	authToken, err := (*service.TokenService)(ink).GetByRefreshToken(refreshToken)
+func checkRefreshToken(c *ext.Context, ink *core.Ink, refreshToken string) (authToken *model.AuthToken, ok bool) {
+	authToken, err := orm.AuthToken(ink).GetByRefreshToken(refreshToken)
 	if err != nil {
 		if !errors.Is(err, sql.ErrNoRows) {
-			extCtx.AbortWithServerError(err)
+			c.AbortWithServerError(err)
 			return
 		}
-		extCtx.AbortWithClientError(ext.ERR_INVALID_REFRESH_TOKEN)
+		c.AbortWithClientError(ext.ERR_INVALID_REFRESH_TOKEN)
 		return
 	}
 
-	if _, err = (*service.TokenService)(ink).DeleteToken(int(authToken.Id)); err != nil {
-		extCtx.AbortWithServerError(err)
+	if _, err = orm.AuthToken(ink).Delete(int(authToken.Id)); err != nil {
+		c.AbortWithServerError(err)
 		return
 	}
 
 	if time.Now().After(authToken.CreatedAt.Add(time.Duration(ink.Env.RefreshTokenDuration) * time.Hour)) {
-		extCtx.AbortWithClientError(ext.ERR_INVALID_REFRESH_TOKEN)
+		c.AbortWithClientError(ext.ERR_INVALID_REFRESH_TOKEN)
 		return
 	}
 

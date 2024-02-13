@@ -1,17 +1,17 @@
 package admin
 
 import (
+	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/ext"
 	"github.com/authink/ink.go/src/middleware"
-	"github.com/authink/ink.go/src/service"
 	"github.com/gin-gonic/gin"
 )
 
-func SetupAdminGroup(rg *gin.RouterGroup) {
+func SetupAdminGroup(rg *gin.RouterGroup, ink *core.Ink) {
 	gAdmin := rg.Group(
 		"admin",
 		ext.Handler(middleware.AuthN),
-		middleware.AppScope(service.APP_ADMIN_DEV),
+		middleware.AppScope(ink.Env.AppNameAdmin),
 	)
 	gAdmin.GET("dashboard", dashboard)
 }
