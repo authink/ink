@@ -16,8 +16,10 @@ func setup(ink *core.Ink) {
 	migrate.Schema(ink, "up")
 	migrate.Seed(ink)
 	r = gin.Default()
-	r.Use(middleware.SetupInk(ink))
-	r.Use(middleware.SetupI18n(ink))
+	r.Use(
+		middleware.SetupInk(ink),
+		middleware.SetupI18n(ink),
+	)
 	SetupTokenGroup(r.Group("api"))
 }
 

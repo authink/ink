@@ -15,9 +15,9 @@ import (
 
 func SetupTokenGroup(rg *gin.RouterGroup) {
 	gToken := rg.Group("token")
-	gToken.POST("grant", grant)
-	gToken.POST("refresh", refresh)
-	gToken.POST("revoke", revoke)
+	gToken.POST("grant", ext.Handler(grant))
+	gToken.POST("refresh", ext.Handler(refresh))
+	gToken.POST("revoke", ext.Handler(revoke))
 }
 
 func generateAuthToken(extCtx *ext.Context, ink *core.Ink, app *model.App, staff *model.Staff) (res *resGrant) {

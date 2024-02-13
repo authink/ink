@@ -8,7 +8,6 @@ import (
 	"github.com/authink/ink.go/src/ext"
 	"github.com/authink/ink.go/src/service"
 	"github.com/authink/ink.go/src/util"
-	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 )
@@ -40,36 +39,34 @@ type resGrant struct {
 	ExpiresIn    int    `json:"expires_in"`
 }
 
-func grant(c *gin.Context) {
+func grant(c *ext.Context) {
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("inkEmail", inkEmailValidation)
 	}
 
-	extCtx := (*ext.Context)(c)
-
 	req := &reqGrant{}
 	if err := c.ShouldBindJSON(req); err != nil {
-		extCtx.AbortWithClientError(ext.ERR_BAD_REQUEST)
+		c.AbortWithClientError(ext.ERR_BAD_REQUEST)
 		return
 	}
 
 	ink := c.MustGet("ink").(*core.Ink)
 
-	if app, err := (*service.AppService)(ink).GetApp(req.AppId); util.CheckApp(extCtx, err, app.Active, func() bool { return util.CompareSecrets(app.Secret, req.AppSecret) }, http.StatusBadRequest) {
+	if app, err := (*service.AppService)(ink).GetApp(req.AppId); util.CheckApp(c, err, app.Active, func() bool { return util.CompareSecrets(app.Secret, req.AppSecret) }, http.StatusBadRequest) {
 		switch app.Name {
 		case service.APP_ADMIN_DEV:
 			staff, err := (*service.StaffService)(ink).GetStaffByEmail(req.Email)
 
-			if ok := util.CheckStaff(extCtx, err, staff.Active, staff.Departure, func() bool { return util.CheckPassword(staff.Password, req.Password) == nil }, http.StatusBadRequest); !ok {
+			if ok := util.CheckStaff(c, err, staff.Active, staff.Departure, func() bool { return util.CheckPassword(staff.Password, req.Password) == nil }, http.StatusBadRequest); !ok {
 				return
 			}
 
-			if res := generateAuthToken(extCtx, ink, app, staff); res != nil {
+			if res := generateAuthToken(c, ink, app, staff); res != nil {
 				c.JSON(http.StatusOK, res)
 			}
 
 		default:
-			extCtx.AbortWithClientError(ext.ERR_UNSUPPORTED_APP)
+			c.AbortWithClientError(ext.ERR_UNSUPPORTED_APP)
 		}
 	}
 }

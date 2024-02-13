@@ -9,18 +9,16 @@ import (
 	"github.com/authink/ink.go/src/ext"
 	"github.com/authink/ink.go/src/service"
 	"github.com/authink/ink.go/src/util"
-	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func AuthN(c *gin.Context) {
-	extCtx := (*ext.Context)(c)
+func AuthN(c *ext.Context) {
 	ink := c.MustGet("ink").(*core.Ink)
 
 	authHeader := c.GetHeader("Authorization")
 
 	if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
-		extCtx.AbortWithUnauthorized(ext.ERR_MISSING_ACCESS_TOKEN)
+		c.AbortWithUnauthorized(ext.ERR_MISSING_ACCESS_TOKEN)
 		return
 	}
 
@@ -29,21 +27,21 @@ func AuthN(c *gin.Context) {
 	claims, err := util.VerifyToken(ink.Env.SecretKey, accessToken)
 	if err != nil {
 		if errors.Is(err, jwt.ErrTokenExpired) {
-			extCtx.AbortWithUnauthorized(ext.ERR_EXPIRED_ACCESS_TOKEN)
+			c.AbortWithUnauthorized(ext.ERR_EXPIRED_ACCESS_TOKEN)
 			return
 		}
 
-		extCtx.AbortWithUnauthorized(ext.ERR_INVALID_ACCESS_TOKEN)
+		c.AbortWithUnauthorized(ext.ERR_INVALID_ACCESS_TOKEN)
 		return
 	}
 
 	if _, err = (*service.TokenService)(ink).GetByAccessToken(claims.ID); err != nil {
-		extCtx.AbortWithUnauthorized(ext.ERR_REVOKED_ACCESS_TOKEN)
+		c.AbortWithUnauthorized(ext.ERR_REVOKED_ACCESS_TOKEN)
 		return
 	}
 
 	app, err := (*service.AppService)(ink).GetApp(claims.AppId)
-	if !util.CheckApp(extCtx, err, app.Active, func() bool { return true }, http.StatusUnauthorized) {
+	if !util.CheckApp(c, err, app.Active, func() bool { return true }, http.StatusUnauthorized) {
 		return
 	}
 	c.Set("app", app)
@@ -52,7 +50,7 @@ func AuthN(c *gin.Context) {
 	case service.APP_ADMIN_DEV:
 		staff, err := (*service.StaffService)(ink).GetStaff(claims.AccountId)
 
-		if ok := util.CheckStaff(extCtx, err, staff.Active, staff.Departure, func() bool { return true }, http.StatusUnauthorized); !ok {
+		if ok := util.CheckStaff(c, err, staff.Active, staff.Departure, func() bool { return true }, http.StatusUnauthorized); !ok {
 			return
 		}
 
@@ -60,7 +58,7 @@ func AuthN(c *gin.Context) {
 		c.Set("account", staff)
 
 	default:
-		extCtx.AbortWithUnauthorized(ext.ERR_UNSUPPORTED_APP)
+		c.AbortWithUnauthorized(ext.ERR_UNSUPPORTED_APP)
 		return
 	}
 
