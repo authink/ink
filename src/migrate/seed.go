@@ -20,7 +20,7 @@ func Seed(ink *core.Ink) {
 		"123456",
 	)
 
-	if err := ink.Transaction(func(tx *sqlx.Tx) (err error) {
+	if err := orm.Transaction(ink, func(tx *sqlx.Tx) (err error) {
 		if err = orm.Staff(ink).SaveWithTx(admin, tx); err != nil {
 			return
 		}

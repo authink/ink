@@ -6,8 +6,6 @@ import (
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
-type TxFunc func(tx *sqlx.Tx) error
-
 type Ink struct {
 	Env    *Env
 	DB     *sqlx.DB
@@ -27,15 +25,4 @@ func NewInk() *Ink {
 
 func (ink *Ink) Close() {
 	ink.DB.Close()
-}
-
-func (ink *Ink) Transaction(txFunc TxFunc) (err error) {
-	tx := ink.DB.MustBegin()
-
-	if err = txFunc(tx); err != nil {
-		tx.Rollback()
-	} else {
-		tx.Commit()
-	}
-	return
 }
