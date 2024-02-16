@@ -20,7 +20,7 @@ func setup(ink *core.Ink) {
 		middleware.SetupInk(ink),
 		middleware.SetupI18n(ink),
 	)
-	SetupTokenGroup(r.Group("api"))
+	SetupTokenGroup(r.Group("api/v1"))
 }
 
 func teardown(ink *core.Ink) {

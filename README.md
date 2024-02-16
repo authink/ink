@@ -90,6 +90,15 @@ godotenv go run ./src/... run
 
 ## API swagger 文档
 
+```bash
+$ go install github.com/swaggo/swag/cmd/swag@latest
+$ cd src
+$ swag init
+# add general api comments in router/setup.go
+$ swag fmt
+$ swag init -g router/setup.go
+```
+
 ## 搭建 Markdown Docs
 
 ## i18n

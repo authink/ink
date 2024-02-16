@@ -20,7 +20,7 @@ func grantToken(appId int, appSecret, email, password string, resObj any) (*http
 	return ext.TestFetch(
 		r,
 		"POST",
-		"/api/token/grant",
+		"/api/v1/token/grant",
 		reqObj,
 		resObj,
 	)
