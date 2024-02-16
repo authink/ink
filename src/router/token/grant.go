@@ -26,10 +26,10 @@ func inkEmailValidation(fl validator.FieldLevel) bool {
 }
 
 type grantReq struct {
-	AppId     int    `json:"appId" binding:"required,min=1"`
-	AppSecret string `json:"appSecret" binding:"required,min=1"`
-	Email     string `json:"email" binding:"required,inkEmail"`
-	Password  string `json:"password" binding:"required,min=6"`
+	AppId     int    `json:"appId" binding:"required,min=1" example:"100000"`
+	AppSecret string `json:"appSecret" binding:"required,min=1" example:"123456"`
+	Email     string `json:"email" binding:"required,inkEmail" example:"admin@huoyijie.cn"`
+	Password  string `json:"password" binding:"required,min=6" example:"123456"`
 }
 
 type grantRes struct {

@@ -17,14 +17,18 @@ definitions:
   token.grantReq:
     properties:
       appId:
+        example: 100000
         minimum: 1
         type: integer
       appSecret:
+        example: "123456"
         minLength: 1
         type: string
       email:
+        example: admin@huoyijie.cn
         type: string
       password:
+        example: "123456"
         minLength: 6
         type: string
     required:

@@ -241,18 +241,22 @@ const docTemplate = `{
             "properties": {
                 "appId": {
                     "type": "integer",
-                    "minimum": 1
+                    "minimum": 1,
+                    "example": 100000
                 },
                 "appSecret": {
                     "type": "string",
-                    "minLength": 1
+                    "minLength": 1,
+                    "example": "123456"
                 },
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "admin@huoyijie.cn"
                 },
                 "password": {
                     "type": "string",
-                    "minLength": 6
+                    "minLength": 6,
+                    "example": "123456"
                 }
             }
         },
