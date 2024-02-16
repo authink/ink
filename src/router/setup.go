@@ -26,12 +26,15 @@ import (
 //	@host		localhost:8080
 //	@BasePath	/api/v1
 
+//	@Accept		json
+//	@Produce	json
+
 //	@securitydefinitions.apikey	ApiKeyAuth
 //	@in							header
 //	@name						Authorization
 
-// @externalDocs.description	OpenAPI
-// @externalDocs.url			https://swagger.io/resources/open-api/
+//	@externalDocs.description	OpenAPI
+//	@externalDocs.url			https://swagger.io/resources/open-api/
 func SetupRouter(ink *core.Ink) (r *gin.Engine) {
 	r = gin.Default()
 
