@@ -4,6 +4,11 @@ import "fmt"
 
 type staff struct{}
 
+// Find implements SQL.
+func (*staff) Find() string {
+	panic("unimplemented")
+}
+
 // Delete implements SQL.
 func (*staff) Delete() string {
 	panic("unimplemented")

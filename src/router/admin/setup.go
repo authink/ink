@@ -14,4 +14,5 @@ func SetupAdminGroup(rg *gin.RouterGroup, ink *core.Ink) {
 		middleware.AppScope(ink.Env.AppNameAdmin),
 	)
 	gAdmin.GET("dashboard", dashboard)
+	gAdmin.GET("apps", ext.Handler(apps))
 }

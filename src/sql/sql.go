@@ -3,6 +3,7 @@ package sql
 type SQL interface {
 	Insert() string
 	Get() string
+	Find() string
 	Delete() string
 }
 

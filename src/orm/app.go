@@ -11,14 +11,24 @@ type app interface {
 	Save(*model.App) error
 	SaveWithTx(*model.App, *sqlx.Tx) error
 	Get(int) (*model.App, error)
+	Find() ([]model.App, error)
 }
 
 type appImpl core.Ink
 
+// Find implements app.
+func (a *appImpl) Find() (apps []model.App, err error) {
+	err = a.DB.Select(
+		&apps,
+		sql.App.Find(),
+	)
+	return
+}
+
 // Get implements app.
-func (as *appImpl) Get(id int) (app *model.App, err error) {
+func (a *appImpl) Get(id int) (app *model.App, err error) {
 	app = &model.App{}
-	err = as.DB.Get(
+	err = a.DB.Get(
 		app,
 		sql.App.Get(),
 		id,
@@ -27,8 +37,8 @@ func (as *appImpl) Get(id int) (app *model.App, err error) {
 }
 
 // Save implements app.
-func (as *appImpl) Save(app *model.App) (err error) {
-	_, err = as.DB.NamedExec(
+func (a *appImpl) Save(app *model.App) (err error) {
+	_, err = a.DB.NamedExec(
 		sql.App.Insert(),
 		app,
 	)

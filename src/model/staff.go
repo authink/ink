@@ -23,5 +23,6 @@ func NewStaff(email, password, phone string, super bool) *Staff {
 		Password: hashedPassword,
 		Phone:    phone,
 		Super:    super,
+		Active:   true,
 	}
 }

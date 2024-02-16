@@ -17,9 +17,9 @@ type staff interface {
 type staffImpl core.Ink
 
 // GetByEmail implements staff.
-func (ss *staffImpl) GetByEmail(email string) (staff *model.Staff, err error) {
+func (s *staffImpl) GetByEmail(email string) (staff *model.Staff, err error) {
 	staff = &model.Staff{}
-	err = ss.DB.Get(
+	err = s.DB.Get(
 		staff,
 		sql.Staff.GetByEmail(),
 		email,
@@ -28,9 +28,9 @@ func (ss *staffImpl) GetByEmail(email string) (staff *model.Staff, err error) {
 }
 
 // Get implements staff.
-func (ss *staffImpl) Get(id int) (staff *model.Staff, err error) {
+func (s *staffImpl) Get(id int) (staff *model.Staff, err error) {
 	staff = &model.Staff{}
-	err = ss.DB.Get(
+	err = s.DB.Get(
 		staff,
 		sql.Staff.Get(),
 		id,
@@ -39,8 +39,8 @@ func (ss *staffImpl) Get(id int) (staff *model.Staff, err error) {
 }
 
 // Save implements staff.
-func (ss *staffImpl) Save(staff *model.Staff) (err error) {
-	_, err = ss.DB.NamedExec(
+func (s *staffImpl) Save(staff *model.Staff) (err error) {
+	_, err = s.DB.NamedExec(
 		sql.Staff.Insert(),
 		staff,
 	)

@@ -18,9 +18,9 @@ type authToken interface {
 type authTokenImpl core.Ink
 
 // GetByRefreshToken implements authToken.
-func (ts *authTokenImpl) GetByRefreshToken(refreshToken string) (token *model.AuthToken, err error) {
+func (at *authTokenImpl) GetByRefreshToken(refreshToken string) (token *model.AuthToken, err error) {
 	token = &model.AuthToken{}
-	err = ts.DB.Get(
+	err = at.DB.Get(
 		token,
 		sql.AuthToken.GetByRefreshToken(),
 		refreshToken,
@@ -29,9 +29,9 @@ func (ts *authTokenImpl) GetByRefreshToken(refreshToken string) (token *model.Au
 }
 
 // GetByAccessToken implements authToken.
-func (ts *authTokenImpl) GetByAccessToken(accessToken string) (token *model.AuthToken, err error) {
+func (at *authTokenImpl) GetByAccessToken(accessToken string) (token *model.AuthToken, err error) {
 	token = &model.AuthToken{}
-	err = ts.DB.Get(
+	err = at.DB.Get(
 		token,
 		sql.AuthToken.GetByAccessToken(),
 		accessToken,
@@ -40,16 +40,16 @@ func (ts *authTokenImpl) GetByAccessToken(accessToken string) (token *model.Auth
 }
 
 // Save implements authToken.
-func (ts *authTokenImpl) Save(token *model.AuthToken) (libsql.Result, error) {
-	return ts.DB.NamedExec(
+func (at *authTokenImpl) Save(token *model.AuthToken) (libsql.Result, error) {
+	return at.DB.NamedExec(
 		sql.AuthToken.Insert(),
 		token,
 	)
 }
 
 // Delete implements authToken.
-func (ts *authTokenImpl) Delete(id int) (libsql.Result, error) {
-	return ts.DB.Exec(
+func (at *authTokenImpl) Delete(id int) (libsql.Result, error) {
+	return at.DB.Exec(
 		sql.AuthToken.Delete(),
 		id,
 	)

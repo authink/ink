@@ -13,5 +13,6 @@ func NewApp(name, secret string) *App {
 	return &App{
 		Name:   name,
 		Secret: util.Sha256(secret),
+		Active: true,
 	}
 }

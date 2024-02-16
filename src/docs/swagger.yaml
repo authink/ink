@@ -14,6 +14,21 @@ definitions:
       message:
         type: string
     type: object
+  model.App:
+    properties:
+      active:
+        type: boolean
+      createdAt:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      secret:
+        type: string
+      updatedAt:
+        type: string
+    type: object
   token.grantReq:
     properties:
       appId:
@@ -77,6 +92,33 @@ info:
   title: Ink API
   version: "1.0"
 paths:
+  /admin/apps:
+    get:
+      description: Show apps
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.App'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ext.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ext.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Show apps
+      tags:
+      - app
   /admin/dashboard:
     get:
       description: Show dashboard
@@ -114,7 +156,7 @@ paths:
       - ApiKeyAuth: []
       summary: Show dashboard
       tags:
-      - admin
+      - dashboard
   /token/grant:
     post:
       description: Generate token

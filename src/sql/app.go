@@ -4,6 +4,11 @@ import "fmt"
 
 type app struct{}
 
+// Find implements SQL.
+func (*app) Find() string {
+	return fmt.Sprintf("SELECT id, created_at, updated_at, name, active FROM %s ORDER BY id ASC", table.App)
+}
+
 // Delete implements SQL.
 func (*app) Delete() string {
 	panic("unimplemented")

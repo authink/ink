@@ -4,6 +4,11 @@ import "fmt"
 
 type authToken struct{}
 
+// Find implements SQL.
+func (*authToken) Find() string {
+	panic("unimplemented")
+}
+
 // Delete implements SQL.
 func (*authToken) Delete() string {
 	return fmt.Sprintf("DELETE FROM %s WHERE id = ?", table.AuthToken)
