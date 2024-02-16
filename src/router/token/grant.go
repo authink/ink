@@ -39,6 +39,16 @@ type grantRes struct {
 	ExpiresIn    int    `json:"expires_in"`
 }
 
+// grant godoc
+//
+//	@Summary		Generate token
+//	@Description	Generate token
+//	@Tags			token
+//	@Router			/token/grant [post]
+//	@Param			grantReq	body		grantReq	true	"request body"
+//	@Success		200			{object}	grantRes
+//	@Failure		400			{object}	ext.ClientError
+//	@Failure		500			{string}	empty
 func grant(c *ext.Context) {
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("inkEmail", inkEmailValidation)

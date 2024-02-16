@@ -14,6 +14,48 @@ definitions:
       message:
         type: string
     type: object
+  token.grantReq:
+    properties:
+      appId:
+        minimum: 1
+        type: integer
+      appSecret:
+        minLength: 1
+        type: string
+      email:
+        type: string
+      password:
+        minLength: 6
+        type: string
+    required:
+    - appId
+    - appSecret
+    - email
+    - password
+    type: object
+  token.grantRes:
+    properties:
+      access_token:
+        type: string
+      expires_in:
+        type: integer
+      refresh_token:
+        type: string
+      token_type:
+        type: string
+    type: object
+  token.refreshReq:
+    properties:
+      access_token:
+        minLength: 1
+        type: string
+      refresh_token:
+        minLength: 1
+        type: string
+    required:
+    - access_token
+    - refresh_token
+    type: object
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
@@ -68,7 +110,85 @@ paths:
       - ApiKeyAuth: []
       summary: Show dashboard
       tags:
-      - dashboard
+      - admin
+  /token/grant:
+    post:
+      description: Generate token
+      parameters:
+      - description: request body
+        in: body
+        name: grantReq
+        required: true
+        schema:
+          $ref: '#/definitions/token.grantReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/token.grantRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ext.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Generate token
+      tags:
+      - token
+  /token/refresh:
+    post:
+      description: Refresh token
+      parameters:
+      - description: request body
+        in: body
+        name: refreshReq
+        required: true
+        schema:
+          $ref: '#/definitions/token.refreshReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/token.grantRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ext.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Refresh token
+      tags:
+      - token
+  /token/revoke:
+    post:
+      description: Revoke token
+      parameters:
+      - description: request body
+        in: body
+        name: refreshReq
+        required: true
+        schema:
+          $ref: '#/definitions/token.refreshReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ext.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Revoke token
+      tags:
+      - token
 produces:
 - application/json
 securityDefinitions:

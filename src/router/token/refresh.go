@@ -14,6 +14,16 @@ type refreshReq struct {
 	RefreshToken string `json:"refresh_token" binding:"required,min=1"`
 }
 
+// refresh godoc
+//
+//	@Summary		Refresh token
+//	@Description	Refresh token
+//	@Tags			token
+//	@Router			/token/refresh [post]
+//	@Param			refreshReq	body		refreshReq	true	"request body"
+//	@Success		200			{object}	grantRes
+//	@Failure		400			{object}	ext.ClientError
+//	@Failure		500			{string}	empty
 func refresh(c *ext.Context) {
 	req := &refreshReq{}
 	if err := c.ShouldBindJSON(req); err != nil {

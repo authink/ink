@@ -14,7 +14,7 @@ type dashboardRes struct {
 //
 //	@Summary		Show dashboard
 //	@Description	Show dashboard
-//	@Tags			dashboard
+//	@Tags			admin
 //	@Router			/admin/dashboard [get]
 //	@Security		ApiKeyAuth
 //	@Param			category	query		string	true	"staff"	Enums(staff, user)

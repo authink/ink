@@ -33,7 +33,7 @@
                 ],
                 "description": "Show dashboard",
                 "tags": [
-                    "dashboard"
+                    "admin"
                 ],
                 "summary": "Show dashboard",
                 "parameters": [
@@ -82,6 +82,126 @@
                     }
                 }
             }
+        },
+        "/token/grant": {
+            "post": {
+                "description": "Generate token",
+                "tags": [
+                    "token"
+                ],
+                "summary": "Generate token",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "grantReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/token.grantReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/token.grantRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/ext.ClientError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/token/refresh": {
+            "post": {
+                "description": "Refresh token",
+                "tags": [
+                    "token"
+                ],
+                "summary": "Refresh token",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "refreshReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/token.refreshReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/token.grantRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/ext.ClientError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/token/revoke": {
+            "post": {
+                "description": "Revoke token",
+                "tags": [
+                    "token"
+                ],
+                "summary": "Revoke token",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "refreshReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/token.refreshReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/ext.ClientError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -101,6 +221,66 @@
                 },
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "token.grantReq": {
+            "type": "object",
+            "required": [
+                "appId",
+                "appSecret",
+                "email",
+                "password"
+            ],
+            "properties": {
+                "appId": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "appSecret": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 6
+                }
+            }
+        },
+        "token.grantRes": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "expires_in": {
+                    "type": "integer"
+                },
+                "refresh_token": {
+                    "type": "string"
+                },
+                "token_type": {
+                    "type": "string"
+                }
+            }
+        },
+        "token.refreshReq": {
+            "type": "object",
+            "required": [
+                "access_token",
+                "refresh_token"
+            ],
+            "properties": {
+                "access_token": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "refresh_token": {
+                    "type": "string",
+                    "minLength": 1
                 }
             }
         }
