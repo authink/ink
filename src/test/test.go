@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"path"
 	"strings"
 	"testing"
 
@@ -15,29 +16,34 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type testCtxKey string
+type ContextKey string
 
-var testCtx context.Context
-var key = testCtxKey("router")
+var InkKey = ContextKey("ink")
+var RouterKey = ContextKey("router")
 
-func setup(ink *core.Ink, router *gin.Engine) {
+func setup(ink *core.Ink) {
 	migrate.Schema(ink, "up")
 	migrate.Seed(ink)
-	testCtx = context.WithValue(
-		context.Background(),
-		key,
-		router,
-	)
 }
 
 func teardown(ink *core.Ink) {
-	testCtx = nil
 	migrate.Schema(ink, "down")
 }
 
-func TestMain(ink *core.Ink, router *gin.Engine) func(*testing.M) {
+func Main(ctx *context.Context, ink *core.Ink, router *gin.Engine) func(*testing.M) {
+	*ctx = context.WithValue(
+		*ctx,
+		InkKey,
+		ink,
+	)
+	*ctx = context.WithValue(
+		*ctx,
+		RouterKey,
+		router,
+	)
+
 	return func(m *testing.M) {
-		setup(ink, router)
+		setup(ink)
 
 		exitCode := m.Run()
 
@@ -49,7 +55,9 @@ func TestMain(ink *core.Ink, router *gin.Engine) func(*testing.M) {
 	}
 }
 
-func TestFetch(method, path string, reqObj, resObj any) (w *httptest.ResponseRecorder, err error) {
+func Fetch(ctx context.Context, method, pathname string, reqObj, resObj any) (w *httptest.ResponseRecorder, err error) {
+	ink := ctx.Value(InkKey).(*core.Ink)
+
 	var reader io.Reader
 	if reqObj != nil {
 		reqBody, _ := json.Marshal(reqObj)
@@ -59,11 +67,11 @@ func TestFetch(method, path string, reqObj, resObj any) (w *httptest.ResponseRec
 	w = httptest.NewRecorder()
 	req, _ := http.NewRequest(
 		method,
-		path,
+		path.Join("/", ink.Env.BasePath, pathname),
 		reader,
 	)
-	r := testCtx.Value(key).(*gin.Engine)
-	r.ServeHTTP(w, req)
+	router := ctx.Value(RouterKey).(*gin.Engine)
+	router.ServeHTTP(w, req)
 
 	if w.Body.Len() > 0 {
 		err = json.Unmarshal(w.Body.Bytes(), resObj)

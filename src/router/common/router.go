@@ -8,16 +8,16 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func SetupRouter(ink *core.Ink) (r *gin.Engine, gApi *gin.RouterGroup) {
-	r = gin.Default()
+func SetupRouter(ink *core.Ink) (router *gin.Engine, gApi *gin.RouterGroup) {
+	router = gin.Default()
 
-	r.Use(
+	router.Use(
 		middleware.SetupInk(ink),
 		middleware.SetupI18n(ink),
 	)
 
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	gApi = r.Group(ink.Env.BasePath)
+	gApi = router.Group(ink.Env.BasePath)
 	return
 }

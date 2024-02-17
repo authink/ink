@@ -18,9 +18,10 @@ func grantToken(appId int, appSecret, email, password string, resObj any) (*http
 		Password:  password,
 	}
 
-	return test.TestFetch(
+	return test.Fetch(
+		ctx,
 		"POST",
-		"/api/v1/token/grant",
+		"token/grant",
 		reqObj,
 		resObj,
 	)

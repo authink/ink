@@ -15,9 +15,10 @@ func refreshToken(accessToken, refreshToken string, resObj any) (*httptest.Respo
 		RefreshToken: refreshToken,
 	}
 
-	return test.TestFetch(
+	return test.Fetch(
+		ctx,
 		"POST",
-		"/api/v1/token/refresh",
+		"token/refresh",
 		reqObj,
 		resObj,
 	)
