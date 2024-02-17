@@ -36,6 +36,6 @@ import (
 func SetupRouter(ink *core.Ink) (router *gin.Engine) {
 	router, gApi := common.SetupRouter(ink)
 	token.SetupTokenGroup(gApi)
-	admin.SetupAdminGroup(gApi, ink)
+	admin.SetupAdminGroup(gApi, ink.Env.AppNameAdmin)
 	return
 }

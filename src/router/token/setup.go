@@ -20,7 +20,7 @@ func SetupTokenGroup(rg *gin.RouterGroup) {
 	gToken.POST("revoke", ext.Handler(revoke))
 }
 
-func generateAuthToken(c *ext.Context, ink *core.Ink, app *model.App, staff *model.Staff) (res *grantRes) {
+func generateAuthToken(c *ext.Context, ink *core.Ink, app *model.App, staff *model.Staff) (res *GrantRes) {
 	uuid := util.GenerateUUID()
 	accessToken, err := util.GenerateToken(ink.Env.SecretKey, time.Duration(ink.Env.AccessTokenDuration), app.Id, app.Name, staff.Id, staff.Email, uuid)
 	if err != nil {
@@ -37,7 +37,7 @@ func generateAuthToken(c *ext.Context, ink *core.Ink, app *model.App, staff *mod
 		return
 	}
 
-	res = &grantRes{
+	res = &GrantRes{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 		TokenType:    "Bearer",

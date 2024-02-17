@@ -25,14 +25,14 @@ func inkEmailValidation(fl validator.FieldLevel) bool {
 	return matched
 }
 
-type grantReq struct {
+type GrantReq struct {
 	AppId     int    `json:"appId" binding:"required,min=1" example:"100000"`
 	AppSecret string `json:"appSecret" binding:"required,min=1" example:"123456"`
 	Email     string `json:"email" binding:"required,inkEmail" example:"admin@huoyijie.cn"`
 	Password  string `json:"password" binding:"required,min=6" example:"123456"`
 }
 
-type grantRes struct {
+type GrantRes struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 	TokenType    string `json:"token_type"`
@@ -54,7 +54,7 @@ func grant(c *ext.Context) {
 		v.RegisterValidation("inkEmail", inkEmailValidation)
 	}
 
-	req := &grantReq{}
+	req := &GrantReq{}
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(ext.ERR_BAD_REQUEST)
 		return

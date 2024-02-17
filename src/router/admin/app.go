@@ -13,7 +13,7 @@ import (
 //	@Summary		Show apps
 //	@Description	Show apps
 //	@Tags			app
-//	@Router			/admin/apps [get]
+//	@Router			/admin/apps	[get]
 //	@Security		ApiKeyAuth
 //	@Success		200	{array}		model.App
 //	@Failure		401	{object}	ext.ClientError

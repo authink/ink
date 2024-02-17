@@ -21,18 +21,19 @@ func refreshToken(accessToken, refreshToken string, resObj any) (*httptest.Respo
 		"token/refresh",
 		reqObj,
 		resObj,
+		"",
 	)
 }
 
 func TestRefresh(t *testing.T) {
-	resObj := &grantRes{}
+	resObj := &GrantRes{}
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.NotEmpty(t, resObj.AccessToken)
 	assert.NotEmpty(t, resObj.RefreshToken)
 
-	resObj2 := &grantRes{}
+	resObj2 := &GrantRes{}
 	w2, _ := refreshToken(resObj.AccessToken, resObj.RefreshToken, resObj2)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.NotEmpty(t, resObj2.AccessToken)

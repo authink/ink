@@ -3,6 +3,7 @@ package test
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -55,7 +56,7 @@ func Main(ctx *context.Context, ink *core.Ink, router *gin.Engine) func(*testing
 	}
 }
 
-func Fetch(ctx context.Context, method, pathname string, reqObj, resObj any) (w *httptest.ResponseRecorder, err error) {
+func Fetch(ctx context.Context, method, pathname string, reqObj, resObj any, accessToken string) (w *httptest.ResponseRecorder, err error) {
 	ink := ctx.Value(InkKey).(*core.Ink)
 
 	var reader io.Reader
@@ -70,6 +71,11 @@ func Fetch(ctx context.Context, method, pathname string, reqObj, resObj any) (w 
 		path.Join("/", ink.Env.BasePath, pathname),
 		reader,
 	)
+
+	if accessToken != "" {
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+	}
+
 	router := ctx.Value(RouterKey).(*gin.Engine)
 	router.ServeHTTP(w, req)
 
