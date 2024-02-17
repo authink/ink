@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/authink/ink.go/src/ext"
+	"github.com/authink/ink.go/src/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,8 +15,7 @@ func revokeToken(accessToken, refreshToken string) (*httptest.ResponseRecorder, 
 		RefreshToken: refreshToken,
 	}
 
-	return ext.TestFetch(
-		r,
+	return test.TestFetch(
 		"POST",
 		"/api/v1/token/revoke",
 		reqObj,

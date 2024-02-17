@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/authink/ink.go/src/ext"
+	"github.com/authink/ink.go/src/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,8 +18,7 @@ func grantToken(appId int, appSecret, email, password string, resObj any) (*http
 		Password:  password,
 	}
 
-	return ext.TestFetch(
-		r,
+	return test.TestFetch(
 		"POST",
 		"/api/v1/token/grant",
 		reqObj,

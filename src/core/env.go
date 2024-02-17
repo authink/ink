@@ -23,6 +23,7 @@ type Env struct {
 	DbConnMaxIdleTime    uint16
 	DbMigrateFileSource  string
 	AppNameAdmin         string
+	BasePath             string
 }
 
 func getUint16(key string, value *uint16) {
@@ -82,6 +83,9 @@ func loadEnv() *Env {
 	appNameAdmin := "admin.dev"
 	getString("APP_NAME_ADMIN", &appNameAdmin)
 
+	basePath := "api/v1"
+	getString("BASE_PATH", &basePath)
+
 	return &Env{
 		secretKey,
 		accessTokenDuration,
@@ -100,5 +104,6 @@ func loadEnv() *Env {
 		dbConnMaxIdleTime,
 		dbMigrateFileSource,
 		appNameAdmin,
+		basePath,
 	}
 }
