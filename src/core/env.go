@@ -40,7 +40,7 @@ func getString(key string, value *string) {
 	}
 }
 
-func loadEnv() *Env {
+func LoadEnv() *Env {
 	secretKey := "your-secret-key"
 	accessTokenDuration := uint16(7200)
 	refreshTokenDuration := uint16(7 * 24)
@@ -59,7 +59,7 @@ func loadEnv() *Env {
 	dbHost := "localhost"
 	dbPort := uint16(3306)
 	dbUser := "root"
-	dbPasswd := "root"
+	dbPasswd := ""
 	dbName := "ink"
 
 	getString("DB_HOST", &dbHost)

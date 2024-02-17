@@ -13,9 +13,11 @@ type Ink struct {
 }
 
 func NewInk() *Ink {
-	env := loadEnv()
-	db := ConnectDB(env)
+	return NewInkWith(LoadEnv())
+}
 
+func NewInkWith(env *Env) *Ink {
+	db := ConnectDB(env)
 	return &Ink{
 		env,
 		db,

@@ -19,7 +19,7 @@ func Schema(ink *core.Ink, direction string) {
 	}
 
 	sourceUrl := createSourceUrl(ink)
-	databaseUrl := core.CreateDatabaseUrl(ink.Env, true)
+	databaseUrl := core.GetDatabaseUrl(ink.Env, true)
 
 	m, err := migrate.New(
 		sourceUrl,

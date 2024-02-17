@@ -8,7 +8,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func CreateDatabaseUrl(env *Env, withSchema bool) string {
+func GetDatabaseUrl(env *Env, withSchema bool) string {
 	databaseUrl := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", env.DbUser, env.DbPasswd, env.DbHost, env.DbPort, env.DbName)
 
 	if withSchema {
@@ -19,7 +19,7 @@ func CreateDatabaseUrl(env *Env, withSchema bool) string {
 }
 
 func ConnectDB(env *Env) *sqlx.DB {
-	databaseUrl := CreateDatabaseUrl(env, false)
+	databaseUrl := GetDatabaseUrl(env, false)
 
 	db, err := sqlx.Open("mysql", databaseUrl)
 	if err != nil {
@@ -32,4 +32,27 @@ func ConnectDB(env *Env) *sqlx.DB {
 	db.SetConnMaxIdleTime(time.Duration(env.DbConnMaxIdleTime) * time.Second)
 
 	return db
+}
+
+func CreateDB(env *Env) func() {
+	databaseUrl := fmt.Sprintf("%s:%s@tcp(%s:%d)/", env.DbUser, env.DbPasswd, env.DbHost, env.DbPort)
+
+	db, err := sqlx.Open("mysql", databaseUrl)
+	if err != nil {
+		panic(err)
+	}
+
+	_, err = db.Exec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s", env.DbName))
+	if err != nil {
+		db.Close()
+		panic(err)
+	}
+
+	return func() {
+		defer db.Close()
+		_, err := db.Exec(fmt.Sprintf("DROP DATABASE IF EXISTS %s", env.DbName))
+		if err != nil {
+			panic(err)
+		}
+	}
 }

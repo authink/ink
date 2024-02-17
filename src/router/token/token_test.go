@@ -2,6 +2,7 @@ package token
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/authink/ink.go/src/core"
@@ -12,7 +13,11 @@ import (
 var ctx = context.Background()
 
 func TestMain(m *testing.M) {
-	ink := core.NewInk()
+	env := core.LoadEnv()
+	env.DbName = fmt.Sprintf("%s_%s", env.DbName, "token")
+	defer core.CreateDB(env)()
+
+	ink := core.NewInkWith(env)
 	defer ink.Close()
 
 	router, gApi := common.SetupRouter(ink)
