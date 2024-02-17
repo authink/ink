@@ -102,3 +102,14 @@ $ swag init -g router/setup.go
 ## 搭建 Markdown Docs
 
 ## i18n
+
+## Env todo
+
+引入 godotenv 库显示合并读取 .env + .env.local
+
+可根据 GO_ENV 环境变量决定读取
+1 .env.dev + .env.dev.local
+2 .env.test + .env.test.local
+3 .env.prod + .env.prod.local
+
+*.local 加入 .gitignore
