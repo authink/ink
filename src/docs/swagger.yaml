@@ -29,7 +29,7 @@ definitions:
       updatedAt:
         type: string
     type: object
-  token.grantReq:
+  token.GrantReq:
     properties:
       appId:
         example: 100000
@@ -52,7 +52,7 @@ definitions:
     - email
     - password
     type: object
-  token.grantRes:
+  token.GrantRes:
     properties:
       access_token:
         type: string
@@ -166,12 +166,12 @@ paths:
         name: grantReq
         required: true
         schema:
-          $ref: '#/definitions/token.grantReq'
+          $ref: '#/definitions/token.GrantReq'
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/token.grantRes'
+            $ref: '#/definitions/token.GrantRes'
         "400":
           description: Bad Request
           schema:
@@ -197,7 +197,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/token.grantRes'
+            $ref: '#/definitions/token.GrantRes'
         "400":
           description: Bad Request
           schema:

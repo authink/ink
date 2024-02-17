@@ -21,7 +21,7 @@ type refreshReq struct {
 //	@Tags			token
 //	@Router			/token/refresh [post]
 //	@Param			refreshReq	body		refreshReq	true	"request body"
-//	@Success		200			{object}	grantRes
+//	@Success		200			{object}	GrantRes
 //	@Failure		400			{object}	ext.ClientError
 //	@Failure		500			{string}	empty
 func refresh(c *ext.Context) {

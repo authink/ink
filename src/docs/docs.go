@@ -146,7 +146,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/token.grantReq"
+                            "$ref": "#/definitions/token.GrantReq"
                         }
                     }
                 ],
@@ -154,7 +154,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/token.grantRes"
+                            "$ref": "#/definitions/token.GrantRes"
                         }
                     },
                     "400": {
@@ -194,7 +194,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/token.grantRes"
+                            "$ref": "#/definitions/token.GrantRes"
                         }
                     },
                     "400": {
@@ -296,7 +296,7 @@ const docTemplate = `{
                 }
             }
         },
-        "token.grantReq": {
+        "token.GrantReq": {
             "type": "object",
             "required": [
                 "appId",
@@ -326,7 +326,7 @@ const docTemplate = `{
                 }
             }
         },
-        "token.grantRes": {
+        "token.GrantRes": {
             "type": "object",
             "properties": {
                 "access_token": {

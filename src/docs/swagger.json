@@ -140,7 +140,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/token.grantReq"
+                            "$ref": "#/definitions/token.GrantReq"
                         }
                     }
                 ],
@@ -148,7 +148,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/token.grantRes"
+                            "$ref": "#/definitions/token.GrantRes"
                         }
                     },
                     "400": {
@@ -188,7 +188,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/token.grantRes"
+                            "$ref": "#/definitions/token.GrantRes"
                         }
                     },
                     "400": {
@@ -290,7 +290,7 @@
                 }
             }
         },
-        "token.grantReq": {
+        "token.GrantReq": {
             "type": "object",
             "required": [
                 "appId",
@@ -320,7 +320,7 @@
                 }
             }
         },
-        "token.grantRes": {
+        "token.GrantRes": {
             "type": "object",
             "properties": {
                 "access_token": {

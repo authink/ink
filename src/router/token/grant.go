@@ -45,8 +45,8 @@ type GrantRes struct {
 //	@Description	Generate token
 //	@Tags			token
 //	@Router			/token/grant [post]
-//	@Param			grantReq	body		grantReq	true	"request body"
-//	@Success		200			{object}	grantRes
+//	@Param			grantReq	body		GrantReq	true	"request body"
+//	@Success		200			{object}	GrantRes
 //	@Failure		400			{object}	ext.ClientError
 //	@Failure		500			{string}	empty
 func grant(c *ext.Context) {
