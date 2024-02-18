@@ -32,7 +32,7 @@ func generateAuthToken(c *ext.Context, ink *core.Ink, app *model.App, staff *mod
 	// accessToken identified by uuid
 	authToken := model.NewAuthToken(uuid, refreshToken, app.Id, staff.Id)
 
-	if _, err = orm.AuthToken(ink).Save(authToken); err != nil {
+	if err = orm.AuthToken(ink).Save(authToken); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}
@@ -57,7 +57,7 @@ func checkRefreshToken(c *ext.Context, ink *core.Ink, refreshToken string) (auth
 		return
 	}
 
-	if _, err = orm.AuthToken(ink).Delete(int(authToken.Id)); err != nil {
+	if err = orm.AuthToken(ink).Delete(int(authToken.Id)); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}

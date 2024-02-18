@@ -1,18 +1,16 @@
 package orm
 
 import (
-	libsql "database/sql"
-
 	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/sql"
 )
 
 type authToken interface {
-	Save(*model.AuthToken) (libsql.Result, error)
+	Save(*model.AuthToken) error
 	GetByRefreshToken(string) (*model.AuthToken, error)
 	GetByAccessToken(string) (*model.AuthToken, error)
-	Delete(int) (libsql.Result, error)
+	Delete(int) error
 }
 
 type authTokenImpl core.Ink
@@ -40,19 +38,21 @@ func (at *authTokenImpl) GetByAccessToken(accessToken string) (token *model.Auth
 }
 
 // Save implements authToken.
-func (at *authTokenImpl) Save(token *model.AuthToken) (libsql.Result, error) {
-	return at.DB.NamedExec(
+func (at *authTokenImpl) Save(token *model.AuthToken) (err error) {
+	_, err = at.DB.NamedExec(
 		sql.AuthToken.Insert(),
 		token,
 	)
+	return
 }
 
 // Delete implements authToken.
-func (at *authTokenImpl) Delete(id int) (libsql.Result, error) {
-	return at.DB.Exec(
+func (at *authTokenImpl) Delete(id int) (err error) {
+	_, err = at.DB.Exec(
 		sql.AuthToken.Delete(),
 		id,
 	)
+	return
 }
 
 var _ authToken = (*authTokenImpl)(nil)
