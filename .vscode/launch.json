@@ -11,7 +11,10 @@
       "mode": "auto",
       "program": "${workspaceFolder}/src",
       "args": ["run"],
-      "envFile": "${workspaceFolder}/.env"
+      "env": {
+        "INK_ENV": "dev",
+        "INK_CWD": "${workspaceFolder}"
+      }
     }
   ]
 }

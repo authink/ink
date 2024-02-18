@@ -25,3 +25,5 @@ tmp/
 __debug*
 
 !.env.test
+*.local
+settings.json

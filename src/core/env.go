@@ -3,9 +3,49 @@ package core
 import (
 	"fmt"
 	"os"
+
+	"github.com/joho/godotenv"
+)
+
+func init() {
+	if inkCWD := getInkCWD(); inkCWD != "" {
+		if err := os.Chdir(inkCWD); err != nil {
+			panic(err)
+		}
+	}
+
+	inkENV := getInkENV()
+
+	files := []string{
+		fmt.Sprintf(".env.%s.local", inkENV),
+		".env.local",
+		fmt.Sprintf(".env.%s", inkENV),
+		".env",
+	}
+
+	var existFiles []string
+	for _, file := range files {
+		if _, err := os.Stat(file); err == nil {
+			existFiles = append(existFiles, file)
+		}
+	}
+
+	if len(existFiles) > 0 {
+		if err := godotenv.Load(existFiles...); err != nil {
+			panic(err)
+		}
+	}
+}
+
+const (
+	DEVELOPMENT string = "dev"
+	TEST        string = "test"
+	PRODUCTION  string = "prod"
 )
 
 type Env struct {
+	InkENV               string
+	InkCWD               string
 	SecretKey            string
 	AccessTokenDuration  uint16
 	RefreshTokenDuration uint16
@@ -26,6 +66,21 @@ type Env struct {
 	BasePath             string
 }
 
+func getInkENV() string {
+	inkENV := DEVELOPMENT
+	getString("INK_ENV", &inkENV)
+
+	if !(inkENV == DEVELOPMENT || inkENV == TEST || inkENV == PRODUCTION) {
+		panic(fmt.Sprintf("Invalid INK_ENV %s", inkENV))
+	}
+	return inkENV
+}
+
+func getInkCWD() (inkCWD string) {
+	getString("INK_CWD", &inkCWD)
+	return
+}
+
 func getUint16(key string, value *uint16) {
 	if v := os.Getenv(key); len(v) > 0 {
 		if _, err := fmt.Sscanf(v, "%d", value); err != nil {
@@ -41,6 +96,8 @@ func getString(key string, value *string) {
 }
 
 func LoadEnv() *Env {
+	inkENV := getInkENV()
+	inkCWD := getInkCWD()
 	secretKey := "your-secret-key"
 	accessTokenDuration := uint16(7200)
 	refreshTokenDuration := uint16(7 * 24)
@@ -87,6 +144,8 @@ func LoadEnv() *Env {
 	getString("BASE_PATH", &basePath)
 
 	return &Env{
+		inkENV,
+		inkCWD,
 		secretKey,
 		accessTokenDuration,
 		refreshTokenDuration,
