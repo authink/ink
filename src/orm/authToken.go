@@ -4,16 +4,31 @@ import (
 	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/sql"
+	"github.com/jmoiron/sqlx"
 )
 
 type authToken interface {
-	Save(*model.AuthToken) error
+	ORM[model.AuthToken]
 	GetByRefreshToken(string) (*model.AuthToken, error)
 	GetByAccessToken(string) (*model.AuthToken, error)
-	Delete(int) error
 }
 
 type authTokenImpl core.Ink
+
+// Find implements authToken.
+func (*authTokenImpl) Find() ([]model.AuthToken, error) {
+	panic("unimplemented")
+}
+
+// Get implements authToken.
+func (*authTokenImpl) Get(int) (*model.AuthToken, error) {
+	panic("unimplemented")
+}
+
+// SaveWithTx implements authToken.
+func (*authTokenImpl) SaveWithTx(*model.AuthToken, *sqlx.Tx) error {
+	panic("unimplemented")
+}
 
 // GetByRefreshToken implements authToken.
 func (at *authTokenImpl) GetByRefreshToken(refreshToken string) (token *model.AuthToken, err error) {

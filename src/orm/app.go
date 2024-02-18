@@ -8,13 +8,15 @@ import (
 )
 
 type app interface {
-	Save(*model.App) error
-	SaveWithTx(*model.App, *sqlx.Tx) error
-	Get(int) (*model.App, error)
-	Find() ([]model.App, error)
+	ORM[model.App]
 }
 
 type appImpl core.Ink
+
+// Delete implements app.
+func (*appImpl) Delete(int) error {
+	panic("unimplemented")
+}
 
 // Find implements app.
 func (a *appImpl) Find() (apps []model.App, err error) {

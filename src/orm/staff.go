@@ -8,13 +8,21 @@ import (
 )
 
 type staff interface {
-	Save(*model.Staff) error
-	SaveWithTx(*model.Staff, *sqlx.Tx) error
-	Get(int) (*model.Staff, error)
+	ORM[model.Staff]
 	GetByEmail(string) (*model.Staff, error)
 }
 
 type staffImpl core.Ink
+
+// Delete implements staff.
+func (*staffImpl) Delete(int) error {
+	panic("unimplemented")
+}
+
+// Find implements staff.
+func (*staffImpl) Find() ([]model.Staff, error) {
+	panic("unimplemented")
+}
 
 // GetByEmail implements staff.
 func (s *staffImpl) GetByEmail(email string) (staff *model.Staff, err error) {
