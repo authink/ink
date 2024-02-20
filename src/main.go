@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/migrate"
+	"github.com/cosmtrek/air/runner"
 	"github.com/spf13/cobra"
 )
 
@@ -40,18 +41,40 @@ var cmdRun = &cobra.Command{
 	Use:   "run",
 	Short: "Run ink server",
 	Run: func(cmd *cobra.Command, args []string) {
-		ink := core.NewInk()
-		defer ink.Close()
+		hotReload, err := cmd.Flags().GetBool("live-reload")
 
-		setupGracefulShutdown(
-			ink,
-			createServer(ink),
-		)
+		if err != nil {
+			panic(err)
+		}
+
+		if hotReload {
+			cfg, err := runner.InitConfig(".air.toml")
+			if err != nil {
+				panic(err)
+			}
+
+			r, err := runner.NewEngineWithConfig(cfg, true)
+			if err != nil {
+				panic(err)
+			}
+
+			r.Run()
+		} else {
+			ink := core.NewInk()
+			defer ink.Close()
+
+			setupGracefulShutdown(
+				ink,
+				createServer(ink),
+			)
+		}
 	},
 }
 
 func init() {
 	cmdMigrate.Flags().StringP("direction", "d", "up", "Specify migrate direction[up, down]")
+
+	cmdRun.Flags().BoolP("live-reload", "l", false, "Enable live reload")
 
 	cmdInk.AddCommand(cmdMigrate)
 	cmdInk.AddCommand(cmdRun)

@@ -1,92 +1,106 @@
 # ink.go
 
-## schema
+## Usage
+
+```bash
+$ INK_ENV=dev ./bin/ink run
+```
+
+具体可以查看 help 信息
+
+```bash
+$ ./bin/ink -h
+Usage:
+  ink [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  migrate     Migrate schema up or down
+  run         Run ink server
+  seed        Seed the database
+
+Flags:
+  -h, --help   help for ink
+
+Use "ink [command] --help" for more information about a command.
+```
+
+```bash
+$ ./bin/ink help run
+Run ink server
+
+Usage:
+  ink run [flags]
+
+Flags:
+  -h, --help          help for run
+  -l, --live-reload   Enable live reload
+```
+
+## 前置条件
+
+* 在工作目录克隆项目代码
+
+```bash
+$ cd {work dir}
+$ git clone git@github.com:authink/ink.go.git
+$ git clone git@github.com:authink/ink.schema.git
+```
+
+* 项目根目录中新建 .env.local
+
+```conf
+# .env.local
+DB_USER={your_db_username}
+DB_PASSWORD={your_db_password}
+```
+
+* 创建名为 ink 的数据库
 
 ```sql
 CREATE DATABASE `ink` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-
-CREATE DATABASE `ink_test` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 ```
+
+## Schema
 
 ```bash
-migrate -database "mysql://username:password@tcp(localhost:3306)/ink" -path db/migrations up
+# up
+$ INK_ENV=dev ./bin/ink migrate -d up
+
+# down
+$ INK_ENV=dev ./bin/ink migrate -d down
 ```
+
+## Seed
 
 ```bash
-migrate -database "mysql://username:password@tcp(localhost:3306)/ink" -path db/migrations down
+$ INK_ENV=dev ./bin/ink seed
 ```
 
-## seed
-
-```sql
-CREATE TABLE users (
-    id INT PRIMARY KEY,
-    username VARCHAR(50) UNIQUE,
-    email VARCHAR(50)
-);
-
--- 使用INSERT IGNORE插入数据，如果用户名已存在则忽略
-INSERT IGNORE INTO users (id, username, email)
-VALUES (1, 'john_doe', 'john@example.com');
-```
-
-## hot reload
+## Quick Run
 
 ```bash
-# install
-go install github.com/cosmtrek/air@latest
-
-# create .air.toml
-air init
+$ INK_ENV=dev go run ./src run
 ```
 
-```toml
-# .air.toml 增加如下一行
-[envfile]
-  path = ".env"
-```
+## Live reload
 
 ```bash
-# run
-air run
+$ INK_ENV=dev ./bin/ink run -l
 ```
-
-## 升级 golang 1.22
 
 ## 单元测试/go test/CI
 
-设置 -> 搜(Test Env File)
-
-`值: ${workspaceFolder}/.env.test`
-
-可以通过 vscode 点击 Run Test，且加载 .env。
-
-如果手动运行测试可安装 dotenv
-
 ```bash
-go install github.com/joho/godotenv/cmd/godotenv@latest
-
-godotenv -f .env.test go test -v -cover ./src/...
-
-#手动运行程序
-godotenv go run ./src/... run
-```
-
-- todo 单元测试开始执行，先在另一个测试库执行 migrate up，seed 测试数据，执行单元测试，完成后 migrate down，清理所有表。
-
-```json
-{
-  "name": "Launch Ink",
-  "type": "go",
-  "request": "launch",
-  "mode": "auto",
-  "program": "${workspaceFolder}/src",
-  "args": ["run"],
-  "envFile": "${workspaceFolder}/.env"
-}
+$ make test
 ```
 
 ## 部署/go build/CD
+
+```bash
+$ make build
+```
 
 ## API swagger 文档
 
@@ -101,15 +115,22 @@ $ swag init -g router/setup.go
 
 ## 搭建 Markdown Docs
 
-## i18n
+## I18n
 
-## Env todo
+## Env
 
-引入 godotenv 库显示合并读取 .env + .env.local
+根据 INK_ENV 读取不同的 env，其中 .local 文件是在本地开发时用来覆盖默认配置，不会提交到 git 仓库
 
-可根据 GO_ENV 环境变量决定读取
-1 .env.dev + .env.dev.local
-2 .env.test + .env.test.local
-3 .env.prod + .env.prod.local
+1. INK_ENV=dev
 
-*.local 加入 .gitignore
+.env.dev.local > .env.local > .env.dev > .env
+
+2. INK_ENV=test
+
+.env.test.local > .env.local > .env.test > .env
+
+3. INK_ENV=prod
+
+.env.prod.local > .env.local > .env.prod > .env
+
+提供 API 可以获取所有变量值
