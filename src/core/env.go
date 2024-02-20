@@ -166,3 +166,9 @@ func LoadEnv() *Env {
 		basePath,
 	}
 }
+
+func AssertEnvDev(feature string) {
+	if getInkENV() != DEVELOPMENT {
+		panic(fmt.Sprintf("[%s] assert development env failed", feature))
+	}
+}

@@ -106,6 +106,8 @@ $ make run
 
 ## Live reload
 
+此功能只能在 INK_ENV=dev 环境中开启
+
 ```bash
 $ make ARGS="-l" run
 ```

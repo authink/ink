@@ -91,6 +91,8 @@ var cmdRun = &cobra.Command{
 		}
 
 		if hotReload {
+			core.AssertEnvDev("live-reload")
+
 			cfg, err := runner.InitConfig(".air.toml")
 			if err != nil {
 				panic(err)
