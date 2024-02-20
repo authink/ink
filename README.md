@@ -19,6 +19,7 @@ Available Commands:
   migrate     Migrate schema up or down
   run         Run ink server
   seed        Seed the database
+  swag        Generate swagger docs
 
 Flags:
   -h, --help   help for ink
@@ -61,6 +62,10 @@ DB_PASSWORD={your_db_password}
 ```sql
 CREATE DATABASE `ink` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 ```
+
+* make，方便执行 swag/test/build/run 等任务
+
+如果未安装 make，可参考 Makefile 中的任务命令，手动执行
 
 ## Schema
 
