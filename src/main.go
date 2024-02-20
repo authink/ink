@@ -1,10 +1,16 @@
 package main
 
 import (
+	"log"
+	"os"
+
 	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/migrate"
 	"github.com/cosmtrek/air/runner"
 	"github.com/spf13/cobra"
+	"github.com/swaggo/swag"
+	"github.com/swaggo/swag/format"
+	"github.com/swaggo/swag/gen"
 )
 
 var cmdInk = &cobra.Command{Use: "ink"}
@@ -34,6 +40,43 @@ var cmdSeed = &cobra.Command{
 		defer ink.Close()
 
 		migrate.Seed(ink)
+	},
+}
+
+var cmdSwag = &cobra.Command{
+	Use:   "swag",
+	Short: "Generate swagger docs",
+	Run: func(cmd *cobra.Command, args []string) {
+		err := format.New().Build(&format.Config{
+			SearchDir: "./src",
+			MainFile:  "router/setup.go",
+		})
+		if err != nil {
+			panic(err)
+		}
+
+		err = gen.New().Build(&gen.Config{
+			SearchDir:   "./src",
+			MainAPIFile: "router/setup.go",
+			OutputDir:   "./src/docs",
+
+			PropNamingStrategy: swag.CamelCase,
+			OutputTypes:        []string{"go", "json", "yaml"},
+
+			ParseDepth: 100,
+
+			OverridesFile: gen.DefaultOverridesFile,
+			ParseGoList:   true,
+
+			LeftTemplateDelim:  "{{",
+			RightTemplateDelim: "}}",
+
+			Debugger:         log.New(os.Stdout, "", log.LstdFlags),
+			CollectionFormat: swag.TransToValidCollectionFormat("csv"),
+		})
+		if err != nil {
+			panic(err)
+		}
 	},
 }
 
@@ -77,8 +120,9 @@ func init() {
 	cmdRun.Flags().BoolP("live-reload", "l", false, "Enable live reload")
 
 	cmdInk.AddCommand(cmdMigrate)
-	cmdInk.AddCommand(cmdRun)
 	cmdInk.AddCommand(cmdSeed)
+	cmdInk.AddCommand(cmdSwag)
+	cmdInk.AddCommand(cmdRun)
 }
 
 func main() {

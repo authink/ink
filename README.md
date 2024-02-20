@@ -90,6 +90,21 @@ $ INK_ENV=dev go run ./src run
 $ INK_ENV=dev ./bin/ink run -l
 ```
 
+## 生成 API swagger 文档
+
+```bash
+$ go run ./src swag
+```
+
+```go
+// MainAPI 文件增加 import
+_ "github.com/authink/ink.go/src/docs"
+```
+
+启动 Ink server
+
+然后[打开 Swagger API 文档](http://localhost:8080/swagger/index.html)
+
 ## 单元测试/go test/CI
 
 ```bash
@@ -100,17 +115,6 @@ $ make test
 
 ```bash
 $ make build
-```
-
-## API swagger 文档
-
-```bash
-$ go install github.com/swaggo/swag/cmd/swag@latest
-$ cd src
-$ swag init
-# add general api comments in router/setup.go
-$ swag fmt
-$ swag init -g router/setup.go
 ```
 
 ## 搭建 Markdown Docs
