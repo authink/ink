@@ -78,22 +78,10 @@ $ INK_ENV=dev ./bin/ink migrate -d down
 $ INK_ENV=dev ./bin/ink seed
 ```
 
-## Quick Run
-
-```bash
-$ INK_ENV=dev go run ./src run
-```
-
-## Live reload
-
-```bash
-$ INK_ENV=dev ./bin/ink run -l
-```
-
 ## 生成 API swagger 文档
 
 ```bash
-$ go run ./src swag
+$ make swag
 ```
 
 ```go
@@ -104,6 +92,18 @@ _ "github.com/authink/ink.go/src/docs"
 启动 Ink server
 
 然后[打开 Swagger API 文档](http://localhost:8080/swagger/index.html)
+
+## Quick Run
+
+```bash
+$ make run
+```
+
+## Live reload
+
+```bash
+$ make ARGS="-l" run
+```
 
 ## 单元测试/go test/CI
 
