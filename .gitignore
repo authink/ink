@@ -26,4 +26,3 @@ __debug*
 
 !.env.test
 *.local
-settings.json

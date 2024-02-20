@@ -1,0 +1,6 @@
+{
+  "go.toolsEnvVars": {
+    "INK_ENV": "test",
+    "INK_CWD": "${workspaceFolder}"
+  }
+}
