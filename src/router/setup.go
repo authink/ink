@@ -35,5 +35,4 @@ import (
 func SetupRouter(apiGroup *gin.RouterGroup) {
 	token.SetupTokenGroup(apiGroup)
 	admin.SetupAdminGroup(apiGroup, env.AppNameAdmin())
-	return
 }

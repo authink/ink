@@ -1,9 +1,13 @@
 .DEFAULT_GOAL := build
-V := 0.1.0
+V := 0.1.1
 ARGS :=
+
+tidy:
+	go mod tidy
 
 swag:
 	go run ./src swag
+swag: tidy
 
 test:
 	APP_ENV=test APP_CWD=$(CURDIR) go test ./src/...
