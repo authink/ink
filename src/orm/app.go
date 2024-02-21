@@ -1,17 +1,17 @@
 package orm
 
 import (
-	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/sql"
+	"github.com/authink/inkstone"
 	"github.com/jmoiron/sqlx"
 )
 
 type app interface {
-	ORM[model.App]
+	inkstone.ORM[model.App]
 }
 
-type appImpl core.Ink
+type appImpl inkstone.AppContext
 
 // Delete implements app.
 func (*appImpl) Delete(int) error {
@@ -58,6 +58,6 @@ func (*appImpl) SaveWithTx(app *model.App, tx *sqlx.Tx) (err error) {
 
 var _ app = (*appImpl)(nil)
 
-func App(ink *core.Ink) app {
-	return (*appImpl)(ink)
+func App(appContext *inkstone.AppContext) app {
+	return (*appImpl)(appContext)
 }

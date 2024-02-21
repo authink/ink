@@ -2,37 +2,46 @@ package token
 
 import (
 	"database/sql"
-	"errors"
+	errs "errors"
 	"time"
 
-	"github.com/authink/ink.go/src/core"
-	"github.com/authink/ink.go/src/ext"
+	"github.com/authink/ink.go/src/errors"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/orm"
-	"github.com/authink/ink.go/src/util"
+	"github.com/authink/inkstone"
 	"github.com/gin-gonic/gin"
 )
 
 func SetupTokenGroup(rg *gin.RouterGroup) {
 	gToken := rg.Group("token")
-	gToken.POST("grant", ext.Handler(grant))
-	gToken.POST("refresh", ext.Handler(refresh))
-	gToken.POST("revoke", ext.Handler(revoke))
+	gToken.POST("grant", inkstone.HandlerAdapter(grant))
+	gToken.POST("refresh", inkstone.HandlerAdapter(refresh))
+	gToken.POST("revoke", inkstone.HandlerAdapter(revoke))
 }
 
-func generateAuthToken(c *ext.Context, ink *core.Ink, app *model.App, staff *model.Staff) (res *GrantRes) {
-	uuid := util.GenerateUUID()
-	accessToken, err := util.GenerateToken(ink.Env.SecretKey, time.Duration(ink.Env.AccessTokenDuration), app.Id, app.Name, staff.Id, staff.Email, uuid)
+func generateAuthToken(c *inkstone.Context, app *model.App, staff *model.Staff) (res *GrantRes) {
+	appContext := c.App()
+	uuid := inkstone.GenerateUUID()
+	accessToken, err := inkstone.GenerateToken(
+		appContext.AppName,
+		appContext.SecretKey,
+		time.Duration(appContext.AccessTokenDuration),
+		app.Id,
+		app.Name,
+		staff.Id,
+		staff.Email,
+		uuid,
+	)
 	if err != nil {
 		c.AbortWithServerError(err)
 		return
 	}
 
-	refreshToken := util.GenerateUUID()
+	refreshToken := inkstone.GenerateUUID()
 	// accessToken identified by uuid
 	authToken := model.NewAuthToken(uuid, refreshToken, app.Id, staff.Id)
 
-	if err = orm.AuthToken(ink).Save(authToken); err != nil {
+	if err = orm.AuthToken(appContext).Save(authToken); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}
@@ -41,29 +50,30 @@ func generateAuthToken(c *ext.Context, ink *core.Ink, app *model.App, staff *mod
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 		TokenType:    "Bearer",
-		ExpiresIn:    int(ink.Env.AccessTokenDuration),
+		ExpiresIn:    int(appContext.AccessTokenDuration),
 	}
 	return
 }
 
-func checkRefreshToken(c *ext.Context, ink *core.Ink, refreshToken string) (authToken *model.AuthToken, ok bool) {
-	authToken, err := orm.AuthToken(ink).GetByRefreshToken(refreshToken)
+func checkRefreshToken(c *inkstone.Context, refreshToken string) (authToken *model.AuthToken, ok bool) {
+	appContext := c.App()
+	authToken, err := orm.AuthToken(appContext).GetByRefreshToken(refreshToken)
 	if err != nil {
-		if !errors.Is(err, sql.ErrNoRows) {
+		if !errs.Is(err, sql.ErrNoRows) {
 			c.AbortWithServerError(err)
 			return
 		}
-		c.AbortWithClientError(ext.ERR_INVALID_REFRESH_TOKEN)
+		c.AbortWithClientError(errors.ERR_INVALID_REFRESH_TOKEN)
 		return
 	}
 
-	if err = orm.AuthToken(ink).Delete(int(authToken.Id)); err != nil {
+	if err = orm.AuthToken(appContext).Delete(int(authToken.Id)); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}
 
-	if time.Now().After(authToken.CreatedAt.Add(time.Duration(ink.Env.RefreshTokenDuration) * time.Hour)) {
-		c.AbortWithClientError(ext.ERR_INVALID_REFRESH_TOKEN)
+	if time.Now().After(authToken.CreatedAt.Add(time.Duration(appContext.RefreshTokenDuration) * time.Hour)) {
+		c.AbortWithClientError(errors.ERR_INVALID_REFRESH_TOKEN)
 		return
 	}
 

@@ -3,9 +3,8 @@ package admin
 import (
 	"net/http"
 
-	"github.com/authink/ink.go/src/core"
-	"github.com/authink/ink.go/src/ext"
 	"github.com/authink/ink.go/src/orm"
+	"github.com/authink/inkstone"
 )
 
 // apps godoc
@@ -16,13 +15,13 @@ import (
 //	@Router			/admin/apps	[get]
 //	@Security		ApiKeyAuth
 //	@Success		200	{array}		model.App
-//	@Failure		401	{object}	ext.ClientError
-//	@Failure		403	{object}	ext.ClientError
+//	@Failure		401	{object}	inkstone.ClientError
+//	@Failure		403	{object}	inkstone.ClientError
 //	@Failure		500	{string}	empty
-func apps(c *ext.Context) {
-	ink := c.MustGet("ink").(*core.Ink)
+func apps(c *inkstone.Context) {
+	appContext := c.App()
 
-	apps, err := orm.App(ink).Find()
+	apps, err := orm.App(appContext).Find()
 	if err != nil {
 		c.AbortWithServerError(err)
 		return

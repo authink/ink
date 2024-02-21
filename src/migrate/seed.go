@@ -1,13 +1,14 @@
 package migrate
 
 import (
-	"github.com/authink/ink.go/src/core"
+	"github.com/authink/ink.go/src/env"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/orm"
+	"github.com/authink/inkstone"
 	"github.com/jmoiron/sqlx"
 )
 
-func Seed(ink *core.Ink) {
+func Seed(appContext *inkstone.AppContext) {
 	admin := model.NewStaff(
 		"admin@huoyijie.cn",
 		"123456",
@@ -16,16 +17,16 @@ func Seed(ink *core.Ink) {
 	)
 
 	app := model.NewApp(
-		ink.Env.AppNameAdmin,
+		env.AppNameAdmin(),
 		"123456",
 	)
 
-	if err := orm.Transaction(ink, func(tx *sqlx.Tx) (err error) {
-		if err = orm.Staff(ink).SaveWithTx(admin, tx); err != nil {
+	if err := inkstone.Transaction(appContext, func(tx *sqlx.Tx) (err error) {
+		if err = orm.Staff(appContext).SaveWithTx(admin, tx); err != nil {
 			return
 		}
 
-		return orm.App(ink).SaveWithTx(app, tx)
+		return orm.App(appContext).SaveWithTx(app, tx)
 	}); err != nil {
 		panic(err)
 	}

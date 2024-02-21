@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/authink/ink.go/src/test"
+	"github.com/authink/inkstone"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,7 +15,7 @@ func revokeToken(accessToken, refreshToken string) (*httptest.ResponseRecorder, 
 		RefreshToken: refreshToken,
 	}
 
-	return test.Fetch(
+	return inkstone.TestFetch(
 		ctx,
 		"POST",
 		"token/revoke",

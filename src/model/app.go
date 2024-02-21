@@ -1,9 +1,11 @@
 package model
 
-import "github.com/authink/ink.go/src/util"
+import (
+	"github.com/authink/inkstone"
+)
 
 type App struct {
-	Model
+	inkstone.Model
 	Name   string
 	Secret string
 	Active bool
@@ -12,7 +14,7 @@ type App struct {
 func NewApp(name, secret string) *App {
 	return &App{
 		Name:   name,
-		Secret: util.Sha256(secret),
+		Secret: inkstone.Sha256(secret),
 		Active: true,
 	}
 }

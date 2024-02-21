@@ -5,8 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/authink/ink.go/src/ext"
-	"github.com/authink/ink.go/src/test"
+	"github.com/authink/ink.go/src/errors"
+	"github.com/authink/inkstone"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -18,7 +18,7 @@ func grantToken(appId int, appSecret, email, password string, resObj any) (*http
 		Password:  password,
 	}
 
-	return test.Fetch(
+	return inkstone.TestFetch(
 		ctx,
 		"POST",
 		"token/grant",
@@ -33,11 +33,11 @@ func TestGrant(t *testing.T) {
 	// go test -v -p 2 # 缺省 -p 参数会根据 cpu 核心数量设置
 	var (
 		ok                 = []any{http.StatusOK, &GrantRes{TokenType: "Bearer", ExpiresIn: 7200}, 100000, "123456", "admin@huoyijie.cn", "123456", &GrantRes{}}
-		invalidAppId       = []any{http.StatusBadRequest, ext.ERR_INVALID_APP, 999999, "123456", "admin@huoyijie.cn", "123456", &ext.ClientError{}}
-		invalidAppSecret   = []any{http.StatusBadRequest, ext.ERR_INVALID_APP, 100000, "1234567", "admin@huoyijie.cn", "123456", &ext.ClientError{}}
-		invalidEmailFormat = []any{http.StatusBadRequest, nil, 100000, "123456", "admin", "123456", &ext.ClientError{}}
-		invalidEmail       = []any{http.StatusBadRequest, ext.ERR_INVALID_ACCOUNT, 100000, "123456", "admin1@huoyijie.cn", "123456", &ext.ClientError{}}
-		invalidPassword    = []any{http.StatusBadRequest, ext.ERR_INVALID_ACCOUNT, 100000, "123456", "admin@huoyijie.cn", "1234567", &ext.ClientError{}}
+		invalidAppId       = []any{http.StatusBadRequest, errors.ERR_INVALID_APP, 999999, "123456", "admin@huoyijie.cn", "123456", &inkstone.ClientError{}}
+		invalidAppSecret   = []any{http.StatusBadRequest, errors.ERR_INVALID_APP, 100000, "1234567", "admin@huoyijie.cn", "123456", &inkstone.ClientError{}}
+		invalidEmailFormat = []any{http.StatusBadRequest, nil, 100000, "123456", "admin", "123456", &inkstone.ClientError{}}
+		invalidEmail       = []any{http.StatusBadRequest, errors.ERR_INVALID_ACCOUNT, 100000, "123456", "admin1@huoyijie.cn", "123456", &inkstone.ClientError{}}
+		invalidPassword    = []any{http.StatusBadRequest, errors.ERR_INVALID_ACCOUNT, 100000, "123456", "admin@huoyijie.cn", "1234567", &inkstone.ClientError{}}
 	)
 
 	var tests = []any{
@@ -66,8 +66,8 @@ func TestGrant(t *testing.T) {
 
 		case http.StatusBadRequest:
 			if tc[1] != nil {
-				resObj := tc[6].(*ext.ClientError)
-				assert.Equal(t, tc[1].(*ext.ClientError).Code, resObj.Code)
+				resObj := tc[6].(*inkstone.ClientError)
+				assert.Equal(t, tc[1].(*inkstone.ClientError).Code, resObj.Code)
 			}
 		}
 	}

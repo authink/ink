@@ -7,7 +7,7 @@ definitions:
       count:
         type: integer
     type: object
-  ext.ClientError:
+  inkstone.ClientError:
     properties:
       code:
         type: string
@@ -105,11 +105,11 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/ext.ClientError'
+            $ref: '#/definitions/inkstone.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/ext.ClientError'
+            $ref: '#/definitions/inkstone.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -139,15 +139,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/ext.ClientError'
+            $ref: '#/definitions/inkstone.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/ext.ClientError'
+            $ref: '#/definitions/inkstone.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/ext.ClientError'
+            $ref: '#/definitions/inkstone.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -161,6 +161,10 @@ paths:
     post:
       description: Generate token
       parameters:
+      - description: language
+        in: query
+        name: lang
+        type: string
       - description: request body
         in: body
         name: grantReq
@@ -175,7 +179,7 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/ext.ClientError'
+            $ref: '#/definitions/inkstone.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -201,7 +205,7 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/ext.ClientError'
+            $ref: '#/definitions/inkstone.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -227,7 +231,7 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/ext.ClientError'
+            $ref: '#/definitions/inkstone.ClientError'
         "500":
           description: Internal Server Error
           schema:

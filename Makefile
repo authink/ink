@@ -5,7 +5,7 @@ swag:
 	go run ./src swag
 
 test:
-	INK_ENV=test INK_CWD=$(CURDIR) go test ./src/...
+	APP_ENV=test APP_CWD=$(CURDIR) go test ./src/...
 test: swag
 
 build:
@@ -13,5 +13,5 @@ build:
 build: test
 
 run:
-	INK_ENV=dev ./bin/ink run $(ARGS)
+	APP_ENV=dev ./bin/ink run $(ARGS)
 run: build

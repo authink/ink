@@ -1,18 +1,18 @@
 package orm
 
 import (
-	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/sql"
+	"github.com/authink/inkstone"
 	"github.com/jmoiron/sqlx"
 )
 
 type staff interface {
-	ORM[model.Staff]
+	inkstone.ORM[model.Staff]
 	GetByEmail(string) (*model.Staff, error)
 }
 
-type staffImpl core.Ink
+type staffImpl inkstone.AppContext
 
 // Delete implements staff.
 func (*staffImpl) Delete(int) error {
@@ -66,6 +66,6 @@ func (*staffImpl) SaveWithTx(staff *model.Staff, tx *sqlx.Tx) (err error) {
 
 var _ staff = (*staffImpl)(nil)
 
-func Staff(ink *core.Ink) staff {
-	return (*staffImpl)(ink)
+func Staff(app *inkstone.AppContext) staff {
+	return (*staffImpl)(app)
 }

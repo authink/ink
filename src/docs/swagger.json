@@ -49,13 +49,13 @@
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/ext.ClientError"
+                            "$ref": "#/definitions/inkstone.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/ext.ClientError"
+                            "$ref": "#/definitions/inkstone.ClientError"
                         }
                     },
                     "500": {
@@ -102,19 +102,19 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/ext.ClientError"
+                            "$ref": "#/definitions/inkstone.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/ext.ClientError"
+                            "$ref": "#/definitions/inkstone.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/ext.ClientError"
+                            "$ref": "#/definitions/inkstone.ClientError"
                         }
                     },
                     "500": {
@@ -135,6 +135,12 @@
                 "summary": "Generate token",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "language",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
                         "description": "request body",
                         "name": "grantReq",
                         "in": "body",
@@ -154,7 +160,7 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/ext.ClientError"
+                            "$ref": "#/definitions/inkstone.ClientError"
                         }
                     },
                     "500": {
@@ -194,7 +200,7 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/ext.ClientError"
+                            "$ref": "#/definitions/inkstone.ClientError"
                         }
                     },
                     "500": {
@@ -234,7 +240,7 @@
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/ext.ClientError"
+                            "$ref": "#/definitions/inkstone.ClientError"
                         }
                     },
                     "500": {
@@ -256,7 +262,7 @@
                 }
             }
         },
-        "ext.ClientError": {
+        "inkstone.ClientError": {
             "type": "object",
             "properties": {
                 "code": {

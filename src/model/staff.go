@@ -1,9 +1,11 @@
 package model
 
-import "github.com/authink/ink.go/src/util"
+import (
+	"github.com/authink/inkstone"
+)
 
 type Staff struct {
-	Model
+	inkstone.Model
 	Email     string
 	Password  string
 	Phone     string
@@ -13,7 +15,7 @@ type Staff struct {
 }
 
 func NewStaff(email, password, phone string, super bool) *Staff {
-	hashedPassword, err := util.HashPassword(password)
+	hashedPassword, err := inkstone.HashPassword(password)
 	if err != nil {
 		panic(err)
 	}

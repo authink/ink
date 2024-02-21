@@ -55,13 +55,13 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/ext.ClientError"
+                            "$ref": "#/definitions/inkstone.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/ext.ClientError"
+                            "$ref": "#/definitions/inkstone.ClientError"
                         }
                     },
                     "500": {
@@ -108,19 +108,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/ext.ClientError"
+                            "$ref": "#/definitions/inkstone.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/ext.ClientError"
+                            "$ref": "#/definitions/inkstone.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/ext.ClientError"
+                            "$ref": "#/definitions/inkstone.ClientError"
                         }
                     },
                     "500": {
@@ -141,6 +141,12 @@ const docTemplate = `{
                 "summary": "Generate token",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "language",
+                        "name": "lang",
+                        "in": "query"
+                    },
+                    {
                         "description": "request body",
                         "name": "grantReq",
                         "in": "body",
@@ -160,7 +166,7 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/ext.ClientError"
+                            "$ref": "#/definitions/inkstone.ClientError"
                         }
                     },
                     "500": {
@@ -200,7 +206,7 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/ext.ClientError"
+                            "$ref": "#/definitions/inkstone.ClientError"
                         }
                     },
                     "500": {
@@ -240,7 +246,7 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/ext.ClientError"
+                            "$ref": "#/definitions/inkstone.ClientError"
                         }
                     },
                     "500": {
@@ -262,7 +268,7 @@ const docTemplate = `{
                 }
             }
         },
-        "ext.ClientError": {
+        "inkstone.ClientError": {
             "type": "object",
             "properties": {
                 "code": {

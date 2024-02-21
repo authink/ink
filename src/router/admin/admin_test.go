@@ -6,27 +6,34 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/authink/ink.go/src/core"
-	"github.com/authink/ink.go/src/router/common"
+	myEnv "github.com/authink/ink.go/src/env"
+	"github.com/authink/ink.go/src/i18n"
+	"github.com/authink/ink.go/src/migrate"
 	"github.com/authink/ink.go/src/router/token"
-	"github.com/authink/ink.go/src/test"
+	"github.com/authink/inkstone"
 )
 
 var ctx = context.Background()
 
 func TestMain(m *testing.M) {
-	env := core.LoadEnv()
+	env := inkstone.LoadEnv()
 	env.DbName = fmt.Sprintf("%s_%s", env.DbName, "admin")
-	defer core.CreateDB(env)()
+	defer inkstone.CreateDB(
+		env.DbUser,
+		env.DbPasswd,
+		env.DbName,
+		env.DbHost,
+		env.DbPort,
+	)()
 
-	ink := core.NewInkWith(env)
-	defer ink.Close()
+	app := inkstone.NewAppContextWithEnv(&i18n.Locales, env)
+	defer app.Close()
 
-	router, gApi := common.SetupRouter(ink)
-	token.SetupTokenGroup(gApi)
-	SetupAdminGroup(gApi, ink.Env.AppNameAdmin)
+	router, apiGroup := inkstone.SetupRouter(app)
+	token.SetupTokenGroup(apiGroup)
+	SetupAdminGroup(apiGroup, myEnv.AppNameAdmin())
 
-	test.Main(&ctx, ink, router)(m)
+	inkstone.TestMain(&ctx, app, router, migrate.Seed)(m)
 }
 
 func grantToken(appId int, appSecret, email, password string, resObj any) (*httptest.ResponseRecorder, error) {
@@ -37,7 +44,7 @@ func grantToken(appId int, appSecret, email, password string, resObj any) (*http
 		Password:  password,
 	}
 
-	return test.Fetch(
+	return inkstone.TestFetch(
 		ctx,
 		"POST",
 		"token/grant",

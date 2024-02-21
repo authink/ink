@@ -3,7 +3,7 @@
 ## Usage
 
 ```bash
-$ INK_ENV=dev ./bin/ink run
+$ ./bin/ink run
 ```
 
 具体可以查看 help 信息
@@ -71,16 +71,16 @@ CREATE DATABASE `ink` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_uni
 
 ```bash
 # up
-$ INK_ENV=dev ./bin/ink migrate -d up
+$ APP_ENV=dev ./bin/ink migrate -d up
 
 # down
-$ INK_ENV=dev ./bin/ink migrate -d down
+$ APP_ENV=dev ./bin/ink migrate -d down
 ```
 
 ## Seed
 
 ```bash
-$ INK_ENV=dev ./bin/ink seed
+$ APP_ENV=dev ./bin/ink seed
 ```
 
 ## 生成 API swagger 文档
@@ -106,7 +106,7 @@ $ make run
 
 ## Live reload
 
-此功能只能在 INK_ENV=dev 环境中开启
+此功能只能在 APP_ENV=dev 环境中开启
 
 ```bash
 $ make run ARGS="-l"
@@ -128,19 +128,22 @@ $ make build
 
 ## I18n
 
+todo: ink translate
+自动扫描所有未翻译字段，写入 locales 文件中
+
 ## Env
 
-根据 INK_ENV 读取不同的 env，其中 .local 文件是在本地开发时用来覆盖默认配置，不会提交到 git 仓库
+根据 APP_ENV 读取不同的 env，其中 .local 文件是在本地开发时用来覆盖默认配置，不会提交到 git 仓库
 
-1. INK_ENV=dev
+1. APP_ENV=dev
 
 .env.dev.local > .env.local > .env.dev > .env
 
-2. INK_ENV=test
+2. APP_ENV=test
 
 .env.test.local > .env.local > .env.test > .env
 
-3. INK_ENV=prod
+3. APP_ENV=prod
 
 .env.prod.local > .env.local > .env.prod > .env
 

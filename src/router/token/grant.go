@@ -4,10 +4,11 @@ import (
 	"net/http"
 	"regexp"
 
-	"github.com/authink/ink.go/src/core"
-	"github.com/authink/ink.go/src/ext"
+	"github.com/authink/ink.go/src/env"
+	"github.com/authink/ink.go/src/errors"
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/ink.go/src/util"
+	"github.com/authink/inkstone"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 )
@@ -45,38 +46,39 @@ type GrantRes struct {
 //	@Description	Generate token
 //	@Tags			token
 //	@Router			/token/grant [post]
+//	@Param			lang		query		string		false	"language"
 //	@Param			grantReq	body		GrantReq	true	"request body"
 //	@Success		200			{object}	GrantRes
-//	@Failure		400			{object}	ext.ClientError
+//	@Failure		400			{object}	inkstone.ClientError
 //	@Failure		500			{string}	empty
-func grant(c *ext.Context) {
+func grant(c *inkstone.Context) {
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("inkEmail", inkEmailValidation)
 	}
 
 	req := &GrantReq{}
 	if err := c.ShouldBindJSON(req); err != nil {
-		c.AbortWithClientError(ext.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
 		return
 	}
 
-	ink := c.MustGet("ink").(*core.Ink)
+	appContext := c.App()
 
-	if app, err := orm.App(ink).Get(req.AppId); util.CheckApp(c, err, app.Active, func() bool { return util.CompareSecrets(app.Secret, req.AppSecret) }, http.StatusBadRequest) {
+	if app, err := orm.App(appContext).Get(req.AppId); util.CheckApp(c, err, app.Active, func() bool { return util.CompareSecrets(app.Secret, req.AppSecret) }, http.StatusBadRequest) {
 		switch app.Name {
-		case ink.Env.AppNameAdmin:
-			staff, err := orm.Staff(ink).GetByEmail(req.Email)
+		case env.AppNameAdmin():
+			staff, err := orm.Staff(appContext).GetByEmail(req.Email)
 
-			if ok := util.CheckStaff(c, err, staff.Active, staff.Departure, func() bool { return util.CheckPassword(staff.Password, req.Password) == nil }, http.StatusBadRequest); !ok {
+			if ok := util.CheckStaff(c, err, staff.Active, staff.Departure, func() bool { return inkstone.CheckPassword(staff.Password, req.Password) == nil }, http.StatusBadRequest); !ok {
 				return
 			}
 
-			if res := generateAuthToken(c, ink, app, staff); res != nil {
+			if res := generateAuthToken(c, app, staff); res != nil {
 				c.JSON(http.StatusOK, res)
 			}
 
 		default:
-			c.AbortWithClientError(ext.ERR_UNSUPPORTED_APP)
+			c.AbortWithClientError(errors.ERR_UNSUPPORTED_APP)
 		}
 	}
 }

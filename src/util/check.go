@@ -1,33 +1,33 @@
 package util
 
 import (
-	"errors"
+	"database/sql"
+	errs "errors"
 	"net/http"
 
-	"database/sql"
-
-	"github.com/authink/ink.go/src/ext"
+	"github.com/authink/ink.go/src/errors"
+	"github.com/authink/inkstone"
 	"github.com/golang-jwt/jwt/v5"
 )
 
 type CheckSecretFunc func() bool
 
 func CompareSecrets(secret, reqAppSecret string) (ok bool) {
-	return secret == Sha256(reqAppSecret)
+	return secret == inkstone.Sha256(reqAppSecret)
 }
 
-func CheckApp(c *ext.Context, err error, active bool, checkSecret CheckSecretFunc, code int) (ok bool) {
+func CheckApp(c *inkstone.Context, err error, active bool, checkSecret CheckSecretFunc, code int) (ok bool) {
 	if err != nil || !active || !checkSecret() {
-		if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		if err != nil && !errs.Is(err, sql.ErrNoRows) {
 			c.AbortWithServerError(err)
 			return
 		}
 
 		switch code {
 		case http.StatusUnauthorized:
-			c.AbortWithUnauthorized(ext.ERR_INVALID_APP)
+			c.AbortWithUnauthorized(errors.ERR_INVALID_APP)
 		default:
-			c.AbortWithClientError(ext.ERR_INVALID_APP)
+			c.AbortWithClientError(errors.ERR_INVALID_APP)
 		}
 
 		return
@@ -37,18 +37,18 @@ func CheckApp(c *ext.Context, err error, active bool, checkSecret CheckSecretFun
 
 type CheckPasswordFunc func() bool
 
-func CheckStaff(c *ext.Context, err error, active, departure bool, checkPassword CheckPasswordFunc, code int) (ok bool) {
+func CheckStaff(c *inkstone.Context, err error, active, departure bool, checkPassword CheckPasswordFunc, code int) (ok bool) {
 	if err != nil || !active || departure || !checkPassword() {
-		if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		if err != nil && !errs.Is(err, sql.ErrNoRows) {
 			c.AbortWithServerError(err)
 			return
 		}
 
 		switch code {
 		case http.StatusUnauthorized:
-			c.AbortWithUnauthorized(ext.ERR_INVALID_ACCOUNT)
+			c.AbortWithUnauthorized(errors.ERR_INVALID_ACCOUNT)
 		default:
-			c.AbortWithClientError(ext.ERR_INVALID_ACCOUNT)
+			c.AbortWithClientError(errors.ERR_INVALID_ACCOUNT)
 		}
 
 		return
@@ -56,11 +56,11 @@ func CheckStaff(c *ext.Context, err error, active, departure bool, checkPassword
 	return true
 }
 
-func CheckAccessToken(c *ext.Context, secretKey, accessToken, uuid string) (jwtClaims *ext.JwtClaims, ok bool) {
-	jwtClaims, err := VerifyToken(secretKey, accessToken)
+func CheckAccessToken(c *inkstone.Context, secretKey, accessToken, uuid string) (jwtClaims *inkstone.JwtClaims, ok bool) {
+	jwtClaims, err := inkstone.VerifyToken(secretKey, accessToken)
 
-	if (err != nil && !errors.Is(err, jwt.ErrTokenExpired)) || jwtClaims.ID != uuid {
-		c.AbortWithClientError(ext.ERR_INVALID_ACCESS_TOKEN)
+	if (err != nil && !errs.Is(err, jwt.ErrTokenExpired)) || jwtClaims.ID != uuid {
+		c.AbortWithClientError(errors.ERR_INVALID_ACCESS_TOKEN)
 		return
 	}
 

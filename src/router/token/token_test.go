@@ -5,23 +5,30 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/authink/ink.go/src/core"
-	"github.com/authink/ink.go/src/router/common"
-	"github.com/authink/ink.go/src/test"
+	"github.com/authink/ink.go/src/i18n"
+	"github.com/authink/ink.go/src/migrate"
+	"github.com/authink/inkstone"
 )
 
 var ctx = context.Background()
 
 func TestMain(m *testing.M) {
-	env := core.LoadEnv()
+	env := inkstone.LoadEnv()
 	env.DbName = fmt.Sprintf("%s_%s", env.DbName, "token")
-	defer core.CreateDB(env)()
 
-	ink := core.NewInkWith(env)
-	defer ink.Close()
+	defer inkstone.CreateDB(
+		env.DbUser,
+		env.DbPasswd,
+		env.DbName,
+		env.DbHost,
+		env.DbPort,
+	)()
 
-	router, gApi := common.SetupRouter(ink)
-	SetupTokenGroup(gApi)
+	app := inkstone.NewAppContextWithEnv(&i18n.Locales, env)
+	defer app.Close()
 
-	test.Main(&ctx, ink, router)(m)
+	router, apiGroup := inkstone.SetupRouter(app)
+	SetupTokenGroup(apiGroup)
+
+	inkstone.TestMain(&ctx, app, router, migrate.Seed)(m)
 }

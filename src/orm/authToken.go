@@ -1,19 +1,19 @@
 package orm
 
 import (
-	"github.com/authink/ink.go/src/core"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/sql"
+	"github.com/authink/inkstone"
 	"github.com/jmoiron/sqlx"
 )
 
 type authToken interface {
-	ORM[model.AuthToken]
+	inkstone.ORM[model.AuthToken]
 	GetByRefreshToken(string) (*model.AuthToken, error)
 	GetByAccessToken(string) (*model.AuthToken, error)
 }
 
-type authTokenImpl core.Ink
+type authTokenImpl inkstone.AppContext
 
 // Find implements authToken.
 func (*authTokenImpl) Find() ([]model.AuthToken, error) {
@@ -72,6 +72,6 @@ func (at *authTokenImpl) Delete(id int) (err error) {
 
 var _ authToken = (*authTokenImpl)(nil)
 
-func AuthToken(ink *core.Ink) authToken {
-	return (*authTokenImpl)(ink)
+func AuthToken(app *inkstone.AppContext) authToken {
+	return (*authTokenImpl)(app)
 }

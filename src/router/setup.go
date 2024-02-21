@@ -1,10 +1,9 @@
 package router
 
 import (
-	"github.com/authink/ink.go/src/core"
 	_ "github.com/authink/ink.go/src/docs"
+	"github.com/authink/ink.go/src/env"
 	"github.com/authink/ink.go/src/router/admin"
-	"github.com/authink/ink.go/src/router/common"
 	"github.com/authink/ink.go/src/router/token"
 	"github.com/gin-gonic/gin"
 )
@@ -33,9 +32,8 @@ import (
 
 // @externalDocs.description	OpenAPI
 // @externalDocs.url			https://swagger.io/resources/open-api/
-func SetupRouter(ink *core.Ink) (router *gin.Engine) {
-	router, gApi := common.SetupRouter(ink)
-	token.SetupTokenGroup(gApi)
-	admin.SetupAdminGroup(gApi, ink.Env.AppNameAdmin)
+func SetupRouter(apiGroup *gin.RouterGroup) {
+	token.SetupTokenGroup(apiGroup)
+	admin.SetupAdminGroup(apiGroup, env.AppNameAdmin())
 	return
 }
