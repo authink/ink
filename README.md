@@ -109,7 +109,7 @@ $ make run
 此功能只能在 INK_ENV=dev 环境中开启
 
 ```bash
-$ make ARGS="-l" run
+$ make run ARGS="-l"
 ```
 
 ## 单元测试/go test/CI
