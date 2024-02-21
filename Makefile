@@ -1,4 +1,5 @@
 .DEFAULT_GOAL := build
+V := 0.1.0
 ARGS :=
 
 swag:
@@ -15,3 +16,8 @@ build: test
 run:
 	APP_ENV=dev ./bin/ink run $(ARGS)
 run: build
+
+package:
+	git tag v$(V)
+	git push --tags
+package: build
