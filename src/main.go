@@ -93,10 +93,13 @@ var cmdRun = &cobra.Command{
 		if hotReload {
 			core.AssertEnvDev("live-reload")
 
-			cfg, err := runner.InitConfig(".air.toml")
+			cfg, err := runner.InitConfig("")
 			if err != nil {
 				panic(err)
 			}
+
+			cfg.Build.Cmd = "go build -o ./tmp/main ./src"
+			cfg.Build.ArgsBin = []string{"run"}
 
 			r, err := runner.NewEngineWithConfig(cfg, true)
 			if err != nil {
