@@ -48,7 +48,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.App"
+                                "$ref": "#/definitions/admin.appRes"
                             }
                         }
                     },
@@ -260,6 +260,26 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "admin.appRes": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
         "admin.dashboardRes": {
             "type": "object",
             "properties": {
@@ -275,29 +295,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "message": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.App": {
-            "type": "object",
-            "properties": {
-                "active": {
-                    "type": "boolean"
-                },
-                "createdAt": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "secret": {
-                    "type": "string"
-                },
-                "updatedAt": {
                     "type": "string"
                 }
             }

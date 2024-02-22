@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/authink/ink.go/src/env"
-	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/router/token"
 	"github.com/authink/inkstone"
 	"github.com/stretchr/testify/assert"
@@ -31,7 +30,7 @@ func TestApps(t *testing.T) {
 	assert.NotEmpty(t, resObj.AccessToken)
 	assert.NotEmpty(t, resObj.RefreshToken)
 
-	var apps []model.App
+	var apps []appRes
 	w2, _ := getApps(resObj.AccessToken, &apps)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Equal(t, 1, len(apps))
