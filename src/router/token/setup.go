@@ -21,16 +21,20 @@ func SetupTokenGroup(rg *gin.RouterGroup) {
 
 func generateAuthToken(c *inkstone.Context, app *model.App, staff *model.Staff) (res *GrantRes) {
 	appContext := c.App()
-	uuid := inkstone.GenerateUUID()
-	accessToken, err := inkstone.GenerateToken(
+
+	jwtClaims := inkstone.NewJwtClaims(
+		inkstone.GenerateUUID(),
 		appContext.AppName,
-		appContext.SecretKey,
+		app.Name,
+		staff.Email,
 		time.Duration(appContext.AccessTokenDuration),
 		app.Id,
-		app.Name,
 		staff.Id,
-		staff.Email,
-		uuid,
+	)
+
+	accessToken, err := inkstone.GenerateToken(
+		appContext.SecretKey,
+		jwtClaims,
 	)
 	if err != nil {
 		c.AbortWithServerError(err)
@@ -38,8 +42,8 @@ func generateAuthToken(c *inkstone.Context, app *model.App, staff *model.Staff) 
 	}
 
 	refreshToken := inkstone.GenerateUUID()
-	// accessToken identified by uuid
-	authToken := model.NewAuthToken(uuid, refreshToken, app.Id, staff.Id)
+
+	authToken := model.NewAuthToken(jwtClaims.ID, refreshToken, app.Id, staff.Id)
 
 	if err = orm.AuthToken(appContext).Save(authToken); err != nil {
 		c.AbortWithServerError(err)
