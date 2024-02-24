@@ -40,19 +40,33 @@ func (a *appImpl) Get(id int) (app *model.App, err error) {
 
 // Save implements app.
 func (a *appImpl) Save(app *model.App) (err error) {
-	_, err = a.DB.NamedExec(
+	result, err := a.DB.NamedExec(
 		sql.App.Insert(),
 		app,
 	)
+	if err != nil {
+		return
+	}
+
+	if lastId, err := result.LastInsertId(); err == nil {
+		app.Id = uint32(lastId)
+	}
 	return
 }
 
 // SaveWithTx implements app.
 func (*appImpl) SaveWithTx(app *model.App, tx *sqlx.Tx) (err error) {
-	_, err = tx.NamedExec(
+	result, err := tx.NamedExec(
 		sql.App.Insert(),
 		app,
 	)
+	if err != nil {
+		return
+	}
+
+	if lastId, err := result.LastInsertId(); err == nil {
+		app.Id = uint32(lastId)
+	}
 	return
 }
 

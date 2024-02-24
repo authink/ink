@@ -2,6 +2,20 @@ basePath: /api/v1
 consumes:
 - application/json
 definitions:
+  admin.addAppReq:
+    properties:
+      name:
+        type: string
+    type: object
+  admin.addAppRes:
+    properties:
+      Secret:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
   admin.appRes:
     properties:
       active:
@@ -115,6 +129,37 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Show apps
+      tags:
+      - app
+    post:
+      description: Add a app
+      parameters:
+      - description: request body
+        in: body
+        name: addAppReq
+        required: true
+        schema:
+          $ref: '#/definitions/admin.addAppReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/admin.addAppRes'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Add a app
       tags:
       - app
   /admin/dashboard:

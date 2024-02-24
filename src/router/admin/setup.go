@@ -14,4 +14,5 @@ func SetupAdminGroup(rg *gin.RouterGroup, appName string) {
 	)
 	gAdmin.GET("dashboard", dashboard)
 	gAdmin.GET("apps", inkstone.HandlerAdapter(apps))
+	gAdmin.POST("apps", inkstone.HandlerAdapter(addApp))
 }

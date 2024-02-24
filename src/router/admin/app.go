@@ -4,7 +4,10 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/authink/ink.go/src/errors"
+	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/orm"
+	"github.com/authink/ink.go/src/util"
 	"github.com/authink/inkstone"
 )
 
@@ -48,4 +51,47 @@ func apps(c *inkstone.Context) {
 	}
 
 	c.JSON(http.StatusOK, res)
+}
+
+type addAppReq struct {
+	Name string `json:"name"`
+}
+
+type addAppRes struct {
+	Id     int    `json:"id"`
+	Name   string `json:"name"`
+	Secret string `json:"Secret"`
+}
+
+// addApp godoc
+//
+//	@Summary		Add a app
+//	@Description	Add a app
+//	@Tags			app
+//	@Router			/admin/apps	[post]
+//	@Security		ApiKeyAuth
+//	@Param			addAppReq	body		addAppReq	true	"request body"
+//	@Success		200			{object}	addAppRes
+//	@Failure		401			{object}	inkstone.ClientError
+//	@Failure		403			{object}	inkstone.ClientError
+//	@Failure		500			{string}	empty
+func addApp(c *inkstone.Context) {
+	req := &addAppReq{}
+	if err := c.ShouldBindJSON(req); err != nil {
+		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		return
+	}
+
+	secret := util.RandString(6)
+	app := model.NewApp(req.Name, secret)
+	if err := orm.App(c.App()).Save(app); err != nil {
+		c.AbortWithServerError(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, &addAppRes{
+		int(app.Id),
+		app.Name,
+		secret,
+	})
 }
