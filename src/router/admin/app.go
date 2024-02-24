@@ -106,7 +106,7 @@ type resetAppReq struct {
 //	@Summary		Reset a app
 //	@Description	Reset a app
 //	@Tags			app
-//	@Router			/admin/apps/{id}	[put]
+//	@Router			/admin/apps/{id}/reset	[put]
 //	@Security		ApiKeyAuth
 //	@Param			id	path		int	true	"app id"
 //	@Success		200	{object}	addAppRes
@@ -143,5 +143,59 @@ func resetApp(c *inkstone.Context) {
 		int(app.Id),
 		app.Name,
 		secret,
+	})
+}
+
+type toggleAppReq struct {
+	Id int `uri:"id" binding:"required,min=100000"`
+}
+
+type toggleAppRes struct {
+	Id     int    `json:"id"`
+	Name   string `json:"name"`
+	Active bool   `json:"active"`
+}
+
+// resetApp godoc
+//
+//	@Summary		Toggle a app
+//	@Description	Toggle a app
+//	@Tags			app
+//	@Router			/admin/apps/{id}/toggle	[put]
+//	@Security		ApiKeyAuth
+//	@Param			id	path		int	true	"app id"
+//	@Success		200	{object}	toggleAppRes
+//	@Failure		401	{object}	inkstone.ClientError
+//	@Failure		403	{object}	inkstone.ClientError
+//	@Failure		500	{string}	empty
+func toggleApp(c *inkstone.Context) {
+	req := &toggleAppReq{}
+	if err := c.ShouldBindUri(req); err != nil {
+		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		return
+	}
+
+	appContext := c.App()
+
+	var app *model.App
+
+	if err := inkstone.Transaction(appContext, func(tx *sqlx.Tx) (err error) {
+		app, err = orm.App(appContext).Get(req.Id)
+		if err != nil {
+			return
+		}
+
+		app.Active = !app.Active
+
+		return orm.App(appContext).SaveWithTx(app, tx)
+	}); err != nil {
+		c.AbortWithServerError(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, &toggleAppRes{
+		int(app.Id),
+		app.Name,
+		app.Active,
 	})
 }
