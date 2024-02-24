@@ -30,7 +30,7 @@ func (*app) Get() string {
 
 // Insert implements inkstone.SQL.
 func (*app) Insert() string {
-	return fmt.Sprintf("INSERT INTO %s (name, secret) VALUES (:name, :secret)", table.App)
+	return fmt.Sprintf("INSERT INTO %s (name, secret) VALUES (:name, :secret) ON DUPLICATE KEY UPDATE active = :active, secret = :secret", table.App)
 }
 
 var _ inkstone.SQL = (*app)(nil)

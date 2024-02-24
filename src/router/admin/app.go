@@ -9,6 +9,7 @@ import (
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/ink.go/src/util"
 	"github.com/authink/inkstone"
+	"github.com/jmoiron/sqlx"
 )
 
 type appRes struct {
@@ -54,13 +55,13 @@ func apps(c *inkstone.Context) {
 }
 
 type addAppReq struct {
-	Name string `json:"name"`
+	Name string `json:"name" binding:"required,min=6"`
 }
 
 type addAppRes struct {
 	Id     int    `json:"id"`
 	Name   string `json:"name"`
-	Secret string `json:"Secret"`
+	Secret string `json:"secret"`
 }
 
 // addApp godoc
@@ -85,6 +86,55 @@ func addApp(c *inkstone.Context) {
 	secret := util.RandString(6)
 	app := model.NewApp(req.Name, secret)
 	if err := orm.App(c.App()).Save(app); err != nil {
+		c.AbortWithServerError(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, &addAppRes{
+		int(app.Id),
+		app.Name,
+		secret,
+	})
+}
+
+type resetAppReq struct {
+	Id int `uri:"id" binding:"required,min=100000"`
+}
+
+// resetApp godoc
+//
+//	@Summary		Reset a app
+//	@Description	Reset a app
+//	@Tags			app
+//	@Router			/admin/apps/{id}	[put]
+//	@Security		ApiKeyAuth
+//	@Param			id	path		int	true	"app id"
+//	@Success		200	{object}	addAppRes
+//	@Failure		401	{object}	inkstone.ClientError
+//	@Failure		403	{object}	inkstone.ClientError
+//	@Failure		500	{string}	empty
+func resetApp(c *inkstone.Context) {
+	req := &resetAppReq{}
+	if err := c.ShouldBindUri(req); err != nil {
+		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		return
+	}
+
+	appContext := c.App()
+
+	var app *model.App
+	secret := util.RandString(6)
+
+	if err := inkstone.Transaction(appContext, func(tx *sqlx.Tx) (err error) {
+		app, err = orm.App(appContext).Get(req.Id)
+		if err != nil {
+			return
+		}
+
+		app.Reset(secret)
+
+		return orm.App(appContext).SaveWithTx(app, tx)
+	}); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}

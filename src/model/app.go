@@ -18,3 +18,7 @@ func NewApp(name, secret string) *App {
 		Active: true,
 	}
 }
+
+func (app *App) Reset(secret string) {
+	app.Secret = inkstone.Sha256(secret)
+}
