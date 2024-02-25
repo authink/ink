@@ -296,8 +296,7 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "offset",
                         "name": "offset",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "type": "integer",
@@ -352,8 +351,7 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "offset",
                         "name": "offset",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "type": "integer",

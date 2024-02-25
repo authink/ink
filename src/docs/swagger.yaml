@@ -345,7 +345,6 @@ paths:
       - description: offset
         in: query
         name: offset
-        required: true
         type: integer
       - description: limit
         in: query
@@ -381,7 +380,6 @@ paths:
       - description: offset
         in: query
         name: offset
-        required: true
         type: integer
       - description: limit
         in: query

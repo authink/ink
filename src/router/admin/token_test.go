@@ -15,7 +15,7 @@ func getTokens(accessToken string, resObj any) (*httptest.ResponseRecorder, erro
 	return inkstone.TestFetch(
 		ctx,
 		"GET",
-		"admin/tokens?offset=0&limit=2",
+		"admin/tokens?limit=2",
 		nil,
 		resObj,
 		accessToken,

@@ -12,8 +12,8 @@ import (
 )
 
 type pageReq struct {
-	Offset int `form:"offset"`
-	Limit  int `form:"limit"`
+	Offset int `form:"offset" binding:"min=0"`
+	Limit  int `form:"limit" binding:"required,min=1,max=100"`
 }
 
 type pageRes[T any] struct {
@@ -41,7 +41,7 @@ type tokenRes struct {
 //	@Tags			admin_token
 //	@Router			/admin/tokens	[get]
 //	@Security		ApiKeyAuth
-//	@Param			offset	query		int	true	"offset"
+//	@Param			offset	query		int	false	"offset"
 //	@Param			limit	query		int	true	"limit"
 //	@Success		200		{object}	pageRes[tokenRes]
 //	@Failure		401		{object}	inkstone.ClientError

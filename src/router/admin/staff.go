@@ -29,7 +29,7 @@ type staffRes struct {
 //	@Tags			admin_staff
 //	@Router			/admin/staffs	[get]
 //	@Security		ApiKeyAuth
-//	@Param			offset	query		int	true	"offset"
+//	@Param			offset	query		int	false	"offset"
 //	@Param			limit	query		int	true	"limit"
 //	@Success		200		{object}	pageRes[staffRes]
 //	@Failure		401		{object}	inkstone.ClientError
