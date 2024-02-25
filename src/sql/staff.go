@@ -8,6 +8,14 @@ import (
 
 type staff struct{}
 
+func (*staff) Count() string {
+	return fmt.Sprintf("SELECT COUNT(id) c FROM %s", table.Staff)
+}
+
+func (*staff) Pagination() string {
+	return fmt.Sprintf("SELECT id, created_at, updated_at, email, phone, super, active, departure FROM %s ORDER BY id DESC LIMIT ? OFFSET ?", table.Staff)
+}
+
 // Update implements inkstone.SQL.
 func (*staff) Update() string {
 	panic("unimplemented")

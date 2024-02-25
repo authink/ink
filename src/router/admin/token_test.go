@@ -37,10 +37,10 @@ func TestTokens(t *testing.T) {
 	assert.NotEmpty(t, resObj2.AccessToken)
 	assert.NotEmpty(t, resObj2.RefreshToken)
 
-	var tokens []tokenRes
-	w3, _ := getTokens(resObj.AccessToken, &tokens)
+	var res pageRes[tokenRes]
+	w3, _ := getTokens(resObj.AccessToken, &res)
 	assert.Equal(t, http.StatusOK, w3.Code)
-	assert.Equal(t, 2, len(tokens))
+	assert.Equal(t, 2, len(res.Items))
 }
 
 func tDeleteToken(accessToken string, id int) (*httptest.ResponseRecorder, error) {

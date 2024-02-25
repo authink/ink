@@ -14,6 +14,13 @@ type pageReq struct {
 	Limit  int `form:"limit"`
 }
 
+type pageRes[T any] struct {
+	Total  int `json:"total"`
+	Offset int `json:"offset"`
+	Limit  int `json:"limit"`
+	Items  []T `json:"items,omitempty"`
+}
+
 type tokenRes struct {
 	Id           int       `json:"id"`
 	CreatedAt    time.Time `json:"createdAt"`
@@ -34,7 +41,7 @@ type tokenRes struct {
 //	@Security		ApiKeyAuth
 //	@Param			offset	query		int	true	"offset"
 //	@Param			limit	query		int	true	"limit"
-//	@Success		200		{array}		tokenRes
+//	@Success		200		{object}	pageRes[tokenRes]
 //	@Failure		401		{object}	inkstone.ClientError
 //	@Failure		403		{object}	inkstone.ClientError
 //	@Failure		500		{string}	empty
@@ -44,6 +51,12 @@ func tokens(c *inkstone.Context) {
 	req := &pageReq{}
 	if err := c.ShouldBindQuery(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		return
+	}
+
+	total, err := orm.AuthToken(appContext).Count()
+	if err != nil {
+		c.AbortWithServerError(err)
 		return
 	}
 
@@ -68,7 +81,12 @@ func tokens(c *inkstone.Context) {
 		})
 	}
 
-	c.JSON(http.StatusOK, res)
+	c.JSON(http.StatusOK, &pageRes[tokenRes]{
+		total,
+		req.Offset,
+		req.Limit,
+		res,
+	})
 }
 
 type delTokenReq struct {

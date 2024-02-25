@@ -9,10 +9,29 @@ import (
 
 type staff interface {
 	inkstone.ORM[model.Staff]
+	Count() (int, error)
+	Pagination(offset, limit int) ([]model.Staff, error)
 	GetByEmail(string) (*model.Staff, error)
 }
 
 type staffImpl inkstone.AppContext
+
+// Count implements staff.
+func (s *staffImpl) Count() (c int, err error) {
+	err = s.DB.Get(&c, sql.Staff.Count())
+	return
+}
+
+// Pagination implements staff.
+func (s *staffImpl) Pagination(offset, limit int) (staffs []model.Staff, err error) {
+	err = s.DB.Select(
+		&staffs,
+		sql.Staff.Pagination(),
+		limit,
+		offset,
+	)
+	return
+}
 
 // Delete implements staff.
 func (*staffImpl) Delete(int) error {
