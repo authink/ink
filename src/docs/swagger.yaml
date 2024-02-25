@@ -331,6 +331,37 @@ paths:
       summary: Show tokens
       tags:
       - admin_token
+  /admin/tokens/{id}:
+    delete:
+      description: Delete a token
+      parameters:
+      - description: token id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a token
+      tags:
+      - admin_token
   /token/grant:
     post:
       description: Generate token

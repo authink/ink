@@ -18,4 +18,5 @@ func SetupAdminGroup(rg *gin.RouterGroup, appName string) {
 	gAdmin.PUT("apps/:id/reset", inkstone.HandlerAdapter(resetApp))
 	gAdmin.PUT("apps/:id/toggle", inkstone.HandlerAdapter(toggleApp))
 	gAdmin.GET("tokens", inkstone.HandlerAdapter(tokens))
+	gAdmin.DELETE("tokens/:id", inkstone.HandlerAdapter(deleteToken))
 }

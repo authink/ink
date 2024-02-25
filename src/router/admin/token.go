@@ -70,3 +70,34 @@ func tokens(c *inkstone.Context) {
 
 	c.JSON(http.StatusOK, res)
 }
+
+type delTokenReq struct {
+	Id int `uri:"id" binding:"required,min=100000"`
+}
+
+// deleteToken godoc
+//
+//	@Summary		Delete a token
+//	@Description	Delete a token
+//	@Tags			admin_token
+//	@Router			/admin/tokens/{id}	[delete]
+//	@Security		ApiKeyAuth
+//	@Param			id	path		int	true	"token id"
+//	@Success		200	{string}	empty
+//	@Failure		401	{object}	inkstone.ClientError
+//	@Failure		403	{object}	inkstone.ClientError
+//	@Failure		500	{string}	empty
+func deleteToken(c *inkstone.Context) {
+	req := &delTokenReq{}
+	if err := c.ShouldBindUri(req); err != nil {
+		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		return
+	}
+
+	if err := orm.AuthToken(c.App()).Delete(req.Id); err != nil {
+		c.AbortWithServerError(err)
+		return
+	}
+
+	c.Status(http.StatusOK)
+}
