@@ -39,7 +39,7 @@ const docTemplate = `{
                 ],
                 "description": "Show apps",
                 "tags": [
-                    "app"
+                    "admin_app"
                 ],
                 "summary": "Show apps",
                 "responses": {
@@ -80,7 +80,7 @@ const docTemplate = `{
                 ],
                 "description": "Add a app",
                 "tags": [
-                    "app"
+                    "admin_app"
                 ],
                 "summary": "Add a app",
                 "parameters": [
@@ -131,7 +131,7 @@ const docTemplate = `{
                 ],
                 "description": "Reset a app",
                 "tags": [
-                    "app"
+                    "admin_app"
                 ],
                 "summary": "Reset a app",
                 "parameters": [
@@ -180,7 +180,7 @@ const docTemplate = `{
                 ],
                 "description": "Toggle a app",
                 "tags": [
-                    "app"
+                    "admin_app"
                 ],
                 "summary": "Toggle a app",
                 "parameters": [
@@ -256,6 +256,65 @@ const docTemplate = `{
                         "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/tokens": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Show tokens",
+                "tags": [
+                    "admin_token"
+                ],
+                "summary": "Show tokens",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "offset",
+                        "name": "offset",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "limit",
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/admin.tokenRes"
+                            }
                         }
                     },
                     "401": {
@@ -471,6 +530,35 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "admin.tokenRes": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "accountId": {
+                    "type": "integer"
+                },
+                "appId": {
+                    "type": "integer"
+                },
+                "appName": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "refresh_token": {
+                    "type": "string"
+                },
+                "updatedAt": {
                     "type": "string"
                 }
             }

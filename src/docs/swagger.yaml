@@ -46,6 +46,25 @@ definitions:
       name:
         type: string
     type: object
+  admin.tokenRes:
+    properties:
+      access_token:
+        type: string
+      accountId:
+        type: integer
+      appId:
+        type: integer
+      appName:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: integer
+      refresh_token:
+        type: string
+      updatedAt:
+        type: string
+    type: object
   inkstone.ClientError:
     properties:
       code:
@@ -142,7 +161,7 @@ paths:
       - ApiKeyAuth: []
       summary: Show apps
       tags:
-      - app
+      - admin_app
     post:
       description: Add a app
       parameters:
@@ -173,7 +192,7 @@ paths:
       - ApiKeyAuth: []
       summary: Add a app
       tags:
-      - app
+      - admin_app
   /admin/apps/{id}/reset:
     put:
       description: Reset a app
@@ -204,7 +223,7 @@ paths:
       - ApiKeyAuth: []
       summary: Reset a app
       tags:
-      - app
+      - admin_app
   /admin/apps/{id}/toggle:
     put:
       description: Toggle a app
@@ -235,7 +254,7 @@ paths:
       - ApiKeyAuth: []
       summary: Toggle a app
       tags:
-      - app
+      - admin_app
   /admin/dashboard:
     get:
       description: Show dashboard
@@ -274,6 +293,44 @@ paths:
       summary: Show dashboard
       tags:
       - dashboard
+  /admin/tokens:
+    get:
+      description: Show tokens
+      parameters:
+      - description: offset
+        in: query
+        name: offset
+        required: true
+        type: integer
+      - description: limit
+        in: query
+        name: limit
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/admin.tokenRes'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Show tokens
+      tags:
+      - admin_token
   /token/grant:
     post:
       description: Generate token

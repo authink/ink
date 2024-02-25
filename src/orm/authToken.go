@@ -9,11 +9,23 @@ import (
 
 type authToken interface {
 	inkstone.ORM[model.AuthToken]
+	Pagination(offset, limit int) ([]model.AuthTokenWithApp, error)
 	GetByRefreshToken(string) (*model.AuthToken, error)
 	GetByAccessToken(string) (*model.AuthToken, error)
 }
 
 type authTokenImpl inkstone.AppContext
+
+// Pagination implements authToken.
+func (at *authTokenImpl) Pagination(offset, limit int) (tokens []model.AuthTokenWithApp, err error) {
+	err = at.DB.Select(
+		&tokens,
+		sql.AuthToken.Pagination(),
+		limit,
+		offset,
+	)
+	return
+}
 
 // Find implements authToken.
 func (*authTokenImpl) Find() ([]model.AuthToken, error) {

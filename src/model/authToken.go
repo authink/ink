@@ -18,3 +18,12 @@ func NewAuthToken(accessToken, refreshToken string, appId, accountId uint32) *Au
 		AccountId:    accountId,
 	}
 }
+
+type AuthTokenWithApp struct {
+	inkstone.Model
+	AccessToken  string `db:"access_token"`
+	RefreshToken string `db:"refresh_token"`
+	AppId        uint32 `db:"app_id"`
+	AppName      string `db:"app_name"`
+	AccountId    uint32 `db:"account_id"`
+}

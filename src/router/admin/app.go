@@ -24,7 +24,7 @@ type appRes struct {
 //
 //	@Summary		Show apps
 //	@Description	Show apps
-//	@Tags			app
+//	@Tags			admin_app
 //	@Router			/admin/apps	[get]
 //	@Security		ApiKeyAuth
 //	@Success		200	{array}		appRes
@@ -68,7 +68,7 @@ type addAppRes struct {
 //
 //	@Summary		Add a app
 //	@Description	Add a app
-//	@Tags			app
+//	@Tags			admin_app
 //	@Router			/admin/apps	[post]
 //	@Security		ApiKeyAuth
 //	@Param			addAppReq	body		addAppReq	true	"request body"
@@ -105,7 +105,7 @@ type resetAppReq struct {
 //
 //	@Summary		Reset a app
 //	@Description	Reset a app
-//	@Tags			app
+//	@Tags			admin_app
 //	@Router			/admin/apps/{id}/reset	[put]
 //	@Security		ApiKeyAuth
 //	@Param			id	path		int	true	"app id"
@@ -160,7 +160,7 @@ type toggleAppRes struct {
 //
 //	@Summary		Toggle a app
 //	@Description	Toggle a app
-//	@Tags			app
+//	@Tags			admin_app
 //	@Router			/admin/apps/{id}/toggle	[put]
 //	@Security		ApiKeyAuth
 //	@Param			id	path		int	true	"app id"
@@ -172,6 +172,12 @@ func toggleApp(c *inkstone.Context) {
 	req := &toggleAppReq{}
 	if err := c.ShouldBindUri(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		return
+	}
+
+	currentApp := c.MustGet("app").(*model.App)
+	if req.Id == int(currentApp.Id) {
+		c.AbortWithForbidden(errors.ERR_BAD_REQUEST)
 		return
 	}
 

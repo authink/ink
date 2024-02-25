@@ -34,7 +34,7 @@ func TestApps(t *testing.T) {
 	var apps []appRes
 	w2, _ := getApps(resObj.AccessToken, &apps)
 	assert.Equal(t, http.StatusOK, w2.Code)
-	assert.Equal(t, 1, len(apps))
+	assert.Equal(t, 2, len(apps))
 	assert.Equal(t, env.AppNameAdmin(), apps[0].Name)
 	assert.True(t, apps[0].Active)
 }
@@ -62,7 +62,7 @@ func TestAddApp(t *testing.T) {
 	resAddApp := &addAppRes{}
 	w2, _ := tAddApp(resObj.AccessToken, "appmock", &resAddApp)
 	assert.Equal(t, http.StatusOK, w2.Code)
-	assert.Less(t, 100000, resAddApp.Id)
+	assert.Less(t, 100001, resAddApp.Id)
 	assert.Equal(t, "appmock", resAddApp.Name)
 	assert.NotEmpty(t, resAddApp.Secret)
 }
@@ -78,7 +78,6 @@ func tResetApp(accessToken string, id int, resObj any) (*httptest.ResponseRecord
 	)
 }
 
-var secret = "123456"
 func TestResetApp(t *testing.T) {
 	resObj := &token.GrantRes{}
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
@@ -88,12 +87,11 @@ func TestResetApp(t *testing.T) {
 	assert.NotEmpty(t, resObj.RefreshToken)
 
 	resetAppRes := &addAppRes{}
-	w2, _ := tResetApp(resObj.AccessToken, 100000, &resetAppRes)
+	w2, _ := tResetApp(resObj.AccessToken, 100001, &resetAppRes)
 	assert.Equal(t, http.StatusOK, w2.Code)
-	assert.Equal(t, 100000, resetAppRes.Id)
-	assert.Equal(t, "admin.dev", resetAppRes.Name)
+	assert.Equal(t, 100001, resetAppRes.Id)
+	assert.Equal(t, "devtools", resetAppRes.Name)
 	assert.NotEqual(t, "123456", resetAppRes.Secret)
-	secret = resetAppRes.Secret
 }
 
 func tToggleApp(accessToken string, id int, resObj any) (*httptest.ResponseRecorder, error) {
@@ -109,16 +107,16 @@ func tToggleApp(accessToken string, id int, resObj any) (*httptest.ResponseRecor
 
 func TestToggleApp(t *testing.T) {
 	resObj := &token.GrantRes{}
-	w, _ := grantToken(100000, secret, "admin@huoyijie.cn", "123456", resObj)
+	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.NotEmpty(t, resObj.AccessToken)
 	assert.NotEmpty(t, resObj.RefreshToken)
 
 	toggleAppRes := &toggleAppRes{}
-	w2, _ := tToggleApp(resObj.AccessToken, 100000, &toggleAppRes)
+	w2, _ := tToggleApp(resObj.AccessToken, 100001, &toggleAppRes)
 	assert.Equal(t, http.StatusOK, w2.Code)
-	assert.Equal(t, 100000, toggleAppRes.Id)
-	assert.Equal(t, "admin.dev", toggleAppRes.Name)
+	assert.Equal(t, 100001, toggleAppRes.Id)
+	assert.Equal(t, "devtools", toggleAppRes.Name)
 	assert.False(t, toggleAppRes.Active)
 }
