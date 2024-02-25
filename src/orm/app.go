@@ -9,9 +9,21 @@ import (
 
 type app interface {
 	inkstone.ORM[model.App]
+	GetWithTx(int, *sqlx.Tx) (*model.App, error)
 }
 
 type appImpl inkstone.AppContext
+
+// GetWithTx implements app.
+func (*appImpl) GetWithTx(id int, tx *sqlx.Tx) (app *model.App, err error) {
+	app = &model.App{}
+	err = tx.Get(
+		app,
+		sql.App.GetForUpdate(),
+		id,
+	)
+	return
+}
 
 // Delete implements app.
 func (*appImpl) Delete(int) error {

@@ -5,8 +5,10 @@ import (
 	"time"
 
 	"github.com/authink/ink.go/src/errors"
+	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/inkstone"
+	"github.com/jmoiron/sqlx"
 )
 
 type staffRes struct {
@@ -42,14 +44,17 @@ func staffs(c *inkstone.Context) {
 		return
 	}
 
-	total, err := orm.Staff(appContext).Count()
-	if err != nil {
-		c.AbortWithServerError(err)
-		return
-	}
+	var total int
+	var staffs []model.Staff
 
-	staffs, err := orm.Staff(appContext).Pagination(req.Offset, req.Limit)
-	if err != nil {
+	if err := inkstone.Transaction(appContext, func(tx *sqlx.Tx) (err error) {
+		if total, err = orm.Staff(appContext).CountWithTx(tx); err != nil {
+			return
+		}
+
+		staffs, err = orm.Staff(appContext).PaginationWithTx(req.Offset, req.Limit, tx)
+		return
+	}); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}

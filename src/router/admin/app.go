@@ -126,7 +126,7 @@ func resetApp(c *inkstone.Context) {
 	secret := util.RandString(6)
 
 	if err := inkstone.Transaction(appContext, func(tx *sqlx.Tx) (err error) {
-		app, err = orm.App(appContext).Get(req.Id)
+		app, err = orm.App(appContext).GetWithTx(req.Id, tx)
 		if err != nil {
 			return
 		}
@@ -186,7 +186,7 @@ func toggleApp(c *inkstone.Context) {
 	var app *model.App
 
 	if err := inkstone.Transaction(appContext, func(tx *sqlx.Tx) (err error) {
-		app, err = orm.App(appContext).Get(req.Id)
+		app, err = orm.App(appContext).GetWithTx(req.Id, tx)
 		if err != nil {
 			return
 		}

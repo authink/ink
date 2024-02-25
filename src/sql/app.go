@@ -8,6 +8,10 @@ import (
 
 type app struct{}
 
+func (*app) GetForUpdate() string {
+	return fmt.Sprintf("SELECT id, name, secret, active FROM %s WHERE id = ? FOR UPDATE", table.App)
+}
+
 // Update implements inkstone.SQL.
 func (*app) Update() string {
 	panic("unimplemented")

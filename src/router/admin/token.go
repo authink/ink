@@ -5,8 +5,10 @@ import (
 	"time"
 
 	"github.com/authink/ink.go/src/errors"
+	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/inkstone"
+	"github.com/jmoiron/sqlx"
 )
 
 type pageReq struct {
@@ -54,14 +56,17 @@ func tokens(c *inkstone.Context) {
 		return
 	}
 
-	total, err := orm.AuthToken(appContext).Count()
-	if err != nil {
-		c.AbortWithServerError(err)
-		return
-	}
+	var total int
+	var tokens []model.AuthTokenWithApp
 
-	tokens, err := orm.AuthToken(appContext).Pagination(req.Offset, req.Limit)
-	if err != nil {
+	if err := inkstone.Transaction(appContext, func(tx *sqlx.Tx) (err error) {
+		if total, err = orm.AuthToken(appContext).CountWithTx(tx); err != nil {
+			return
+		}
+
+		tokens, err = orm.AuthToken(appContext).PaginationWithTx(req.Offset, req.Limit, tx)
+		return
+	}); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}
