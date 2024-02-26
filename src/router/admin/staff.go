@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"net/http"
 	"time"
 
 	"github.com/authink/ink.go/src/errors"
@@ -74,7 +73,7 @@ func staffs(c *inkstone.Context) {
 		})
 	}
 
-	c.JSON(http.StatusOK, &pageRes[staffRes]{
+	c.Response(&pageRes[staffRes]{
 		total,
 		req.Offset,
 		req.Limit,

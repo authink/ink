@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"net/http"
 	"time"
 
 	"github.com/authink/ink.go/src/errors"
@@ -86,7 +85,7 @@ func tokens(c *inkstone.Context) {
 		})
 	}
 
-	c.JSON(http.StatusOK, &pageRes[tokenRes]{
+	c.Response(&pageRes[tokenRes]{
 		total,
 		req.Offset,
 		req.Limit,
@@ -122,5 +121,5 @@ func deleteToken(c *inkstone.Context) {
 		return
 	}
 
-	c.Status(http.StatusOK)
+	c.Empty()
 }

@@ -54,7 +54,7 @@ func refresh(c *inkstone.Context) {
 			}
 
 			if res := generateAuthToken(c, app, staff); res != nil {
-				c.JSON(http.StatusOK, res)
+				c.Response(res)
 			}
 
 		default:

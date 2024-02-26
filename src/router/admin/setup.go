@@ -12,7 +12,7 @@ func SetupAdminGroup(rg *gin.RouterGroup, appName string) {
 		inkstone.HandlerAdapter(middleware.AuthN),
 		middleware.AppScope(appName),
 	)
-	gAdmin.GET("dashboard", dashboard)
+	gAdmin.GET("dashboard", inkstone.HandlerAdapter(dashboard))
 	gAdmin.GET("apps", inkstone.HandlerAdapter(apps))
 	gAdmin.POST("apps", inkstone.HandlerAdapter(addApp))
 	gAdmin.PUT("apps/:id/reset", inkstone.HandlerAdapter(resetApp))

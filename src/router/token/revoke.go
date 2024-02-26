@@ -1,8 +1,6 @@
 package token
 
 import (
-	"net/http"
-
 	"github.com/authink/ink.go/src/errors"
 	"github.com/authink/inkstone"
 )
@@ -28,5 +26,5 @@ func revoke(c *inkstone.Context) {
 		return
 	}
 
-	c.Status(http.StatusOK)
+	c.Empty()
 }

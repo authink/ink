@@ -1,9 +1,7 @@
 package admin
 
 import (
-	"net/http"
-
-	"github.com/gin-gonic/gin"
+	"github.com/authink/inkstone"
 )
 
 type dashboardRes struct {
@@ -23,6 +21,6 @@ type dashboardRes struct {
 //	@Failure		401			{object}	inkstone.ClientError
 //	@Failure		403			{object}	inkstone.ClientError
 //	@Failure		500			{string}	empty
-func dashboard(c *gin.Context) {
-	c.JSON(http.StatusOK, &dashboardRes{})
+func dashboard(c *inkstone.Context) {
+	c.Response(&dashboardRes{})
 }

@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"net/http"
 	"time"
 
 	"github.com/authink/ink.go/src/errors"
@@ -51,7 +50,7 @@ func apps(c *inkstone.Context) {
 		})
 	}
 
-	c.JSON(http.StatusOK, res)
+	c.Response(res)
 }
 
 type addAppReq struct {
@@ -90,7 +89,7 @@ func addApp(c *inkstone.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, &addAppRes{
+	c.Response(&addAppRes{
 		int(app.Id),
 		app.Name,
 		secret,
@@ -139,7 +138,7 @@ func resetApp(c *inkstone.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, &addAppRes{
+	c.Response(&addAppRes{
 		int(app.Id),
 		app.Name,
 		secret,
@@ -199,7 +198,7 @@ func toggleApp(c *inkstone.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, &toggleAppRes{
+	c.Response(&toggleAppRes{
 		int(app.Id),
 		app.Name,
 		app.Active,
