@@ -101,6 +101,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/admin.addAppRes"
                         }
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
@@ -150,6 +156,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/admin.addAppRes"
                         }
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
@@ -197,6 +209,12 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/admin.toggleAppRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
                         }
                     },
                     "401": {
@@ -313,6 +331,67 @@ const docTemplate = `{
                             "$ref": "#/definitions/inkstone.PagingResponse-admin_staffRes"
                         }
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Add a staff",
+                "tags": [
+                    "admin_staff"
+                ],
+                "summary": "Add a staff",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "addStaffReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.addStaffReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/admin.addStaffRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
@@ -368,6 +447,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/inkstone.PagingResponse-admin_tokenRes"
                         }
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
@@ -415,6 +500,12 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
                         }
                     },
                     "401": {
@@ -588,6 +679,43 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "secret": {
+                    "type": "string"
+                }
+            }
+        },
+        "admin.addStaffReq": {
+            "type": "object",
+            "required": [
+                "email",
+                "phone"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "example@huoyijie.cn"
+                },
+                "phone": {
+                    "type": "string",
+                    "maxLength": 11,
+                    "minLength": 11,
+                    "example": "18555201314"
+                },
+                "super": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
+        "admin.addStaffRes": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "password": {
                     "type": "string"
                 }
             }

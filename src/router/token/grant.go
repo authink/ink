@@ -2,29 +2,13 @@ package token
 
 import (
 	"net/http"
-	"regexp"
 
 	"github.com/authink/ink.go/src/env"
 	"github.com/authink/ink.go/src/errors"
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/ink.go/src/util"
 	"github.com/authink/inkstone"
-	"github.com/gin-gonic/gin/binding"
-	"github.com/go-playground/validator/v10"
 )
-
-func inkEmailValidation(fl validator.FieldLevel) bool {
-	email := fl.Field().String()
-
-	emailRegex := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
-
-	matched, err := regexp.MatchString(emailRegex, email)
-	if err != nil {
-		return false
-	}
-
-	return matched
-}
 
 type GrantReq struct {
 	AppId     int    `json:"appId" binding:"required,min=1" example:"100000"`
@@ -52,10 +36,6 @@ type GrantRes struct {
 //	@Failure		400			{object}	inkstone.ClientError
 //	@Failure		500			{string}	empty
 func grant(c *inkstone.Context) {
-	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-		v.RegisterValidation("inkEmail", inkEmailValidation)
-	}
-
 	req := new(GrantReq)
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)

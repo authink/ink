@@ -72,6 +72,7 @@ type addAppRes struct {
 //	@Security		ApiKeyAuth
 //	@Param			addAppReq	body		addAppReq	true	"request body"
 //	@Success		200			{object}	addAppRes
+//	@Failure		400			{object}	inkstone.ClientError
 //	@Failure		401			{object}	inkstone.ClientError
 //	@Failure		403			{object}	inkstone.ClientError
 //	@Failure		500			{string}	empty
@@ -109,6 +110,7 @@ type resetAppReq struct {
 //	@Security		ApiKeyAuth
 //	@Param			id	path		int	true	"app id"
 //	@Success		200	{object}	addAppRes
+//	@Failure		400	{object}	inkstone.ClientError
 //	@Failure		401	{object}	inkstone.ClientError
 //	@Failure		403	{object}	inkstone.ClientError
 //	@Failure		500	{string}	empty
@@ -164,6 +166,7 @@ type toggleAppRes struct {
 //	@Security		ApiKeyAuth
 //	@Param			id	path		int	true	"app id"
 //	@Success		200	{object}	toggleAppRes
+//	@Failure		400	{object}	inkstone.ClientError
 //	@Failure		401	{object}	inkstone.ClientError
 //	@Failure		403	{object}	inkstone.ClientError
 //	@Failure		500	{string}	empty

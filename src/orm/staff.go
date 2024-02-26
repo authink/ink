@@ -67,19 +67,33 @@ func (s *staffImpl) Get(id int) (staff *model.Staff, err error) {
 
 // Save implements staff.
 func (s *staffImpl) Save(staff *model.Staff) (err error) {
-	_, err = s.DB.NamedExec(
+	result, err := s.DB.NamedExec(
 		sql.Staff.Insert(),
 		staff,
 	)
+	if err != nil {
+		return
+	}
+
+	if lastId, err := result.LastInsertId(); err == nil {
+		staff.Id = uint32(lastId)
+	}
 	return
 }
 
 // SaveWithTx implements staff.
 func (*staffImpl) SaveWithTx(staff *model.Staff, tx *sqlx.Tx) (err error) {
-	_, err = tx.NamedExec(
+	result, err := tx.NamedExec(
 		sql.Staff.Insert(),
 		staff,
 	)
+	if err != nil {
+		return
+	}
+
+	if lastId, err := result.LastInsertId(); err == nil {
+		staff.Id = uint32(lastId)
+	}
 	return
 }
 

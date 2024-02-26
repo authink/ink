@@ -31,6 +31,7 @@ type tokenRes struct {
 //	@Param			offset	query		int	false	"offset"
 //	@Param			limit	query		int	true	"limit"
 //	@Success		200		{object}	inkstone.PagingResponse[tokenRes]
+//	@Failure		400		{object}	inkstone.ClientError
 //	@Failure		401		{object}	inkstone.ClientError
 //	@Failure		403		{object}	inkstone.ClientError
 //	@Failure		500		{string}	empty
@@ -94,6 +95,7 @@ type delTokenReq struct {
 //	@Security		ApiKeyAuth
 //	@Param			id	path		int	true	"token id"
 //	@Success		200	{string}	empty
+//	@Failure		400	{object}	inkstone.ClientError
 //	@Failure		401	{object}	inkstone.ClientError
 //	@Failure		403	{object}	inkstone.ClientError
 //	@Failure		500	{string}	empty

@@ -19,6 +19,32 @@ definitions:
       secret:
         type: string
     type: object
+  admin.addStaffReq:
+    properties:
+      email:
+        example: example@huoyijie.cn
+        type: string
+      phone:
+        example: "18555201314"
+        maxLength: 11
+        minLength: 11
+        type: string
+      super:
+        example: false
+        type: boolean
+    required:
+    - email
+    - phone
+    type: object
+  admin.addStaffRes:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+    type: object
   admin.appRes:
     properties:
       active:
@@ -221,6 +247,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/admin.addAppRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
         "401":
           description: Unauthorized
           schema:
@@ -252,6 +282,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/admin.addAppRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
         "401":
           description: Unauthorized
           schema:
@@ -283,6 +317,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/admin.toggleAppRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
         "401":
           description: Unauthorized
           schema:
@@ -356,6 +394,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/inkstone.PagingResponse-admin_staffRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
         "401":
           description: Unauthorized
           schema:
@@ -371,6 +413,41 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Show staffs
+      tags:
+      - admin_staff
+    post:
+      description: Add a staff
+      parameters:
+      - description: request body
+        in: body
+        name: addStaffReq
+        required: true
+        schema:
+          $ref: '#/definitions/admin.addStaffReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/admin.addStaffRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Add a staff
       tags:
       - admin_staff
   /admin/tokens:
@@ -391,6 +468,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/inkstone.PagingResponse-admin_tokenRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
         "401":
           description: Unauthorized
           schema:
@@ -422,6 +503,10 @@ paths:
           description: OK
           schema:
             type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
         "401":
           description: Unauthorized
           schema:
