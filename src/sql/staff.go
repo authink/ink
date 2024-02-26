@@ -9,7 +9,7 @@ import (
 type staff struct{}
 
 func (*staff) GetForUpdate() string {
-	return fmt.Sprintf("SELECT id, email, password, phone, super, active, departure FROM %s WHERE id = ? FOR UPDATE", table.Staff)
+	return fmt.Sprintf("SELECT id, email, phone, super, active, departure FROM %s WHERE id = ? FOR UPDATE", table.Staff)
 }
 
 func (*staff) Count() string {

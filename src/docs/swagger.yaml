@@ -489,7 +489,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/admin.staffRes'
         "400":
           description: Bad Request
           schema:

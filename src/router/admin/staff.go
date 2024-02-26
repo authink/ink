@@ -14,14 +14,14 @@ import (
 )
 
 type staffRes struct {
-	Id        int       `json:"id"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
-	Email     string    `json:"email"`
-	Phone     string    `json:"phone"`
-	Super     bool      `json:"super"`
-	Active    bool      `json:"active"`
-	Departure bool      `json:"departure"`
+	Id        int        `json:"id"`
+	CreatedAt *time.Time `json:"createdAt,omitempty"`
+	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
+	Email     string     `json:"email"`
+	Phone     string     `json:"phone"`
+	Super     bool       `json:"super"`
+	Active    bool       `json:"active"`
+	Departure bool       `json:"departure"`
 }
 
 // staffs godoc
@@ -67,8 +67,8 @@ func staffs(c *inkstone.Context) {
 		staff := &staffs[i]
 		res = append(res, staffRes{
 			int(staff.Id),
-			staff.CreatedAt,
-			staff.UpdatedAt,
+			&staff.CreatedAt,
+			&staff.UpdatedAt,
 			staff.Email,
 			staff.Phone,
 			staff.Super,
@@ -152,7 +152,7 @@ type updateStaffReq struct {
 //	@Security		ApiKeyAuth
 //	@Param			id				path		int				true	"staff id"
 //	@Param			updateStaffReq	body		updateStaffReq	true	"request body"
-//	@Success		200				{string}	empty
+//	@Success		200				{object}	staffRes
 //	@Failure		400				{object}	inkstone.ClientError
 //	@Failure		401				{object}	inkstone.ClientError
 //	@Failure		403				{object}	inkstone.ClientError
@@ -208,5 +208,12 @@ func updateStaff(c *inkstone.Context) {
 		return
 	}
 
-	c.Empty()
+	c.Response(&staffRes{
+		Id:        int(staff.Id),
+		Email:     staff.Email,
+		Phone:     staff.Phone,
+		Super:     staff.Super,
+		Active:    staff.Active,
+		Departure: staff.Departure,
+	})
 }
