@@ -30,14 +30,14 @@ type staffRes struct {
 //	@Security		ApiKeyAuth
 //	@Param			offset	query		int	false	"offset"
 //	@Param			limit	query		int	true	"limit"
-//	@Success		200		{object}	pageRes[staffRes]
+//	@Success		200		{object}	inkstone.PagingResponse[staffRes]
 //	@Failure		401		{object}	inkstone.ClientError
 //	@Failure		403		{object}	inkstone.ClientError
 //	@Failure		500		{string}	empty
 func staffs(c *inkstone.Context) {
 	appContext := c.App()
 
-	req := &pageReq{}
+	req := new(inkstone.PagingRequest)
 	if err := c.ShouldBindQuery(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
 		return
@@ -73,10 +73,10 @@ func staffs(c *inkstone.Context) {
 		})
 	}
 
-	c.Response(&pageRes[staffRes]{
-		total,
-		req.Offset,
-		req.Limit,
-		res,
+	c.Response(&inkstone.PagingResponse[staffRes]{
+		Offset: req.Offset,
+		Limit:  req.Limit,
+		Total:  total,
+		Items:  res,
 	})
 }

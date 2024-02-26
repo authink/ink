@@ -45,7 +45,7 @@ func (*staffImpl) Find() ([]model.Staff, error) {
 
 // GetByEmail implements staff.
 func (s *staffImpl) GetByEmail(email string) (staff *model.Staff, err error) {
-	staff = &model.Staff{}
+	staff = new(model.Staff)
 	err = s.DB.Get(
 		staff,
 		sql.Staff.GetByEmail(),
@@ -56,7 +56,7 @@ func (s *staffImpl) GetByEmail(email string) (staff *model.Staff, err error) {
 
 // Get implements staff.
 func (s *staffImpl) Get(id int) (staff *model.Staff, err error) {
-	staff = &model.Staff{}
+	staff = new(model.Staff)
 	err = s.DB.Get(
 		staff,
 		sql.Staff.Get(),

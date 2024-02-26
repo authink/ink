@@ -32,12 +32,12 @@ func TestGrant(t *testing.T) {
 	// t.Parallel()
 	// go test -v -p 2 # 缺省 -p 参数会根据 cpu 核心数量设置
 	var (
-		ok                 = []any{http.StatusOK, &GrantRes{TokenType: "Bearer", ExpiresIn: 7200}, 100000, "123456", "admin@huoyijie.cn", "123456", &GrantRes{}}
-		invalidAppId       = []any{http.StatusBadRequest, errors.ERR_INVALID_APP, 999999, "123456", "admin@huoyijie.cn", "123456", &inkstone.ClientError{}}
-		invalidAppSecret   = []any{http.StatusBadRequest, errors.ERR_INVALID_APP, 100000, "1234567", "admin@huoyijie.cn", "123456", &inkstone.ClientError{}}
-		invalidEmailFormat = []any{http.StatusBadRequest, nil, 100000, "123456", "admin", "123456", &inkstone.ClientError{}}
-		invalidEmail       = []any{http.StatusBadRequest, errors.ERR_INVALID_ACCOUNT, 100000, "123456", "admin1@huoyijie.cn", "123456", &inkstone.ClientError{}}
-		invalidPassword    = []any{http.StatusBadRequest, errors.ERR_INVALID_ACCOUNT, 100000, "123456", "admin@huoyijie.cn", "1234567", &inkstone.ClientError{}}
+		ok                 = []any{http.StatusOK, &GrantRes{TokenType: "Bearer", ExpiresIn: 7200}, 100000, "123456", "admin@huoyijie.cn", "123456", new(GrantRes)}
+		invalidAppId       = []any{http.StatusBadRequest, errors.ERR_INVALID_APP, 999999, "123456", "admin@huoyijie.cn", "123456", new(inkstone.ClientError)}
+		invalidAppSecret   = []any{http.StatusBadRequest, errors.ERR_INVALID_APP, 100000, "1234567", "admin@huoyijie.cn", "123456", new(inkstone.ClientError)}
+		invalidEmailFormat = []any{http.StatusBadRequest, nil, 100000, "123456", "admin", "123456", new(inkstone.ClientError)}
+		invalidEmail       = []any{http.StatusBadRequest, errors.ERR_INVALID_ACCOUNT, 100000, "123456", "admin1@huoyijie.cn", "123456", new(inkstone.ClientError)}
+		invalidPassword    = []any{http.StatusBadRequest, errors.ERR_INVALID_ACCOUNT, 100000, "123456", "admin@huoyijie.cn", "1234567", new(inkstone.ClientError)}
 	)
 
 	var tests = []any{

@@ -46,4 +46,4 @@ func (*staff) GetByEmail() string {
 }
 
 var _ inkstone.SQL = (*staff)(nil)
-var Staff = &staff{}
+var Staff = new(staff)

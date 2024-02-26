@@ -56,7 +56,7 @@ func grant(c *inkstone.Context) {
 		v.RegisterValidation("inkEmail", inkEmailValidation)
 	}
 
-	req := &GrantReq{}
+	req := new(GrantReq)
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
 		return

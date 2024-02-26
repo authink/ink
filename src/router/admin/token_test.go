@@ -23,21 +23,21 @@ func getTokens(accessToken string, resObj any) (*httptest.ResponseRecorder, erro
 }
 
 func TestTokens(t *testing.T) {
-	resObj := &token.GrantRes{}
+	resObj := new(token.GrantRes)
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.NotEmpty(t, resObj.AccessToken)
 	assert.NotEmpty(t, resObj.RefreshToken)
 
-	resObj2 := &token.GrantRes{}
+	resObj2 := new(token.GrantRes)
 	w2, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj2)
 
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.NotEmpty(t, resObj2.AccessToken)
 	assert.NotEmpty(t, resObj2.RefreshToken)
 
-	var res pageRes[tokenRes]
+	var res inkstone.PagingResponse[tokenRes]
 	w3, _ := getTokens(resObj.AccessToken, &res)
 	assert.Equal(t, http.StatusOK, w3.Code)
 	assert.Equal(t, 2, len(res.Items))
@@ -55,7 +55,7 @@ func tDeleteToken(accessToken string, id int) (*httptest.ResponseRecorder, error
 }
 
 func TestDeleteToken(t *testing.T) {
-	resObj := &token.GrantRes{}
+	resObj := new(token.GrantRes)
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)

@@ -51,7 +51,7 @@ func (*authTokenImpl) SaveWithTx(*model.AuthToken, *sqlx.Tx) error {
 
 // GetByRefreshToken implements authToken.
 func (at *authTokenImpl) GetByRefreshToken(refreshToken string) (token *model.AuthToken, err error) {
-	token = &model.AuthToken{}
+	token = new(model.AuthToken)
 	err = at.DB.Get(
 		token,
 		sql.AuthToken.GetByRefreshToken(),
@@ -62,7 +62,7 @@ func (at *authTokenImpl) GetByRefreshToken(refreshToken string) (token *model.Au
 
 // GetByAccessToken implements authToken.
 func (at *authTokenImpl) GetByAccessToken(accessToken string) (token *model.AuthToken, err error) {
-	token = &model.AuthToken{}
+	token = new(model.AuthToken)
 	err = at.DB.Get(
 		token,
 		sql.AuthToken.GetByAccessToken(),

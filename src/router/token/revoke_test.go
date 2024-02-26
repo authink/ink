@@ -26,7 +26,7 @@ func revokeToken(accessToken, refreshToken string) (*httptest.ResponseRecorder, 
 }
 
 func TestRevoke(t *testing.T) {
-	resObj := &GrantRes{}
+	resObj := new(GrantRes)
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)

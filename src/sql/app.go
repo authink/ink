@@ -38,4 +38,4 @@ func (*app) Insert() string {
 }
 
 var _ inkstone.SQL = (*app)(nil)
-var App = &app{}
+var App = new(app)

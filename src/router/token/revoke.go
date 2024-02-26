@@ -16,7 +16,7 @@ import (
 //	@Failure		400			{object}	inkstone.ClientError
 //	@Failure		500			{string}	empty
 func revoke(c *inkstone.Context) {
-	req := &refreshReq{}
+	req := new(refreshReq)
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
 		return

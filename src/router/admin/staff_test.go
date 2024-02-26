@@ -22,14 +22,14 @@ func getStaffs(accessToken string, resObj any) (*httptest.ResponseRecorder, erro
 }
 
 func TestStaffs(t *testing.T) {
-	resObj := &token.GrantRes{}
+	resObj := new(token.GrantRes)
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.NotEmpty(t, resObj.AccessToken)
 	assert.NotEmpty(t, resObj.RefreshToken)
 
-	var res pageRes[staffRes]
+	var res inkstone.PagingResponse[staffRes]
 	w2, _ := getStaffs(resObj.AccessToken, &res)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Equal(t, 1, len(res.Items))

@@ -10,18 +10,6 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type pageReq struct {
-	Offset int `form:"offset" binding:"min=0"`
-	Limit  int `form:"limit" binding:"required,min=1,max=100"`
-}
-
-type pageRes[T any] struct {
-	Total  int `json:"total"`
-	Offset int `json:"offset"`
-	Limit  int `json:"limit"`
-	Items  []T `json:"items,omitempty"`
-}
-
 type tokenRes struct {
 	Id           int       `json:"id"`
 	CreatedAt    time.Time `json:"createdAt"`
@@ -42,14 +30,14 @@ type tokenRes struct {
 //	@Security		ApiKeyAuth
 //	@Param			offset	query		int	false	"offset"
 //	@Param			limit	query		int	true	"limit"
-//	@Success		200		{object}	pageRes[tokenRes]
+//	@Success		200		{object}	inkstone.PagingResponse[tokenRes]
 //	@Failure		401		{object}	inkstone.ClientError
 //	@Failure		403		{object}	inkstone.ClientError
 //	@Failure		500		{string}	empty
 func tokens(c *inkstone.Context) {
 	appContext := c.App()
 
-	req := &pageReq{}
+	req := new(inkstone.PagingRequest)
 	if err := c.ShouldBindQuery(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
 		return
@@ -85,11 +73,11 @@ func tokens(c *inkstone.Context) {
 		})
 	}
 
-	c.Response(&pageRes[tokenRes]{
-		total,
-		req.Offset,
-		req.Limit,
-		res,
+	c.Response(&inkstone.PagingResponse[tokenRes]{
+		Offset: req.Offset,
+		Limit:  req.Limit,
+		Total:  total,
+		Items:  res,
 	})
 }
 
@@ -110,7 +98,7 @@ type delTokenReq struct {
 //	@Failure		403	{object}	inkstone.ClientError
 //	@Failure		500	{string}	empty
 func deleteToken(c *inkstone.Context) {
-	req := &delTokenReq{}
+	req := new(delTokenReq)
 	if err := c.ShouldBindUri(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
 		return

@@ -16,7 +16,7 @@ type appImpl inkstone.AppContext
 
 // GetWithTx implements app.
 func (*appImpl) GetWithTx(id int, tx *sqlx.Tx) (app *model.App, err error) {
-	app = &model.App{}
+	app = new(model.App)
 	err = tx.Get(
 		app,
 		sql.App.GetForUpdate(),
@@ -41,7 +41,7 @@ func (a *appImpl) Find() (apps []model.App, err error) {
 
 // Get implements app.
 func (a *appImpl) Get(id int) (app *model.App, err error) {
-	app = &model.App{}
+	app = new(model.App)
 	err = a.DB.Get(
 		app,
 		sql.App.Get(),

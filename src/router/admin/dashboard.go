@@ -22,5 +22,5 @@ type dashboardRes struct {
 //	@Failure		403			{object}	inkstone.ClientError
 //	@Failure		500			{string}	empty
 func dashboard(c *inkstone.Context) {
-	c.Response(&dashboardRes{})
+	c.Response(new(dashboardRes))
 }

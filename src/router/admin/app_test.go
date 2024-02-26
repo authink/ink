@@ -24,7 +24,7 @@ func getApps(accessToken string, resObj any) (*httptest.ResponseRecorder, error)
 }
 
 func TestApps(t *testing.T) {
-	resObj := &token.GrantRes{}
+	resObj := new(token.GrantRes)
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)
@@ -52,14 +52,14 @@ func tAddApp(accessToken, name string, resObj any) (*httptest.ResponseRecorder, 
 }
 
 func TestAddApp(t *testing.T) {
-	resObj := &token.GrantRes{}
+	resObj := new(token.GrantRes)
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.NotEmpty(t, resObj.AccessToken)
 	assert.NotEmpty(t, resObj.RefreshToken)
 
-	resAddApp := &addAppRes{}
+	resAddApp := new(addAppRes)
 	w2, _ := tAddApp(resObj.AccessToken, "appmock", &resAddApp)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Less(t, 100001, resAddApp.Id)
@@ -79,14 +79,14 @@ func tResetApp(accessToken string, id int, resObj any) (*httptest.ResponseRecord
 }
 
 func TestResetApp(t *testing.T) {
-	resObj := &token.GrantRes{}
+	resObj := new(token.GrantRes)
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.NotEmpty(t, resObj.AccessToken)
 	assert.NotEmpty(t, resObj.RefreshToken)
 
-	resetAppRes := &addAppRes{}
+	resetAppRes := new(addAppRes)
 	w2, _ := tResetApp(resObj.AccessToken, 100001, &resetAppRes)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Equal(t, 100001, resetAppRes.Id)
@@ -106,14 +106,14 @@ func tToggleApp(accessToken string, id int, resObj any) (*httptest.ResponseRecor
 }
 
 func TestToggleApp(t *testing.T) {
-	resObj := &token.GrantRes{}
+	resObj := new(token.GrantRes)
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.NotEmpty(t, resObj.AccessToken)
 	assert.NotEmpty(t, resObj.RefreshToken)
 
-	toggleAppRes := &toggleAppRes{}
+	toggleAppRes := new(toggleAppRes)
 	w2, _ := tToggleApp(resObj.AccessToken, 100001, &toggleAppRes)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Equal(t, 100001, toggleAppRes.Id)

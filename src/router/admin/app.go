@@ -76,7 +76,7 @@ type addAppRes struct {
 //	@Failure		403			{object}	inkstone.ClientError
 //	@Failure		500			{string}	empty
 func addApp(c *inkstone.Context) {
-	req := &addAppReq{}
+	req := new(addAppReq)
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
 		return
@@ -113,7 +113,7 @@ type resetAppReq struct {
 //	@Failure		403	{object}	inkstone.ClientError
 //	@Failure		500	{string}	empty
 func resetApp(c *inkstone.Context) {
-	req := &resetAppReq{}
+	req := new(resetAppReq)
 	if err := c.ShouldBindUri(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
 		return
@@ -168,7 +168,7 @@ type toggleAppRes struct {
 //	@Failure		403	{object}	inkstone.ClientError
 //	@Failure		500	{string}	empty
 func toggleApp(c *inkstone.Context) {
-	req := &toggleAppReq{}
+	req := new(toggleAppReq)
 	if err := c.ShouldBindUri(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
 		return

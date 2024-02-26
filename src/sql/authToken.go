@@ -50,4 +50,4 @@ func (*authToken) GetByAccessToken() string {
 }
 
 var _ inkstone.SQL = (*authToken)(nil)
-var AuthToken = &authToken{}
+var AuthToken = new(authToken)
