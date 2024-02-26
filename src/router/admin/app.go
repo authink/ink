@@ -90,9 +90,9 @@ func addApp(c *inkstone.Context) {
 	}
 
 	c.Response(&addAppRes{
-		int(app.Id),
-		app.Name,
-		secret,
+		Id:     int(app.Id),
+		Name:   app.Name,
+		Secret: secret,
 	})
 }
 
@@ -139,9 +139,9 @@ func resetApp(c *inkstone.Context) {
 	}
 
 	c.Response(&addAppRes{
-		int(app.Id),
-		app.Name,
-		secret,
+		Id:     int(app.Id),
+		Name:   app.Name,
+		Secret: secret,
 	})
 }
 
@@ -199,8 +199,8 @@ func toggleApp(c *inkstone.Context) {
 	}
 
 	c.Response(&toggleAppRes{
-		int(app.Id),
-		app.Name,
-		app.Active,
+		Id:     int(app.Id),
+		Name:   app.Name,
+		Active: app.Active,
 	})
 }
