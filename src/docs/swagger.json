@@ -407,6 +407,70 @@
                 }
             }
         },
+        "/admin/staffs/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Update a staff",
+                "tags": [
+                    "admin_staff"
+                ],
+                "summary": "Update a staff",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "staff id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "request body",
+                        "name": "updateStaffReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.updateStaffReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/tokens": {
             "get": {
                 "security": [
@@ -811,6 +875,33 @@
                 },
                 "updatedAt": {
                     "type": "string"
+                }
+            }
+        },
+        "admin.updateStaffReq": {
+            "type": "object",
+            "properties": {
+                "activeToggle": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "departureToggle": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "phone": {
+                    "type": "string",
+                    "maxLength": 11,
+                    "minLength": 11,
+                    "example": "18555201314"
+                },
+                "resetPassword": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "superToggle": {
+                    "type": "boolean",
+                    "example": false
                 }
             }
         },

@@ -8,6 +8,8 @@ import (
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/ink.go/src/util"
 	"github.com/authink/inkstone"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -127,4 +129,84 @@ func addStaff(c *inkstone.Context) {
 		Email:    staff.Email,
 		Password: password,
 	})
+}
+
+type updateStaffParam struct {
+	Id int `uri:"id" binding:"required,min=100000"`
+}
+
+type updateStaffReq struct {
+	Phone           string `json:"phone" binding:"omitempty,min=11,max=11" example:"18555201314"`
+	SuperToggle     bool   `json:"superToggle" example:"false"`
+	ActiveToggle    bool   `json:"activeToggle" example:"true"`
+	DepartureToggle bool   `json:"departureToggle" example:"false"`
+	ResetPassword   bool   `json:"resetPassword" example:"false"`
+}
+
+// updateStaff godoc
+//
+//	@Summary		Update a staff
+//	@Description	Update a staff
+//	@Tags			admin_staff
+//	@Router			/admin/staffs/{id}	[put]
+//	@Security		ApiKeyAuth
+//	@Param			id				path		int				true	"staff id"
+//	@Param			updateStaffReq	body		updateStaffReq	true	"request body"
+//	@Success		200				{string}	empty
+//	@Failure		400				{object}	inkstone.ClientError
+//	@Failure		401				{object}	inkstone.ClientError
+//	@Failure		403				{object}	inkstone.ClientError
+//	@Failure		500				{string}	empty
+func updateStaff(c *inkstone.Context) {
+	param := new(updateStaffParam)
+
+	if err := c.ShouldBindUri(param); err != nil {
+		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		return
+	}
+
+	req := new(updateStaffReq)
+
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterStructValidation(inkstone.ValidationNotAllFieldsZero, req)
+	}
+
+	if err := c.ShouldBindJSON(req); err != nil {
+		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		return
+	}
+
+	appContext := c.App()
+
+	var staff *model.Staff
+
+	if err := inkstone.Transaction(appContext, func(tx *sqlx.Tx) (err error) {
+		staff, err = orm.Staff(appContext).GetWithTx(param.Id, tx)
+		if err != nil {
+			return
+		}
+
+		if req.Phone != "" {
+			staff.Phone = req.Phone
+		}
+		if req.SuperToggle {
+			staff.Super = !staff.Super
+		}
+		if req.ActiveToggle {
+			staff.Active = !staff.Active
+		}
+		if req.DepartureToggle {
+			staff.Departure = !staff.Departure
+		}
+		if req.ResetPassword {
+			staff.Reset(util.RandString(6))
+		}
+
+		return orm.Staff(appContext).SaveWithTx(staff, tx)
+	}); err != nil {
+		c.AbortWithServerError(err)
+		return
+	}
+
+	c.Empty()
 }

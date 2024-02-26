@@ -9,12 +9,24 @@ import (
 
 type staff interface {
 	inkstone.ORM[model.Staff]
+	GetWithTx(int, *sqlx.Tx) (*model.Staff, error)
 	CountWithTx(*sqlx.Tx) (int, error)
 	PaginationWithTx(offset, limit int, tx *sqlx.Tx) ([]model.Staff, error)
 	GetByEmail(string) (*model.Staff, error)
 }
 
 type staffImpl inkstone.AppContext
+
+// GetWithTx implements staff.
+func (*staffImpl) GetWithTx(id int, tx *sqlx.Tx) (staff *model.Staff, err error) {
+	staff = new(model.Staff)
+	err = tx.Get(
+		staff,
+		sql.Staff.GetForUpdate(),
+		id,
+	)
+	return
+}
 
 // CountWithTx implements staff.
 func (*staffImpl) CountWithTx(tx *sqlx.Tx) (c int, err error) {

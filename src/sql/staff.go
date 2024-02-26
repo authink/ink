@@ -8,6 +8,10 @@ import (
 
 type staff struct{}
 
+func (*staff) GetForUpdate() string {
+	return fmt.Sprintf("SELECT id, email, password, phone, super, active, departure FROM %s WHERE id = ? FOR UPDATE", table.Staff)
+}
+
 func (*staff) Count() string {
 	return fmt.Sprintf("SELECT COUNT(id) c FROM %s", table.Staff)
 }
@@ -38,7 +42,7 @@ func (*staff) Get() string {
 
 // Insert implements inkstone.SQL.
 func (*staff) Insert() string {
-	return fmt.Sprintf("INSERT INTO %s (email, password, phone, super) VALUES (:email, :password, :phone, :super)", table.Staff)
+	return fmt.Sprintf("INSERT INTO %s (email, password, phone, super) VALUES (:email, :password, :phone, :super) ON DUPLICATE KEY UPDATE password = :password, phone = :phone, super = :super, active = :active, departure = :departure", table.Staff)
 }
 
 func (*staff) GetByEmail() string {

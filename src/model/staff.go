@@ -15,16 +15,15 @@ type Staff struct {
 }
 
 func NewStaff(email, password, phone string, super bool) *Staff {
-	hashedPassword, err := inkstone.HashPassword(password)
-	if err != nil {
-		panic(err)
-	}
-
 	return &Staff{
 		Email:    email,
-		Password: hashedPassword,
+		Password: inkstone.HashPassword(password),
 		Phone:    phone,
 		Super:    super,
 		Active:   true,
 	}
+}
+
+func (s *Staff) Reset(password string) {
+	s.Password = inkstone.HashPassword(password)
 }

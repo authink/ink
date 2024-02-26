@@ -21,4 +21,5 @@ func SetupAdminGroup(rg *gin.RouterGroup, appName string) {
 	gAdmin.DELETE("tokens/:id", inkstone.HandlerAdapter(deleteToken))
 	gAdmin.GET("staffs", inkstone.HandlerAdapter(staffs))
 	gAdmin.POST("staffs", inkstone.HandlerAdapter(addStaff))
+	gAdmin.PUT("staffs/:id", inkstone.HandlerAdapter(updateStaff))
 }

@@ -110,6 +110,26 @@ definitions:
       updatedAt:
         type: string
     type: object
+  admin.updateStaffReq:
+    properties:
+      activeToggle:
+        example: true
+        type: boolean
+      departureToggle:
+        example: false
+        type: boolean
+      phone:
+        example: "18555201314"
+        maxLength: 11
+        minLength: 11
+        type: string
+      resetPassword:
+        example: false
+        type: boolean
+      superToggle:
+        example: false
+        type: boolean
+    type: object
   inkstone.ClientError:
     properties:
       code:
@@ -448,6 +468,47 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Add a staff
+      tags:
+      - admin_staff
+  /admin/staffs/{id}:
+    put:
+      description: Update a staff
+      parameters:
+      - description: staff id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: request body
+        in: body
+        name: updateStaffReq
+        required: true
+        schema:
+          $ref: '#/definitions/admin.updateStaffReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Update a staff
       tags:
       - admin_staff
   /admin/tokens:
