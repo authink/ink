@@ -15,7 +15,7 @@ import (
 func getApps(accessToken string, resObj any) (*httptest.ResponseRecorder, error) {
 	return inkstone.TestFetch(
 		ctx,
-		"GET",
+		http.MethodGet,
 		"admin/apps",
 		nil,
 		resObj,
@@ -43,7 +43,7 @@ func tAddApp(accessToken, name string, resObj any) (*httptest.ResponseRecorder, 
 	reqObj := &addAppReq{name}
 	return inkstone.TestFetch(
 		ctx,
-		"POST",
+		http.MethodPost,
 		"admin/apps",
 		reqObj,
 		resObj,
@@ -70,7 +70,7 @@ func TestAddApp(t *testing.T) {
 func tUpdateApp(accessToken string, id int, reqObj, resObj any) (*httptest.ResponseRecorder, error) {
 	return inkstone.TestFetch(
 		ctx,
-		"PUT",
+		http.MethodPut,
 		fmt.Sprintf("admin/apps/%d", id),
 		reqObj,
 		resObj,

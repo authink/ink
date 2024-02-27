@@ -20,7 +20,7 @@ func grantToken(appId int, appSecret, email, password string, resObj any) (*http
 
 	return inkstone.TestFetch(
 		ctx,
-		"POST",
+		http.MethodPost,
 		"token/grant",
 		reqObj,
 		resObj,

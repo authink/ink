@@ -14,7 +14,7 @@ import (
 func getStaffs(accessToken string, resObj any) (*httptest.ResponseRecorder, error) {
 	return inkstone.TestFetch(
 		ctx,
-		"GET",
+		http.MethodGet,
 		"admin/staffs?limit=1",
 		nil,
 		resObj,
@@ -40,7 +40,7 @@ func tAddStaff(accessToken, email, phone string, super bool, resObj any) (*httpt
 	reqObj := &addStaffReq{email, phone, super}
 	return inkstone.TestFetch(
 		ctx,
-		"POST",
+		http.MethodPost,
 		"admin/staffs",
 		reqObj,
 		resObj,
@@ -67,7 +67,7 @@ func TestAddStaff(t *testing.T) {
 func tUpdateStaff(accessToken string, id int, reqObj, resObj any) (*httptest.ResponseRecorder, error) {
 	return inkstone.TestFetch(
 		ctx,
-		"PUT",
+		http.MethodPut,
 		fmt.Sprintf("admin/staffs/%d", id),
 		reqObj,
 		resObj,

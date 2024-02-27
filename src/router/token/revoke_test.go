@@ -17,7 +17,7 @@ func revokeToken(accessToken, refreshToken string) (*httptest.ResponseRecorder, 
 
 	return inkstone.TestFetch(
 		ctx,
-		"POST",
+		http.MethodPost,
 		"token/revoke",
 		reqObj,
 		nil,

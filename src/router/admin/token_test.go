@@ -14,7 +14,7 @@ import (
 func getTokens(accessToken string, resObj any) (*httptest.ResponseRecorder, error) {
 	return inkstone.TestFetch(
 		ctx,
-		"GET",
+		http.MethodGet,
 		"admin/tokens?limit=2",
 		nil,
 		resObj,
@@ -46,7 +46,7 @@ func TestTokens(t *testing.T) {
 func tDeleteToken(accessToken string, id int) (*httptest.ResponseRecorder, error) {
 	return inkstone.TestFetch(
 		ctx,
-		"DELETE",
+		http.MethodDelete,
 		fmt.Sprintf("admin/tokens/%d", id),
 		nil,
 		nil,

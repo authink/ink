@@ -17,7 +17,7 @@ func refreshToken(accessToken, refreshToken string, resObj any) (*httptest.Respo
 
 	return inkstone.TestFetch(
 		ctx,
-		"POST",
+		http.MethodPost,
 		"token/refresh",
 		reqObj,
 		resObj,
