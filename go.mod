@@ -4,10 +4,12 @@ go 1.21.4
 
 require (
 	github.com/authink/inkstone v0.1.7
+	github.com/casbin/casbin/v2 v2.82.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-playground/validator/v10 v10.14.0
 	github.com/golang-jwt/jwt/v5 v5.2.0
 	github.com/jmoiron/sqlx v1.3.5
+	github.com/memwey/casbin-sqlx-adapter v0.3.0
 	github.com/stretchr/testify v1.8.3
 	github.com/swaggo/swag v1.16.3
 )
@@ -21,6 +23,7 @@ require (
 	github.com/bep/godartsass v0.16.0 // indirect
 	github.com/bep/golibsass v1.1.0 // indirect
 	github.com/bytedance/sonic v1.9.1 // indirect
+	github.com/casbin/govaluate v1.1.0 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
 	github.com/cli/safeexec v1.0.0 // indirect
 	github.com/cosmtrek/air v1.49.0 // indirect

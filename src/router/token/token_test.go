@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/authink/ink.go/src/authz"
 	"github.com/authink/ink.go/src/i18n"
 	"github.com/authink/ink.go/src/migrate"
 	"github.com/authink/inkstone"
@@ -13,13 +14,16 @@ import (
 var ctx = context.Background()
 
 func TestMain(m *testing.M) {
-	inkstone.TestMain(
+	inkstone.TestRun(
 		"token",
 		&ctx,
-		&i18n.Locales,
-		migrate.Seed,
-		func(apiGroup *gin.RouterGroup) {
-			SetupTokenGroup(apiGroup)
+		&inkstone.Options{
+			Locales: &i18n.Locales,
+			Seed:    migrate.Seed,
+			SetupAPIGroup: func(apiGroup *gin.RouterGroup) {
+				SetupTokenGroup(apiGroup)
+			},
+			FinishSetup: authz.SetupEnforcer,
 		},
 	)(m)
 }

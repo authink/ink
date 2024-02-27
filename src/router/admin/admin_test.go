@@ -5,6 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/authink/ink.go/src/authz"
 	"github.com/authink/ink.go/src/env"
 	"github.com/authink/ink.go/src/i18n"
 	"github.com/authink/ink.go/src/migrate"
@@ -19,34 +20,37 @@ import (
 var ctx = context.Background()
 
 func TestMain(m *testing.M) {
-	inkstone.TestMain(
+	inkstone.TestRun(
 		"admin",
 		&ctx,
-		&i18n.Locales,
-		func(appContext *inkstone.AppContext) {
-			migrate.Seed(appContext)
-			if err := inkstone.Transaction(appContext, func(tx *sqlx.Tx) (err error) {
-				if err = orm.App(appContext).SaveWithTx(model.NewApp(
-					"devtools",
-					"123456",
-				), tx); err != nil {
-					return
-				}
+		&inkstone.Options{
+			Locales: &i18n.Locales,
+			Seed: func(appContext *inkstone.AppContext) {
+				migrate.Seed(appContext)
+				if err := inkstone.Transaction(appContext, func(tx *sqlx.Tx) (err error) {
+					if err = orm.App(appContext).SaveWithTx(model.NewApp(
+						"devtools",
+						"123456",
+					), tx); err != nil {
+						return
+					}
 
-				err = orm.Staff(appContext).SaveWithTx(model.NewStaff(
-					"test@huoyijie.cn",
-					"123456",
-					"11111111111",
-					false,
-				), tx)
-				return
-			}); err != nil {
-				panic(err)
-			}
-		},
-		func(apiGroup *gin.RouterGroup) {
-			token.SetupTokenGroup(apiGroup)
-			SetupAdminGroup(apiGroup, env.AppNameAdmin())
+					err = orm.Staff(appContext).SaveWithTx(model.NewStaff(
+						"test@huoyijie.cn",
+						"123456",
+						"11111111111",
+						false,
+					), tx)
+					return
+				}); err != nil {
+					panic(err)
+				}
+			},
+			SetupAPIGroup: func(apiGroup *gin.RouterGroup) {
+				token.SetupTokenGroup(apiGroup)
+				SetupAdminGroup(apiGroup, env.AppNameAdmin())
+			},
+			FinishSetup: authz.SetupEnforcer,
 		},
 	)(m)
 }
