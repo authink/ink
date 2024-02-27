@@ -1,8 +1,6 @@
 package admin
 
 import (
-	"time"
-
 	"github.com/authink/ink.go/src/errors"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/orm"
@@ -14,12 +12,10 @@ import (
 )
 
 type appRes struct {
-	Id        int        `json:"id,omitempty"`
-	CreatedAt *time.Time `json:"createdAt,omitempty"`
-	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
-	Name      string     `json:"name,omitempty"`
-	Secret    string     `json:"secret,omitempty"`
-	Active    bool       `json:"active"`
+	inkstone.Response
+	Name   string `json:"name,omitempty"`
+	Secret string `json:"secret,omitempty"`
+	Active bool   `json:"active"`
 }
 
 // apps godoc
@@ -45,11 +41,13 @@ func apps(c *inkstone.Context) {
 	var res []appRes
 	for i := range apps {
 		res = append(res, appRes{
-			Id:        int(apps[i].Id),
-			CreatedAt: apps[i].CreatedAt,
-			UpdatedAt: apps[i].UpdatedAt,
-			Name:      apps[i].Name,
-			Active:    apps[i].Active,
+			Response: inkstone.Response{
+				Id:        int(apps[i].Id),
+				CreatedAt: apps[i].CreatedAt,
+				UpdatedAt: apps[i].UpdatedAt,
+			},
+			Name:   apps[i].Name,
+			Active: apps[i].Active,
 		})
 	}
 
@@ -88,7 +86,9 @@ func addApp(c *inkstone.Context) {
 	}
 
 	c.Response(&appRes{
-		Id:     int(app.Id),
+		Response: inkstone.Response{
+			Id: int(app.Id),
+		},
 		Name:   app.Name,
 		Secret: secret,
 		Active: app.Active,
@@ -164,7 +164,9 @@ func updateApp(c *inkstone.Context) {
 	}
 
 	c.Response(&appRes{
-		Id:     int(app.Id),
+		Response: inkstone.Response{
+			Id: int(app.Id),
+		},
 		Name:   app.Name,
 		Secret: secret,
 		Active: app.Active,

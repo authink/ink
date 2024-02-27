@@ -1,8 +1,6 @@
 package admin
 
 import (
-	"time"
-
 	"github.com/authink/ink.go/src/errors"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/orm"
@@ -14,15 +12,13 @@ import (
 )
 
 type staffRes struct {
-	Id        int        `json:"id,omitempty"`
-	CreatedAt *time.Time `json:"createdAt,omitempty"`
-	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
-	Email     string     `json:"email,omitempty"`
-	Password  string     `json:"password,omitempty"`
-	Phone     string     `json:"phone,omitempty"`
-	Super     bool       `json:"super"`
-	Active    bool       `json:"active"`
-	Departure bool       `json:"departure"`
+	inkstone.Response
+	Email     string `json:"email,omitempty"`
+	Password  string `json:"password,omitempty"`
+	Phone     string `json:"phone,omitempty"`
+	Super     bool   `json:"super"`
+	Active    bool   `json:"active"`
+	Departure bool   `json:"departure"`
 }
 
 // staffs godoc
@@ -67,9 +63,11 @@ func staffs(c *inkstone.Context) {
 	for i := range staffs {
 		staff := &staffs[i]
 		res = append(res, staffRes{
-			Id:        int(staff.Id),
-			CreatedAt: staff.CreatedAt,
-			UpdatedAt: staff.UpdatedAt,
+			Response: inkstone.Response{
+				Id:        int(staff.Id),
+				CreatedAt: staff.CreatedAt,
+				UpdatedAt: staff.UpdatedAt,
+			},
 			Email:     staff.Email,
 			Phone:     staff.Phone,
 			Super:     staff.Super,
@@ -120,7 +118,9 @@ func addStaff(c *inkstone.Context) {
 	}
 
 	c.Response(&staffRes{
-		Id:        int(staff.Id),
+		Response: inkstone.Response{
+			Id: int(staff.Id),
+		},
 		Email:     staff.Email,
 		Password:  password,
 		Super:     staff.Super,
@@ -210,7 +210,9 @@ func updateStaff(c *inkstone.Context) {
 	}
 
 	c.Response(&staffRes{
-		Id:        int(staff.Id),
+		Response: inkstone.Response{
+			Id: int(staff.Id),
+		},
 		Email:     staff.Email,
 		Phone:     staff.Phone,
 		Super:     staff.Super,

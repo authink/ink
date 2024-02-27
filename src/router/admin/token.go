@@ -1,8 +1,6 @@
 package admin
 
 import (
-	"time"
-
 	"github.com/authink/ink.go/src/errors"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/orm"
@@ -11,14 +9,12 @@ import (
 )
 
 type tokenRes struct {
-	Id           int        `json:"id,omitempty"`
-	CreatedAt    *time.Time `json:"createdAt,omitempty"`
-	UpdatedAt    *time.Time `json:"updatedAt,omitempty"`
-	AccessToken  string     `json:"access_token,omitempty"`
-	RefreshToken string     `json:"refresh_token,omitempty"`
-	AppId        int        `json:"appId,omitempty"`
-	AppName      string     `json:"appName,omitempty"`
-	AccountId    int        `json:"accountId,omitempty"`
+	inkstone.Response
+	AccessToken  string `json:"access_token,omitempty"`
+	RefreshToken string `json:"refresh_token,omitempty"`
+	AppId        int    `json:"appId,omitempty"`
+	AppName      string `json:"appName,omitempty"`
+	AccountId    int    `json:"accountId,omitempty"`
 }
 
 // tokens godoc
@@ -63,9 +59,11 @@ func tokens(c *inkstone.Context) {
 	for i := range tokens {
 		token := &tokens[i]
 		res = append(res, tokenRes{
-			int(token.Id),
-			token.CreatedAt,
-			token.UpdatedAt,
+			inkstone.Response{
+				Id:        int(token.Id),
+				CreatedAt: token.CreatedAt,
+				UpdatedAt: token.UpdatedAt,
+			},
 			token.AccessToken,
 			token.RefreshToken,
 			int(token.AppId),
