@@ -25,17 +25,17 @@ func TestMain(m *testing.M) {
 		&ctx,
 		&inkstone.Options{
 			Locales: &i18n.Locales,
-			Seed: func(appContext *inkstone.AppContext) {
-				migrate.Seed(appContext)
-				if err := inkstone.Transaction(appContext, func(tx *sqlx.Tx) (err error) {
-					if err = orm.App(appContext).SaveWithTx(model.NewApp(
+			Seed: func(appCtx *inkstone.AppContext) {
+				migrate.Seed(appCtx)
+				if err := inkstone.Transaction(appCtx, func(tx *sqlx.Tx) (err error) {
+					if err = orm.App(appCtx).SaveWithTx(model.NewApp(
 						"devtools",
 						"123456",
 					), tx); err != nil {
 						return
 					}
 
-					err = orm.Staff(appContext).SaveWithTx(model.NewStaff(
+					err = orm.Staff(appCtx).SaveWithTx(model.NewStaff(
 						"test@huoyijie.cn",
 						"123456",
 						"11111111111",

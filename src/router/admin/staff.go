@@ -36,7 +36,7 @@ type staffRes struct {
 //	@Failure		403		{object}	inkstone.ClientError
 //	@Failure		500		{string}	empty
 func staffs(c *inkstone.Context) {
-	appContext := c.App()
+	appCtx := c.AppContext()
 
 	req := new(inkstone.PagingRequest)
 	if err := c.ShouldBindQuery(req); err != nil {
@@ -47,12 +47,12 @@ func staffs(c *inkstone.Context) {
 	var total int
 	var staffs []model.Staff
 
-	if err := inkstone.Transaction(appContext, func(tx *sqlx.Tx) (err error) {
-		if total, err = orm.Staff(appContext).CountWithTx(tx); err != nil {
+	if err := inkstone.Transaction(appCtx, func(tx *sqlx.Tx) (err error) {
+		if total, err = orm.Staff(appCtx).CountWithTx(tx); err != nil {
 			return
 		}
 
-		staffs, err = orm.Staff(appContext).PaginationWithTx(req.Offset, req.Limit, tx)
+		staffs, err = orm.Staff(appCtx).PaginationWithTx(req.Offset, req.Limit, tx)
 		return
 	}); err != nil {
 		c.AbortWithServerError(err)
@@ -112,7 +112,7 @@ func addStaff(c *inkstone.Context) {
 
 	password := util.RandString(6)
 	staff := model.NewStaff(req.Email, password, req.Phone, req.Super)
-	if err := orm.Staff(c.App()).Save(staff); err != nil {
+	if err := orm.Staff(c.AppContext()).Save(staff); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}
@@ -175,13 +175,13 @@ func updateStaff(c *inkstone.Context) {
 	}
 
 	var (
-		appContext = c.App()
-		staff      *model.Staff
-		password   string
+		appCtx   = c.AppContext()
+		staff    *model.Staff
+		password string
 	)
 
-	if err := inkstone.Transaction(appContext, func(tx *sqlx.Tx) (err error) {
-		staff, err = orm.Staff(appContext).GetWithTx(param.Id, tx)
+	if err := inkstone.Transaction(appCtx, func(tx *sqlx.Tx) (err error) {
+		staff, err = orm.Staff(appCtx).GetWithTx(param.Id, tx)
 		if err != nil {
 			return
 		}
@@ -203,7 +203,7 @@ func updateStaff(c *inkstone.Context) {
 			staff.Reset(password)
 		}
 
-		return orm.Staff(appContext).SaveWithTx(staff, tx)
+		return orm.Staff(appCtx).SaveWithTx(staff, tx)
 	}); err != nil {
 		c.AbortWithServerError(err)
 		return

@@ -91,6 +91,6 @@ func (at *authTokenImpl) Delete(id int) (err error) {
 
 var _ authToken = (*authTokenImpl)(nil)
 
-func AuthToken(app *inkstone.AppContext) authToken {
-	return (*authTokenImpl)(app)
+func AuthToken(appCtx *inkstone.AppContext) authToken {
+	return (*authTokenImpl)(appCtx)
 }

@@ -32,7 +32,7 @@ type tokenRes struct {
 //	@Failure		403		{object}	inkstone.ClientError
 //	@Failure		500		{string}	empty
 func tokens(c *inkstone.Context) {
-	appContext := c.App()
+	appCtx := c.AppContext()
 
 	req := new(inkstone.PagingRequest)
 	if err := c.ShouldBindQuery(req); err != nil {
@@ -43,12 +43,12 @@ func tokens(c *inkstone.Context) {
 	var total int
 	var tokens []model.AuthTokenWithApp
 
-	if err := inkstone.Transaction(appContext, func(tx *sqlx.Tx) (err error) {
-		if total, err = orm.AuthToken(appContext).CountWithTx(tx); err != nil {
+	if err := inkstone.Transaction(appCtx, func(tx *sqlx.Tx) (err error) {
+		if total, err = orm.AuthToken(appCtx).CountWithTx(tx); err != nil {
 			return
 		}
 
-		tokens, err = orm.AuthToken(appContext).PaginationWithTx(req.Offset, req.Limit, tx)
+		tokens, err = orm.AuthToken(appCtx).PaginationWithTx(req.Offset, req.Limit, tx)
 		return
 	}); err != nil {
 		c.AbortWithServerError(err)
@@ -104,7 +104,7 @@ func deleteToken(c *inkstone.Context) {
 		return
 	}
 
-	if err := orm.AuthToken(c.App()).Delete(req.Id); err != nil {
+	if err := orm.AuthToken(c.AppContext()).Delete(req.Id); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}

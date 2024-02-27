@@ -15,13 +15,13 @@ var (
 	enforcer *casbin.Enforcer
 )
 
-func SetupEnforcer(app *inkstone.AppContext) {
+func SetupEnforcer(appCtx *inkstone.AppContext) {
 	model, err := model.NewModelFromString(rbac)
 	if err != nil {
 		panic(err)
 	}
 
-	adapter := sqlxadapter.NewAdapterByDB(app.DB)
+	adapter := sqlxadapter.NewAdapterByDB(appCtx.DB)
 
 	enforcer, err = casbin.NewEnforcer(model, adapter)
 	if err != nil {

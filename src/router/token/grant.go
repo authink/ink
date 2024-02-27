@@ -42,12 +42,12 @@ func grant(c *inkstone.Context) {
 		return
 	}
 
-	appContext := c.App()
+	appCtx := c.AppContext()
 
-	if app, err := orm.App(appContext).Get(req.AppId); util.CheckApp(c, err, app.Active, func() bool { return util.CompareSecrets(app.Secret, req.AppSecret) }, http.StatusBadRequest) {
+	if app, err := orm.App(appCtx).Get(req.AppId); util.CheckApp(c, err, app.Active, func() bool { return util.CompareSecrets(app.Secret, req.AppSecret) }, http.StatusBadRequest) {
 		switch app.Name {
 		case env.AppNameAdmin():
-			staff, err := orm.Staff(appContext).GetByEmail(req.Email)
+			staff, err := orm.Staff(appCtx).GetByEmail(req.Email)
 
 			if ok := util.CheckStaff(c, err, staff.Active, staff.Departure, func() bool { return inkstone.CheckPassword(staff.Password, req.Password) == nil }, http.StatusBadRequest); !ok {
 				return

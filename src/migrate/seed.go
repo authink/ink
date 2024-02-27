@@ -8,7 +8,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func Seed(appContext *inkstone.AppContext) {
+func Seed(appCtx *inkstone.AppContext) {
 	admin := model.NewStaff(
 		"admin@huoyijie.cn",
 		"123456",
@@ -21,12 +21,12 @@ func Seed(appContext *inkstone.AppContext) {
 		"123456",
 	)
 
-	if err := inkstone.Transaction(appContext, func(tx *sqlx.Tx) (err error) {
-		if err = orm.Staff(appContext).SaveWithTx(admin, tx); err != nil {
+	if err := inkstone.Transaction(appCtx, func(tx *sqlx.Tx) (err error) {
+		if err = orm.Staff(appCtx).SaveWithTx(admin, tx); err != nil {
 			return
 		}
 
-		return orm.App(appContext).SaveWithTx(app, tx)
+		return orm.App(appCtx).SaveWithTx(app, tx)
 	}); err != nil {
 		panic(err)
 	}

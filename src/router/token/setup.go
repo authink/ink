@@ -20,20 +20,20 @@ func SetupTokenGroup(rg *gin.RouterGroup) {
 }
 
 func generateAuthToken(c *inkstone.Context, app *model.App, staff *model.Staff) (res *GrantRes) {
-	appContext := c.App()
+	appCtx := c.AppContext()
 
 	jwtClaims := inkstone.NewJwtClaims(
 		inkstone.GenerateUUID(),
-		appContext.AppName,
+		appCtx.AppName,
 		app.Name,
 		staff.Email,
-		time.Duration(appContext.AccessTokenDuration),
+		time.Duration(appCtx.AccessTokenDuration),
 		app.Id,
 		staff.Id,
 	)
 
 	accessToken, err := inkstone.GenerateToken(
-		appContext.SecretKey,
+		appCtx.SecretKey,
 		jwtClaims,
 	)
 	if err != nil {
@@ -45,7 +45,7 @@ func generateAuthToken(c *inkstone.Context, app *model.App, staff *model.Staff) 
 
 	authToken := model.NewAuthToken(jwtClaims.ID, refreshToken, app.Id, staff.Id)
 
-	if err = orm.AuthToken(appContext).Save(authToken); err != nil {
+	if err = orm.AuthToken(appCtx).Save(authToken); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}
@@ -54,14 +54,14 @@ func generateAuthToken(c *inkstone.Context, app *model.App, staff *model.Staff) 
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 		TokenType:    "Bearer",
-		ExpiresIn:    int(appContext.AccessTokenDuration),
+		ExpiresIn:    int(appCtx.AccessTokenDuration),
 	}
 	return
 }
 
 func checkRefreshToken(c *inkstone.Context, refreshToken string) (authToken *model.AuthToken, ok bool) {
-	appContext := c.App()
-	authToken, err := orm.AuthToken(appContext).GetByRefreshToken(refreshToken)
+	appCtx := c.AppContext()
+	authToken, err := orm.AuthToken(appCtx).GetByRefreshToken(refreshToken)
 	if err != nil {
 		if !errs.Is(err, sql.ErrNoRows) {
 			c.AbortWithServerError(err)
@@ -71,12 +71,12 @@ func checkRefreshToken(c *inkstone.Context, refreshToken string) (authToken *mod
 		return
 	}
 
-	if err = orm.AuthToken(appContext).Delete(int(authToken.Id)); err != nil {
+	if err = orm.AuthToken(appCtx).Delete(int(authToken.Id)); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}
 
-	if time.Now().After(authToken.CreatedAt.Add(time.Duration(appContext.RefreshTokenDuration) * time.Hour)) {
+	if time.Now().After(authToken.CreatedAt.Add(time.Duration(appCtx.RefreshTokenDuration) * time.Hour)) {
 		c.AbortWithClientError(errors.ERR_INVALID_REFRESH_TOKEN)
 		return
 	}

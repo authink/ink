@@ -84,6 +84,6 @@ func (*appImpl) SaveWithTx(app *model.App, tx *sqlx.Tx) (err error) {
 
 var _ app = (*appImpl)(nil)
 
-func App(appContext *inkstone.AppContext) app {
-	return (*appImpl)(appContext)
+func App(appCtx *inkstone.AppContext) app {
+	return (*appImpl)(appCtx)
 }

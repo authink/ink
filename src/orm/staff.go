@@ -111,6 +111,6 @@ func (*staffImpl) SaveWithTx(staff *model.Staff, tx *sqlx.Tx) (err error) {
 
 var _ staff = (*staffImpl)(nil)
 
-func Staff(app *inkstone.AppContext) staff {
-	return (*staffImpl)(app)
+func Staff(appCtx *inkstone.AppContext) staff {
+	return (*staffImpl)(appCtx)
 }

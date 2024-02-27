@@ -14,7 +14,7 @@ import (
 )
 
 func AuthN(c *inkstone.Context) {
-	appContext := c.App()
+	appCtx := c.AppContext()
 	authHeader := c.GetHeader("Authorization")
 
 	if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
@@ -24,7 +24,7 @@ func AuthN(c *inkstone.Context) {
 
 	accessToken := strings.TrimPrefix(authHeader, "Bearer ")
 
-	claims, err := inkstone.VerifyToken(appContext.SecretKey, accessToken)
+	claims, err := inkstone.VerifyToken(appCtx.SecretKey, accessToken)
 	if err != nil {
 		if errs.Is(err, jwt.ErrTokenExpired) {
 			c.AbortWithUnauthorized(errors.ERR_EXPIRED_ACCESS_TOKEN)
@@ -35,12 +35,12 @@ func AuthN(c *inkstone.Context) {
 		return
 	}
 
-	if _, err = orm.AuthToken(appContext).GetByAccessToken(claims.ID); err != nil {
+	if _, err = orm.AuthToken(appCtx).GetByAccessToken(claims.ID); err != nil {
 		c.AbortWithUnauthorized(errors.ERR_REVOKED_ACCESS_TOKEN)
 		return
 	}
 
-	app, err := orm.App(appContext).Get(claims.AppId)
+	app, err := orm.App(appCtx).Get(claims.AppId)
 	if !util.CheckApp(c, err, app.Active, func() bool { return true }, http.StatusUnauthorized) {
 		return
 	}
@@ -48,7 +48,7 @@ func AuthN(c *inkstone.Context) {
 
 	switch app.Name {
 	case env.AppNameAdmin():
-		staff, err := orm.Staff(appContext).Get(claims.AccountId)
+		staff, err := orm.Staff(appCtx).Get(claims.AccountId)
 
 		if ok := util.CheckStaff(c, err, staff.Active, staff.Departure, func() bool { return true }, http.StatusUnauthorized); !ok {
 			return

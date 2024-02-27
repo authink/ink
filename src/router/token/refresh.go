@@ -37,17 +37,17 @@ func refresh(c *inkstone.Context) {
 		return
 	}
 
-	appContext := c.App()
+	appCtx := c.AppContext()
 
-	jwtClaims, ok := util.CheckAccessToken(c, appContext.SecretKey, req.AccessToken, authToken.AccessToken)
+	jwtClaims, ok := util.CheckAccessToken(c, appCtx.SecretKey, req.AccessToken, authToken.AccessToken)
 	if !ok {
 		return
 	}
 
-	if app, err := orm.App(appContext).Get(jwtClaims.AppId); util.CheckApp(c, err, app.Active, func() bool { return true }, http.StatusBadRequest) {
+	if app, err := orm.App(appCtx).Get(jwtClaims.AppId); util.CheckApp(c, err, app.Active, func() bool { return true }, http.StatusBadRequest) {
 		switch app.Name {
 		case env.AppNameAdmin():
-			staff, err := orm.Staff(appContext).Get(jwtClaims.AccountId)
+			staff, err := orm.Staff(appCtx).Get(jwtClaims.AccountId)
 
 			if ok := util.CheckStaff(c, err, staff.Active, staff.Departure, func() bool { return true }, http.StatusBadRequest); !ok {
 				return

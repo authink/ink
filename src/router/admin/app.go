@@ -30,9 +30,9 @@ type appRes struct {
 //	@Failure		403	{object}	inkstone.ClientError
 //	@Failure		500	{string}	empty
 func apps(c *inkstone.Context) {
-	appContext := c.App()
+	appCtx := c.AppContext()
 
-	apps, err := orm.App(appContext).Find()
+	apps, err := orm.App(appCtx).Find()
 	if err != nil {
 		c.AbortWithServerError(err)
 		return
@@ -80,7 +80,7 @@ func addApp(c *inkstone.Context) {
 
 	secret := util.RandString(6)
 	app := model.NewApp(req.Name, secret)
-	if err := orm.App(c.App()).Save(app); err != nil {
+	if err := orm.App(c.AppContext()).Save(app); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}
@@ -138,13 +138,13 @@ func updateApp(c *inkstone.Context) {
 	}
 
 	var (
-		appContext = c.App()
-		app        *model.App
-		secret     string
+		appCtx = c.AppContext()
+		app    *model.App
+		secret string
 	)
 
-	if err := inkstone.Transaction(appContext, func(tx *sqlx.Tx) (err error) {
-		app, err = orm.App(appContext).GetWithTx(param.Id, tx)
+	if err := inkstone.Transaction(appCtx, func(tx *sqlx.Tx) (err error) {
+		app, err = orm.App(appCtx).GetWithTx(param.Id, tx)
 		if err != nil {
 			return
 		}
@@ -157,7 +157,7 @@ func updateApp(c *inkstone.Context) {
 			app.Active = !app.Active
 		}
 
-		return orm.App(appContext).SaveWithTx(app, tx)
+		return orm.App(appCtx).SaveWithTx(app, tx)
 	}); err != nil {
 		c.AbortWithServerError(err)
 		return
