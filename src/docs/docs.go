@@ -128,18 +128,18 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/apps/{id}/reset": {
+        "/admin/apps/{id}": {
             "put": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Reset a app",
+                "description": "Update a app",
                 "tags": [
                     "admin_app"
                 ],
-                "summary": "Reset a app",
+                "summary": "Update a app",
                 "parameters": [
                     {
                         "type": "integer",
@@ -147,68 +147,22 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "request body",
+                        "name": "updateAppReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.updateAppReq"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/admin.addAppRes"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/apps/{id}/toggle": {
-            "put": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Toggle a app",
-                "tags": [
-                    "admin_app"
-                ],
-                "summary": "Toggle a app",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "app id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/admin.toggleAppRes"
+                            "$ref": "#/definitions/admin.appRes"
                         }
                     },
                     "400": {
@@ -799,6 +753,9 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
+                "secret": {
+                    "type": "string"
+                },
                 "updatedAt": {
                     "type": "string"
                 }
@@ -841,20 +798,6 @@ const docTemplate = `{
                 }
             }
         },
-        "admin.toggleAppRes": {
-            "type": "object",
-            "properties": {
-                "active": {
-                    "type": "boolean"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
         "admin.tokenRes": {
             "type": "object",
             "properties": {
@@ -881,6 +824,19 @@ const docTemplate = `{
                 },
                 "updatedAt": {
                     "type": "string"
+                }
+            }
+        },
+        "admin.updateAppReq": {
+            "type": "object",
+            "properties": {
+                "activeToggle": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "resetSecret": {
+                    "type": "boolean",
+                    "example": false
                 }
             }
         },

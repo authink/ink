@@ -67,8 +67,8 @@ func staffs(c *inkstone.Context) {
 		staff := &staffs[i]
 		res = append(res, staffRes{
 			int(staff.Id),
-			&staff.CreatedAt,
-			&staff.UpdatedAt,
+			staff.CreatedAt,
+			staff.UpdatedAt,
 			staff.Email,
 			staff.Phone,
 			staff.Super,
@@ -176,9 +176,10 @@ func updateStaff(c *inkstone.Context) {
 		return
 	}
 
-	appContext := c.App()
-
-	var staff *model.Staff
+	var (
+		appContext = c.App()
+		staff      *model.Staff
+	)
 
 	if err := inkstone.Transaction(appContext, func(tx *sqlx.Tx) (err error) {
 		staff, err = orm.Staff(appContext).GetWithTx(param.Id, tx)

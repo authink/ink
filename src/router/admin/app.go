@@ -8,15 +8,18 @@ import (
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/ink.go/src/util"
 	"github.com/authink/inkstone"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
 	"github.com/jmoiron/sqlx"
 )
 
 type appRes struct {
-	Id        int       `json:"id"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
-	Name      string    `json:"name"`
-	Active    bool      `json:"active"`
+	Id        int        `json:"id"`
+	CreatedAt *time.Time `json:"createdAt,omitempty"`
+	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
+	Name      string     `json:"name"`
+	Secret    string     `json:"secret,omitempty"`
+	Active    bool       `json:"active"`
 }
 
 // apps godoc
@@ -42,11 +45,11 @@ func apps(c *inkstone.Context) {
 	var res []appRes
 	for i := range apps {
 		res = append(res, appRes{
-			int(apps[i].Id),
-			apps[i].CreatedAt,
-			apps[i].UpdatedAt,
-			apps[i].Name,
-			apps[i].Active,
+			Id:        int(apps[i].Id),
+			CreatedAt: apps[i].CreatedAt,
+			UpdatedAt: apps[i].UpdatedAt,
+			Name:      apps[i].Name,
+			Active:    apps[i].Active,
 		})
 	}
 
@@ -97,42 +100,67 @@ func addApp(c *inkstone.Context) {
 	})
 }
 
-type resetAppReq struct {
+type updateAppParam struct {
 	Id int `uri:"id" binding:"required,min=100000"`
 }
 
-// resetApp godoc
+type updateAppReq struct {
+	ResetSecret  bool `json:"resetSecret" example:"false"`
+	ActiveToggle bool `json:"activeToggle" example:"true"`
+}
+
+// updateApp godoc
 //
-//	@Summary		Reset a app
-//	@Description	Reset a app
+//	@Summary		Update a app
+//	@Description	Update a app
 //	@Tags			admin_app
-//	@Router			/admin/apps/{id}/reset	[put]
+//	@Router			/admin/apps/{id}	[put]
 //	@Security		ApiKeyAuth
-//	@Param			id	path		int	true	"app id"
-//	@Success		200	{object}	addAppRes
-//	@Failure		400	{object}	inkstone.ClientError
-//	@Failure		401	{object}	inkstone.ClientError
-//	@Failure		403	{object}	inkstone.ClientError
-//	@Failure		500	{string}	empty
-func resetApp(c *inkstone.Context) {
-	req := new(resetAppReq)
-	if err := c.ShouldBindUri(req); err != nil {
+//	@Param			id				path		int				true	"app id"
+//	@Param			updateAppReq	body		updateAppReq	true	"request body"
+//	@Success		200				{object}	appRes
+//	@Failure		400				{object}	inkstone.ClientError
+//	@Failure		401				{object}	inkstone.ClientError
+//	@Failure		403				{object}	inkstone.ClientError
+//	@Failure		500				{string}	empty
+func updateApp(c *inkstone.Context) {
+	param := new(updateAppParam)
+
+	if err := c.ShouldBindUri(param); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
 		return
 	}
 
-	appContext := c.App()
+	req := new(updateAppReq)
 
-	var app *model.App
-	secret := util.RandString(6)
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterStructValidation(inkstone.ValidationNotAllFieldsZero, req)
+	}
+
+	if err := c.ShouldBindJSON(req); err != nil {
+		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		return
+	}
+
+	var (
+		appContext = c.App()
+		app        *model.App
+		secret     string
+	)
 
 	if err := inkstone.Transaction(appContext, func(tx *sqlx.Tx) (err error) {
-		app, err = orm.App(appContext).GetWithTx(req.Id, tx)
+		app, err = orm.App(appContext).GetWithTx(param.Id, tx)
 		if err != nil {
 			return
 		}
 
-		app.Reset(secret)
+		if req.ResetSecret {
+			secret = util.RandString(6)
+			app.Reset(secret)
+		}
+		if req.ActiveToggle {
+			app.Active = !app.Active
+		}
 
 		return orm.App(appContext).SaveWithTx(app, tx)
 	}); err != nil {
@@ -140,70 +168,10 @@ func resetApp(c *inkstone.Context) {
 		return
 	}
 
-	c.Response(&addAppRes{
+	c.Response(&appRes{
 		Id:     int(app.Id),
 		Name:   app.Name,
 		Secret: secret,
-	})
-}
-
-type toggleAppReq struct {
-	Id int `uri:"id" binding:"required,min=100000"`
-}
-
-type toggleAppRes struct {
-	Id     int    `json:"id"`
-	Name   string `json:"name"`
-	Active bool   `json:"active"`
-}
-
-// resetApp godoc
-//
-//	@Summary		Toggle a app
-//	@Description	Toggle a app
-//	@Tags			admin_app
-//	@Router			/admin/apps/{id}/toggle	[put]
-//	@Security		ApiKeyAuth
-//	@Param			id	path		int	true	"app id"
-//	@Success		200	{object}	toggleAppRes
-//	@Failure		400	{object}	inkstone.ClientError
-//	@Failure		401	{object}	inkstone.ClientError
-//	@Failure		403	{object}	inkstone.ClientError
-//	@Failure		500	{string}	empty
-func toggleApp(c *inkstone.Context) {
-	req := new(toggleAppReq)
-	if err := c.ShouldBindUri(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
-		return
-	}
-
-	currentApp := c.MustGet("app").(*model.App)
-	if req.Id == int(currentApp.Id) {
-		c.AbortWithForbidden(errors.ERR_BAD_REQUEST)
-		return
-	}
-
-	appContext := c.App()
-
-	var app *model.App
-
-	if err := inkstone.Transaction(appContext, func(tx *sqlx.Tx) (err error) {
-		app, err = orm.App(appContext).GetWithTx(req.Id, tx)
-		if err != nil {
-			return
-		}
-
-		app.Active = !app.Active
-
-		return orm.App(appContext).SaveWithTx(app, tx)
-	}); err != nil {
-		c.AbortWithServerError(err)
-		return
-	}
-
-	c.Response(&toggleAppRes{
-		Id:     int(app.Id),
-		Name:   app.Name,
 		Active: app.Active,
 	})
 }

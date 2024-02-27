@@ -60,19 +60,19 @@ func TestAddApp(t *testing.T) {
 	assert.NotEmpty(t, resObj.RefreshToken)
 
 	resAddApp := new(addAppRes)
-	w2, _ := tAddApp(resObj.AccessToken, "appmock", &resAddApp)
+	w2, _ := tAddApp(resObj.AccessToken, "appmock", resAddApp)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Less(t, 100001, resAddApp.Id)
 	assert.Equal(t, "appmock", resAddApp.Name)
 	assert.NotEmpty(t, resAddApp.Secret)
 }
 
-func tResetApp(accessToken string, id int, resObj any) (*httptest.ResponseRecorder, error) {
+func tUpdateApp(accessToken string, id int, reqObj, resObj any) (*httptest.ResponseRecorder, error) {
 	return inkstone.TestFetch(
 		ctx,
 		"PUT",
-		fmt.Sprintf("admin/apps/%d/reset", id),
-		nil,
+		fmt.Sprintf("admin/apps/%d", id),
+		reqObj,
 		resObj,
 		accessToken,
 	)
@@ -86,23 +86,15 @@ func TestResetApp(t *testing.T) {
 	assert.NotEmpty(t, resObj.AccessToken)
 	assert.NotEmpty(t, resObj.RefreshToken)
 
-	resetAppRes := new(addAppRes)
-	w2, _ := tResetApp(resObj.AccessToken, 100001, &resetAppRes)
+	resetAppReq := &updateAppReq{
+		ResetSecret: true,
+	}
+	resetAppRes := new(appRes)
+	w2, _ := tUpdateApp(resObj.AccessToken, 100001, resetAppReq, resetAppRes)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Equal(t, 100001, resetAppRes.Id)
 	assert.Equal(t, "devtools", resetAppRes.Name)
 	assert.NotEqual(t, "123456", resetAppRes.Secret)
-}
-
-func tToggleApp(accessToken string, id int, resObj any) (*httptest.ResponseRecorder, error) {
-	return inkstone.TestFetch(
-		ctx,
-		"PUT",
-		fmt.Sprintf("admin/apps/%d/toggle", id),
-		nil,
-		resObj,
-		accessToken,
-	)
 }
 
 func TestToggleApp(t *testing.T) {
@@ -113,8 +105,11 @@ func TestToggleApp(t *testing.T) {
 	assert.NotEmpty(t, resObj.AccessToken)
 	assert.NotEmpty(t, resObj.RefreshToken)
 
-	toggleAppRes := new(toggleAppRes)
-	w2, _ := tToggleApp(resObj.AccessToken, 100001, &toggleAppRes)
+	resetAppReq := &updateAppReq{
+		ActiveToggle: true,
+	}
+	toggleAppRes := new(appRes)
+	w2, _ := tUpdateApp(resObj.AccessToken, 100001, resetAppReq, toggleAppRes)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Equal(t, 100001, toggleAppRes.Id)
 	assert.Equal(t, "devtools", toggleAppRes.Name)
