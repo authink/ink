@@ -119,9 +119,11 @@ type updateAppReq struct {
 //	@Failure		403				{object}	inkstone.ClientError
 //	@Failure		500				{string}	empty
 func updateApp(c *inkstone.Context) {
+	var currentApp = c.MustGet("app").(*model.App)
+
 	param := new(updateAppParam)
 
-	if err := c.ShouldBindUri(param); err != nil {
+	if err := c.ShouldBindUri(param); err != nil || param.Id == int(currentApp.Id) {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
 		return
 	}

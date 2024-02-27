@@ -38,4 +38,8 @@ var (
 	ERR_EXPIRED_ACCESS_TOKEN error = &inkstone.ClientError{
 		Code: "ExpiredAccessToken",
 	}
+
+	ERR_NO_PERMISSION error = &inkstone.ClientError{
+		Code: "NoPermission",
+	}
 )
