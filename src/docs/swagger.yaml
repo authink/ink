@@ -5,19 +5,11 @@ definitions:
   admin.addAppReq:
     properties:
       name:
+        example: appmock
         minLength: 6
         type: string
     required:
     - name
-    type: object
-  admin.addAppRes:
-    properties:
-      id:
-        type: integer
-      name:
-        type: string
-      secret:
-        type: string
     type: object
   admin.addStaffReq:
     properties:
@@ -35,15 +27,6 @@ definitions:
     required:
     - email
     - phone
-    type: object
-  admin.addStaffRes:
-    properties:
-      email:
-        type: string
-      id:
-        type: integer
-      password:
-        type: string
     type: object
   admin.appRes:
     properties:
@@ -77,6 +60,8 @@ definitions:
         type: string
       id:
         type: integer
+      password:
+        type: string
       phone:
         type: string
       super:
@@ -268,7 +253,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/admin.addAppRes'
+            $ref: '#/definitions/admin.appRes'
         "400":
           description: Bad Request
           schema:
@@ -421,7 +406,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/admin.addStaffRes'
+            $ref: '#/definitions/admin.staffRes'
         "400":
           description: Bad Request
           schema:

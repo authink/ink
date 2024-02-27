@@ -14,11 +14,12 @@ import (
 )
 
 type staffRes struct {
-	Id        int        `json:"id"`
+	Id        int        `json:"id,omitempty"`
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
-	Email     string     `json:"email"`
-	Phone     string     `json:"phone"`
+	Email     string     `json:"email,omitempty"`
+	Password  string     `json:"password,omitempty"`
+	Phone     string     `json:"phone,omitempty"`
 	Super     bool       `json:"super"`
 	Active    bool       `json:"active"`
 	Departure bool       `json:"departure"`
@@ -66,14 +67,14 @@ func staffs(c *inkstone.Context) {
 	for i := range staffs {
 		staff := &staffs[i]
 		res = append(res, staffRes{
-			int(staff.Id),
-			staff.CreatedAt,
-			staff.UpdatedAt,
-			staff.Email,
-			staff.Phone,
-			staff.Super,
-			staff.Active,
-			staff.Departure,
+			Id:        int(staff.Id),
+			CreatedAt: staff.CreatedAt,
+			UpdatedAt: staff.UpdatedAt,
+			Email:     staff.Email,
+			Phone:     staff.Phone,
+			Super:     staff.Super,
+			Active:    staff.Active,
+			Departure: staff.Departure,
 		})
 	}
 
@@ -91,12 +92,6 @@ type addStaffReq struct {
 	Super bool   `json:"super" example:"false"`
 }
 
-type addStaffRes struct {
-	Id       int    `json:"id"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
 // addStaff godoc
 //
 //	@Summary		Add a staff
@@ -105,7 +100,7 @@ type addStaffRes struct {
 //	@Router			/admin/staffs	[post]
 //	@Security		ApiKeyAuth
 //	@Param			addStaffReq	body		addStaffReq	true	"request body"
-//	@Success		200			{object}	addStaffRes
+//	@Success		200			{object}	staffRes
 //	@Failure		400			{object}	inkstone.ClientError
 //	@Failure		401			{object}	inkstone.ClientError
 //	@Failure		403			{object}	inkstone.ClientError
@@ -124,10 +119,13 @@ func addStaff(c *inkstone.Context) {
 		return
 	}
 
-	c.Response(&addStaffRes{
-		Id:       int(staff.Id),
-		Email:    staff.Email,
-		Password: password,
+	c.Response(&staffRes{
+		Id:        int(staff.Id),
+		Email:     staff.Email,
+		Password:  password,
+		Super:     staff.Super,
+		Active:    staff.Active,
+		Departure: staff.Departure,
 	})
 }
 
@@ -179,6 +177,7 @@ func updateStaff(c *inkstone.Context) {
 	var (
 		appContext = c.App()
 		staff      *model.Staff
+		password   string
 	)
 
 	if err := inkstone.Transaction(appContext, func(tx *sqlx.Tx) (err error) {
@@ -200,7 +199,8 @@ func updateStaff(c *inkstone.Context) {
 			staff.Departure = !staff.Departure
 		}
 		if req.ResetPassword {
-			staff.Reset(util.RandString(6))
+			password = util.RandString(6)
+			staff.Reset(password)
 		}
 
 		return orm.Staff(appContext).SaveWithTx(staff, tx)

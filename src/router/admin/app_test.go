@@ -59,7 +59,7 @@ func TestAddApp(t *testing.T) {
 	assert.NotEmpty(t, resObj.AccessToken)
 	assert.NotEmpty(t, resObj.RefreshToken)
 
-	resAddApp := new(addAppRes)
+	resAddApp := new(appRes)
 	w2, _ := tAddApp(resObj.AccessToken, "appmock", resAddApp)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Less(t, 100001, resAddApp.Id)

@@ -98,7 +98,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/admin.addAppRes"
+                            "$ref": "#/definitions/admin.appRes"
                         }
                     },
                     "400": {
@@ -337,7 +337,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/admin.addStaffRes"
+                            "$ref": "#/definitions/admin.staffRes"
                         }
                     },
                     "400": {
@@ -683,21 +683,8 @@ const docTemplate = `{
             "properties": {
                 "name": {
                     "type": "string",
-                    "minLength": 6
-                }
-            }
-        },
-        "admin.addAppRes": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "secret": {
-                    "type": "string"
+                    "minLength": 6,
+                    "example": "appmock"
                 }
             }
         },
@@ -721,20 +708,6 @@ const docTemplate = `{
                 "super": {
                     "type": "boolean",
                     "example": false
-                }
-            }
-        },
-        "admin.addStaffRes": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "password": {
-                    "type": "string"
                 }
             }
         },
@@ -786,6 +759,9 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "integer"
+                },
+                "password": {
+                    "type": "string"
                 },
                 "phone": {
                     "type": "string"

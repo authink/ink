@@ -55,7 +55,7 @@ func TestAddStaff(t *testing.T) {
 	assert.NotEmpty(t, resObj.AccessToken)
 	assert.NotEmpty(t, resObj.RefreshToken)
 
-	resAddStaff := new(addStaffRes)
+	resAddStaff := new(staffRes)
 	w2, _ := tAddStaff(resObj.AccessToken, "example@huoyijie.cn", "18555201314", false, resAddStaff)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Equal(t, 100001, resAddStaff.Id)

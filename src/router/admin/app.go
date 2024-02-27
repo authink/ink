@@ -14,10 +14,10 @@ import (
 )
 
 type appRes struct {
-	Id        int        `json:"id"`
+	Id        int        `json:"id,omitempty"`
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
-	Name      string     `json:"name"`
+	Name      string     `json:"name,omitempty"`
 	Secret    string     `json:"secret,omitempty"`
 	Active    bool       `json:"active"`
 }
@@ -57,13 +57,7 @@ func apps(c *inkstone.Context) {
 }
 
 type addAppReq struct {
-	Name string `json:"name" binding:"required,min=6"`
-}
-
-type addAppRes struct {
-	Id     int    `json:"id"`
-	Name   string `json:"name"`
-	Secret string `json:"secret"`
+	Name string `json:"name" binding:"required,min=6" example:"appmock"`
 }
 
 // addApp godoc
@@ -74,7 +68,7 @@ type addAppRes struct {
 //	@Router			/admin/apps	[post]
 //	@Security		ApiKeyAuth
 //	@Param			addAppReq	body		addAppReq	true	"request body"
-//	@Success		200			{object}	addAppRes
+//	@Success		200			{object}	appRes
 //	@Failure		400			{object}	inkstone.ClientError
 //	@Failure		401			{object}	inkstone.ClientError
 //	@Failure		403			{object}	inkstone.ClientError
@@ -93,10 +87,11 @@ func addApp(c *inkstone.Context) {
 		return
 	}
 
-	c.Response(&addAppRes{
+	c.Response(&appRes{
 		Id:     int(app.Id),
 		Name:   app.Name,
 		Secret: secret,
+		Active: app.Active,
 	})
 }
 

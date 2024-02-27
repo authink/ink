@@ -11,14 +11,14 @@ import (
 )
 
 type tokenRes struct {
-	Id           int       `json:"id"`
+	Id           int        `json:"id,omitempty"`
 	CreatedAt    *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt    *time.Time `json:"updatedAt,omitempty"`
-	AccessToken  string    `json:"access_token"`
-	RefreshToken string    `json:"refresh_token"`
-	AppId        uint32    `json:"appId"`
-	AppName      string    `json:"appName"`
-	AccountId    uint32    `json:"accountId"`
+	AccessToken  string     `json:"access_token,omitempty"`
+	RefreshToken string     `json:"refresh_token,omitempty"`
+	AppId        int        `json:"appId,omitempty"`
+	AppName      string     `json:"appName,omitempty"`
+	AccountId    int        `json:"accountId,omitempty"`
 }
 
 // tokens godoc
@@ -68,9 +68,9 @@ func tokens(c *inkstone.Context) {
 			token.UpdatedAt,
 			token.AccessToken,
 			token.RefreshToken,
-			token.AppId,
+			int(token.AppId),
 			token.AppName,
-			token.AccountId,
+			int(token.AccountId),
 		})
 	}
 
