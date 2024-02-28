@@ -15,8 +15,8 @@ import (
 )
 
 func setupStaffGroup(gAdmin *gin.RouterGroup) {
-	gStaffs := gAdmin.Group(authz.ResourceStaff)
-	gStaffs.Use(middleware.AuthZ(authz.ResourceStaff))
+	gStaffs := gAdmin.Group(authz.Staffs.Name)
+	gStaffs.Use(middleware.Authz(authz.Staffs))
 	gStaffs.GET("", inkstone.HandlerAdapter(staffs))
 	gStaffs.POST("", inkstone.HandlerAdapter(addStaff))
 	gStaffs.PUT(":id", inkstone.HandlerAdapter(updateStaff))
@@ -98,7 +98,6 @@ func staffs(c *inkstone.Context) {
 type addStaffReq struct {
 	Email string `json:"email" binding:"required,inkEmail" example:"example@huoyijie.cn"`
 	Phone string `json:"phone" binding:"required,min=11,max=11" example:"18555201314"`
-	Super bool   `json:"super" example:"false"`
 }
 
 // addStaff godoc
@@ -122,7 +121,7 @@ func addStaff(c *inkstone.Context) {
 	}
 
 	password := util.RandString(6)
-	staff := model.NewStaff(req.Email, password, req.Phone, req.Super)
+	staff := model.NewStaff(req.Email, password, req.Phone, false)
 	if err := orm.Staff(c.AppContext()).Save(staff); err != nil {
 		c.AbortWithServerError(err)
 		return
@@ -146,7 +145,6 @@ type updateStaffParam struct {
 
 type updateStaffReq struct {
 	Phone           string `json:"phone" binding:"omitempty,min=11,max=11" example:"18555201314"`
-	SuperToggle     bool   `json:"superToggle" example:"false"`
 	ActiveToggle    bool   `json:"activeToggle" example:"true"`
 	DepartureToggle bool   `json:"departureToggle" example:"false"`
 	ResetPassword   bool   `json:"resetPassword" example:"false"`
@@ -199,9 +197,6 @@ func updateStaff(c *inkstone.Context) {
 
 		if req.Phone != "" {
 			staff.Phone = req.Phone
-		}
-		if req.SuperToggle {
-			staff.Super = !staff.Super
 		}
 		if req.ActiveToggle {
 			staff.Active = !staff.Active

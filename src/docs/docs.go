@@ -779,10 +779,6 @@ const docTemplate = `{
                     "maxLength": 11,
                     "minLength": 11,
                     "example": "18555201314"
-                },
-                "super": {
-                    "type": "boolean",
-                    "example": false
                 }
             }
         },
@@ -938,10 +934,6 @@ const docTemplate = `{
                     "example": "18555201314"
                 },
                 "resetPassword": {
-                    "type": "boolean",
-                    "example": false
-                },
-                "superToggle": {
                     "type": "boolean",
                     "example": false
                 }

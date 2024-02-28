@@ -21,9 +21,6 @@ definitions:
         maxLength: 11
         minLength: 11
         type: string
-      super:
-        example: false
-        type: boolean
     required:
     - email
     - phone
@@ -130,9 +127,6 @@ definitions:
         minLength: 11
         type: string
       resetPassword:
-        example: false
-        type: boolean
-      superToggle:
         example: false
         type: boolean
     type: object

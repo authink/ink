@@ -12,8 +12,8 @@ import (
 )
 
 func setupTokenGroup(gAdmin *gin.RouterGroup) {
-	gTokens := gAdmin.Group(authz.ResourceToken)
-	gTokens.Use(middleware.AuthZ(authz.ResourceToken))
+	gTokens := gAdmin.Group(authz.Tokens.Name)
+	gTokens.Use(middleware.Authz(authz.Tokens))
 	gTokens.GET("", inkstone.HandlerAdapter(tokens))
 	gTokens.DELETE(":id", inkstone.HandlerAdapter(deleteToken))
 }

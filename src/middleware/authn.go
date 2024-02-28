@@ -13,7 +13,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func AuthN(c *inkstone.Context) {
+func Authn(c *inkstone.Context) {
 	appCtx := c.AppContext()
 	authHeader := c.GetHeader("Authorization")
 

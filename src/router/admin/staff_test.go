@@ -36,8 +36,8 @@ func TestStaffs(t *testing.T) {
 	assert.Equal(t, 1, len(res.Items))
 }
 
-func tAddStaff(accessToken, email, phone string, super bool, resObj any) (*httptest.ResponseRecorder, error) {
-	reqObj := &addStaffReq{email, phone, super}
+func tAddStaff(accessToken, email, phone string, resObj any) (*httptest.ResponseRecorder, error) {
+	reqObj := &addStaffReq{email, phone}
 	return inkstone.TestFetch(
 		ctx,
 		http.MethodPost,
@@ -57,7 +57,7 @@ func TestAddStaff(t *testing.T) {
 	assert.NotEmpty(t, resObj.RefreshToken)
 
 	resAddStaff := new(staffRes)
-	w2, _ := tAddStaff(resObj.AccessToken, "example@huoyijie.cn", "18555201314", false, resAddStaff)
+	w2, _ := tAddStaff(resObj.AccessToken, "example@huoyijie.cn", "18555201314", resAddStaff)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Equal(t, 100002, resAddStaff.Id)
 	assert.Equal(t, "example@huoyijie.cn", resAddStaff.Email)
@@ -87,7 +87,6 @@ func TestUpdateStaff(t *testing.T) {
 		Phone:           "12112112112",
 		ActiveToggle:    true,
 		DepartureToggle: true,
-		SuperToggle:     true,
 		ResetPassword:   true,
 	}
 	updateRes := new(staffRes)
@@ -97,6 +96,6 @@ func TestUpdateStaff(t *testing.T) {
 	assert.Equal(t, "12112112112", updateRes.Phone)
 	assert.NotEqual(t, "123456", updateRes.Password)
 	assert.False(t, updateRes.Active)
-	assert.True(t, updateRes.Super)
+	assert.False(t, updateRes.Super)
 	assert.True(t, updateRes.Departure)
 }

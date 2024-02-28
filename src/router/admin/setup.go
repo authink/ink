@@ -9,7 +9,7 @@ import (
 func SetupAdminGroup(rg *gin.RouterGroup, appName string) {
 	gAdmin := rg.Group("admin")
 	gAdmin.Use(
-		inkstone.HandlerAdapter(middleware.AuthN), middleware.AppScope(appName),
+		inkstone.HandlerAdapter(middleware.Authn), middleware.AppScope(appName),
 	)
 	setupDashboard(gAdmin)
 

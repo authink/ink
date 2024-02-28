@@ -12,9 +12,9 @@ import (
 )
 
 func setupGroupGroup(gAdmin *gin.RouterGroup) {
-	gApps := gAdmin.Group(authz.ResourceGroup)
-	gApps.Use(middleware.AuthZ(authz.ResourceGroup))
-	gApps.GET("", inkstone.HandlerAdapter(groups))
+	gGroups := gAdmin.Group(authz.Groups.Name)
+	gGroups.Use(middleware.Authz(authz.Groups))
+	gGroups.GET("", inkstone.HandlerAdapter(groups))
 }
 
 type pagingGroupReq struct {

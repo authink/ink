@@ -15,8 +15,8 @@ import (
 )
 
 func setupAppGroup(gAdmin *gin.RouterGroup) {
-	gApps := gAdmin.Group(authz.ResourceApp)
-	gApps.Use(middleware.AuthZ(authz.ResourceApp))
+	gApps := gAdmin.Group(authz.Apps.Name)
+	gApps.Use(middleware.Authz(authz.Apps))
 	gApps.GET("", inkstone.HandlerAdapter(apps))
 	gApps.POST("", inkstone.HandlerAdapter(addApp))
 	gApps.PUT(":id", inkstone.HandlerAdapter(updateApp))
