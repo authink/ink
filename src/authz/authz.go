@@ -13,6 +13,7 @@ const (
 	ResourceApp   string = "apps"
 	ResourceToken string = "tokens"
 	ResourceStaff string = "staffs"
+	ResourceGroup string = "groups"
 )
 
 var (

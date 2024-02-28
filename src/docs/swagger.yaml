@@ -48,6 +48,25 @@ definitions:
       count:
         type: integer
     type: object
+  admin.groupRes:
+    properties:
+      active:
+        type: boolean
+      appId:
+        type: integer
+      appName:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      type:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
   admin.staffRes:
     properties:
       active:
@@ -123,6 +142,19 @@ definitions:
         type: string
       message:
         type: string
+    type: object
+  inkstone.PagingResponse-admin_groupRes:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/admin.groupRes'
+        type: array
+      limit:
+        type: integer
+      offset:
+        type: integer
+      total:
+        type: integer
     type: object
   inkstone.PagingResponse-admin_staffRes:
     properties:
@@ -354,6 +386,55 @@ paths:
       summary: Show dashboard
       tags:
       - dashboard
+  /admin/groups:
+    get:
+      description: Show groups
+      parameters:
+      - description: type
+        in: query
+        name: type
+        required: true
+        type: integer
+      - description: appId
+        in: query
+        name: appId
+        required: true
+        type: integer
+      - description: offset
+        in: query
+        name: offset
+        type: integer
+      - description: limit
+        in: query
+        name: limit
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/inkstone.PagingResponse-admin_groupRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Show groups
+      tags:
+      - admin_group
   /admin/staffs:
     get:
       description: Show staffs

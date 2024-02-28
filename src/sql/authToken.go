@@ -13,7 +13,7 @@ func (*authToken) Count() string {
 }
 
 func (*authToken) Pagination() string {
-	return fmt.Sprintf("SELECT at.id, at.created_at, at.updated_at, at.access_token, at.refresh_token, at.app_id, a.name app_name, at.account_id FROM %s at, %s a where at.app_id = a.id ORDER BY at.id DESC LIMIT ? OFFSET ?", table.AuthToken, table.App)
+	return fmt.Sprintf("SELECT at.id, at.created_at, at.updated_at, at.access_token, at.refresh_token, at.app_id, a.name app_name, at.account_id FROM %s at, %s a WHERE at.app_id = a.id ORDER BY at.id DESC LIMIT ? OFFSET ?", table.AuthToken, table.App)
 }
 
 // Update implements inkstone.SQL.

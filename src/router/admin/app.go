@@ -51,14 +51,15 @@ func apps(c *inkstone.Context) {
 
 	var res []appRes
 	for i := range apps {
+		app := &apps[i]
 		res = append(res, appRes{
 			Response: inkstone.Response{
-				Id:        int(apps[i].Id),
-				CreatedAt: apps[i].CreatedAt,
-				UpdatedAt: apps[i].UpdatedAt,
+				Id:        int(app.Id),
+				CreatedAt: app.CreatedAt,
+				UpdatedAt: app.UpdatedAt,
 			},
-			Name:   apps[i].Name,
-			Active: apps[i].Active,
+			Name:   app.Name,
+			Active: app.Active,
 		})
 	}
 
