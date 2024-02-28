@@ -1,12 +1,22 @@
 package admin
 
 import (
+	"github.com/authink/ink.go/src/authz"
 	"github.com/authink/ink.go/src/errors"
+	"github.com/authink/ink.go/src/middleware"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/inkstone"
+	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 )
+
+func setupTokenGroup(gAdmin *gin.RouterGroup) {
+	gTokens := gAdmin.Group(authz.ResourceToken)
+	gTokens.Use(middleware.AuthZ(authz.ResourceToken))
+	gTokens.GET("", inkstone.HandlerAdapter(tokens))
+	gTokens.DELETE(":id", inkstone.HandlerAdapter(deleteToken))
+}
 
 type tokenRes struct {
 	inkstone.Response

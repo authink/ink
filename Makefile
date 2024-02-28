@@ -5,9 +5,13 @@ ARGS :=
 tidy:
 	go mod tidy
 
+fmt:
+	go fmt ./src
+fmt: tidy
+
 swag:
 	go run ./src swag
-swag: tidy
+swag: fmt
 
 test:
 	APP_ENV=test APP_CWD=$(CURDIR) go test ./src/...

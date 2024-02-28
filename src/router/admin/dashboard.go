@@ -2,7 +2,12 @@ package admin
 
 import (
 	"github.com/authink/inkstone"
+	"github.com/gin-gonic/gin"
 )
+
+func setupDashboard(gAdmin *gin.RouterGroup) {
+	gAdmin.GET("dashboard", inkstone.HandlerAdapter(dashboard))
+}
 
 type dashboardRes struct {
 	Count int `json:"count"`

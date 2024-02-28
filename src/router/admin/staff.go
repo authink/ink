@@ -1,15 +1,26 @@
 package admin
 
 import (
+	"github.com/authink/ink.go/src/authz"
 	"github.com/authink/ink.go/src/errors"
+	"github.com/authink/ink.go/src/middleware"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/ink.go/src/util"
 	"github.com/authink/inkstone"
+	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	"github.com/jmoiron/sqlx"
 )
+
+func setupStaffGroup(gAdmin *gin.RouterGroup) {
+	gStaffs := gAdmin.Group(authz.ResourceStaff)
+	gStaffs.Use(middleware.AuthZ(authz.ResourceStaff))
+	gStaffs.GET("", inkstone.HandlerAdapter(staffs))
+	gStaffs.POST("", inkstone.HandlerAdapter(addStaff))
+	gStaffs.PUT(":id", inkstone.HandlerAdapter(updateStaff))
+}
 
 type staffRes struct {
 	inkstone.Response
