@@ -25,6 +25,10 @@ run:
 	APP_ENV=dev ./bin/ink run $(ARGS)
 run: build
 
+frun:
+	APP_ENV=dev ./bin/ink run
+frun: tidy
+
 package:
 	git tag v$(V)
 	git push --tags
