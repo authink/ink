@@ -9,6 +9,12 @@ import (
 	"github.com/memwey/casbin-sqlx-adapter"
 )
 
+const (
+	ResourceApp   string = "apps"
+	ResourceToken string = "tokens"
+	ResourceStaff string = "staffs"
+)
+
 var (
 	//go:embed rbac.conf
 	rbac     string

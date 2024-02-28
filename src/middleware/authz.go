@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/authink/ink.go/src/authz"
 	"github.com/authink/ink.go/src/env"
@@ -11,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AuthZ(obj, act string) gin.HandlerFunc {
+func AuthZ(obj string) gin.HandlerFunc {
 	return inkstone.HandlerAdapter(func(c *inkstone.Context) {
 		var app = c.MustGet("app").(*model.App)
 
@@ -25,6 +26,7 @@ func AuthZ(obj, act string) gin.HandlerFunc {
 			}
 
 			dom := strconv.Itoa(int(app.Id))
+			act := strings.ToUpper(c.Request.Method)
 
 			if ok, err := authz.RBACEnforcer().Enforce(sub, dom, obj, act); err != nil || !ok {
 				c.AbortWithForbidden(errors.ERR_NO_PERMISSION)
