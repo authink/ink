@@ -9,7 +9,7 @@ type tableName struct {
 
 var table = &tableName{
 	App:       "s_apps",
-	Staff:     "s_staff",
+	Staff:     "s_staffs",
 	AuthToken: "s_auth_tokens",
 	Group:     "s_groups",
 }
