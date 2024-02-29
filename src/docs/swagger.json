@@ -626,6 +626,63 @@
                 }
             }
         },
+        "/admin/policies": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Add a policy",
+                "tags": [
+                    "admin_policy"
+                ],
+                "summary": "Add a policy",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "addPolicyReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.addPolicyReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/staffs": {
             "get": {
                 "security": [
@@ -1109,6 +1166,30 @@
                     "type": "integer",
                     "minimum": 100000,
                     "example": 100000
+                }
+            }
+        },
+        "admin.addPolicyReq": {
+            "type": "object",
+            "required": [
+                "act",
+                "g",
+                "obj"
+            ],
+            "properties": {
+                "act": {
+                    "type": "string",
+                    "example": "GET"
+                },
+                "g": {
+                    "type": "integer",
+                    "minimum": 100000,
+                    "example": 100000
+                },
+                "obj": {
+                    "type": "string",
+                    "minLength": 2,
+                    "example": "apps"
                 }
             }
         },

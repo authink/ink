@@ -48,6 +48,24 @@ definitions:
     - g
     - sub
     type: object
+  admin.addPolicyReq:
+    properties:
+      act:
+        example: GET
+        type: string
+      g:
+        example: 100000
+        minimum: 100000
+        type: integer
+      obj:
+        example: apps
+        minLength: 2
+        type: string
+    required:
+    - act
+    - g
+    - obj
+    type: object
   admin.addStaffReq:
     properties:
       email:
@@ -673,6 +691,42 @@ paths:
       summary: Add a groupship
       tags:
       - admin_groupship
+  /admin/policies:
+    post:
+      description: Add a policy
+      parameters:
+      - description: request body
+        in: body
+        name: addPolicyReq
+        required: true
+        schema:
+          $ref: '#/definitions/admin.addPolicyReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Add a policy
+      tags:
+      - admin_policy
   /admin/staffs:
     get:
       description: Show staffs

@@ -58,7 +58,15 @@ var (
 		Acts: []string{
 			http.MethodGet,
 			http.MethodPost,
-			http.MethodPut,
+			http.MethodDelete,
+		},
+	}
+	Policies = Obj{
+		Name:     "policies",
+		NeedRoot: true,
+		Acts: []string{
+			http.MethodGet,
+			http.MethodPost,
 			http.MethodDelete,
 		},
 	}
