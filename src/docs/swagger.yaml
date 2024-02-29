@@ -29,6 +29,25 @@ definitions:
     - name
     - type
     type: object
+  admin.addGroupshipReq:
+    properties:
+      dom:
+        example: 100000
+        minimum: 100000
+        type: integer
+      g:
+        example: 100000
+        minimum: 100000
+        type: integer
+      sub:
+        example: 100000
+        minimum: 100000
+        type: integer
+    required:
+    - dom
+    - g
+    - sub
+    type: object
   admin.addStaffReq:
     properties:
       email:
@@ -533,6 +552,127 @@ paths:
       summary: Update a group
       tags:
       - admin_group
+  /admin/groupships:
+    delete:
+      description: Delete a groupship
+      parameters:
+      - description: sub
+        in: query
+        name: sub
+        required: true
+        type: integer
+      - description: dom
+        in: query
+        name: dom
+        required: true
+        type: integer
+      - description: g
+        in: query
+        name: g
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a groupship
+      tags:
+      - admin_groupship
+    get:
+      description: Show groupships
+      parameters:
+      - description: sub
+        in: query
+        name: sub
+        required: true
+        type: integer
+      - description: dom
+        in: query
+        name: dom
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Show groupships
+      tags:
+      - admin_groupship
+    post:
+      description: Add a groupship
+      parameters:
+      - description: request body
+        in: body
+        name: addGroupshipReq
+        required: true
+        schema:
+          $ref: '#/definitions/admin.addGroupshipReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Add a groupship
+      tags:
+      - admin_groupship
   /admin/staffs:
     get:
       description: Show staffs

@@ -52,6 +52,16 @@ var (
 			http.MethodPut,
 		},
 	}
+	Groupships = Obj{
+		Name:     "groupships",
+		NeedRoot: true,
+		Acts: []string{
+			http.MethodGet,
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodDelete,
+		},
+	}
 )
 
 func List() []Obj {

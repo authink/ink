@@ -445,6 +445,193 @@ const docTemplate = `{
                 }
             }
         },
+        "/admin/groupships": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Show groupships",
+                "tags": [
+                    "admin_groupship"
+                ],
+                "summary": "Show groupships",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "sub",
+                        "name": "sub",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "dom",
+                        "name": "dom",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Add a groupship",
+                "tags": [
+                    "admin_groupship"
+                ],
+                "summary": "Add a groupship",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "addGroupshipReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.addGroupshipReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete a groupship",
+                "tags": [
+                    "admin_groupship"
+                ],
+                "summary": "Delete a groupship",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "sub",
+                        "name": "sub",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "dom",
+                        "name": "dom",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "g",
+                        "name": "g",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/staffs": {
             "get": {
                 "security": [
@@ -903,6 +1090,31 @@ const docTemplate = `{
                 "type": {
                     "type": "integer",
                     "example": 1
+                }
+            }
+        },
+        "admin.addGroupshipReq": {
+            "type": "object",
+            "required": [
+                "dom",
+                "g",
+                "sub"
+            ],
+            "properties": {
+                "dom": {
+                    "type": "integer",
+                    "minimum": 100000,
+                    "example": 100000
+                },
+                "g": {
+                    "type": "integer",
+                    "minimum": 100000,
+                    "example": 100000
+                },
+                "sub": {
+                    "type": "integer",
+                    "minimum": 100000,
+                    "example": 100000
                 }
             }
         },
