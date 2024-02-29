@@ -45,7 +45,7 @@ func generateAuthToken(c *inkstone.Context, app *model.App, staff *model.Staff) 
 
 	authToken := model.NewAuthToken(jwtClaims.ID, refreshToken, app.Id, staff.Id)
 
-	if err = orm.AuthToken(appCtx).Save(authToken); err != nil {
+	if err = orm.AuthToken(appCtx).Insert(authToken); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}

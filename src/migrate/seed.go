@@ -22,11 +22,11 @@ func Seed(appCtx *inkstone.AppContext) {
 	)
 
 	if err := inkstone.Transaction(appCtx, func(tx *sqlx.Tx) (err error) {
-		if err = orm.Staff(appCtx).SaveWithTx(admin, tx); err != nil {
+		if err = orm.Staff(appCtx).InsertWithTx(admin, tx); err != nil {
 			return
 		}
 
-		return orm.App(appCtx).SaveWithTx(app, tx)
+		return orm.App(appCtx).InsertWithTx(app, tx)
 	}); err != nil {
 		panic(err)
 	}

@@ -17,6 +17,25 @@ type authToken interface {
 
 type authTokenImpl inkstone.AppContext
 
+// Insert implements authToken.
+func (at *authTokenImpl) Insert(token *model.AuthToken) (err error) {
+	result, err := at.DB.NamedExec(
+		sql.AuthToken.Insert(),
+		token,
+	)
+	if err != nil {
+		return
+	}
+
+	err = handleInsertResult(result, &token.Model)
+	return
+}
+
+// InsertWithTx implements authToken.
+func (*authTokenImpl) InsertWithTx(*model.AuthToken, *sqlx.Tx) error {
+	panic("unimplemented")
+}
+
 // CountWithTx implements authToken.
 func (*authTokenImpl) CountWithTx(tx *sqlx.Tx) (c int, err error) {
 	err = tx.Get(&c, sql.AuthToken.Count())
@@ -72,12 +91,8 @@ func (at *authTokenImpl) GetByAccessToken(accessToken string) (token *model.Auth
 }
 
 // Save implements authToken.
-func (at *authTokenImpl) Save(token *model.AuthToken) (err error) {
-	_, err = at.DB.NamedExec(
-		sql.AuthToken.Insert(),
-		token,
-	)
-	return
+func (*authTokenImpl) Save(token *model.AuthToken) (err error) {
+	panic("unimplemented")
 }
 
 // Delete implements authToken.

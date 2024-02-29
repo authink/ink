@@ -11,6 +11,24 @@ definitions:
     required:
     - name
     type: object
+  admin.addGroupReq:
+    properties:
+      appId:
+        example: 100000
+        minimum: 100000
+        type: integer
+      name:
+        example: developer
+        minLength: 2
+        type: string
+      type:
+        example: 1
+        type: integer
+    required:
+    - appId
+    - name
+    - type
+    type: object
   admin.addStaffReq:
     properties:
       email:
@@ -427,6 +445,41 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Show groups
+      tags:
+      - admin_group
+    post:
+      description: Add a group
+      parameters:
+      - description: request body
+        in: body
+        name: addGroupReq
+        required: true
+        schema:
+          $ref: '#/definitions/admin.addGroupReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/admin.groupRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Add a group
       tags:
       - admin_group
   /admin/staffs:

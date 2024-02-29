@@ -8,6 +8,11 @@ import (
 
 type group struct{}
 
+// Save implements inkstone.SQL.
+func (*group) Save() string {
+	return fmt.Sprintf("INSERT INTO %s (name, type, app_id) VALUES (:name, :type, :app_id) ON DUPLICATE KEY UPDATE name = :name, active = :active", table.Group)
+}
+
 func (*group) Count() string {
 	return fmt.Sprintf("SELECT COUNT(id) c FROM %s WHERE type = ? AND app_id = ?", table.Group)
 }
@@ -33,7 +38,7 @@ func (*group) Get() string {
 
 // Insert implements inkstone.SQL.
 func (*group) Insert() string {
-	return fmt.Sprintf("INSERT INTO %s (name, type, app_id) VALUES (:name, :type, :app_id) ON DUPLICATE KEY UPDATE name = :name, active = :active", table.Group)
+	return fmt.Sprintf("INSERT INTO %s (name, type, app_id) VALUES (:name, :type, :app_id)", table.Group)
 }
 
 // Update implements inkstone.SQL.

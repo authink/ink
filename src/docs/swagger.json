@@ -318,6 +318,61 @@
                         }
                     }
                 }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Add a group",
+                "tags": [
+                    "admin_group"
+                ],
+                "summary": "Add a group",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "addGroupReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.addGroupReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/admin.groupRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
             }
         },
         "/admin/staffs": {
@@ -754,6 +809,30 @@
                     "type": "string",
                     "minLength": 6,
                     "example": "appmock"
+                }
+            }
+        },
+        "admin.addGroupReq": {
+            "type": "object",
+            "required": [
+                "appId",
+                "name",
+                "type"
+            ],
+            "properties": {
+                "appId": {
+                    "type": "integer",
+                    "minimum": 100000,
+                    "example": 100000
+                },
+                "name": {
+                    "type": "string",
+                    "minLength": 2,
+                    "example": "developer"
+                },
+                "type": {
+                    "type": "integer",
+                    "example": 1
                 }
             }
         },

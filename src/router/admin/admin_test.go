@@ -29,14 +29,14 @@ func TestMain(m *testing.M) {
 			Seed: func(appCtx *inkstone.AppContext) {
 				migrate.Seed(appCtx)
 				if err := inkstone.Transaction(appCtx, func(tx *sqlx.Tx) (err error) {
-					if err = orm.App(appCtx).SaveWithTx(model.NewApp(
+					if err = orm.App(appCtx).InsertWithTx(model.NewApp(
 						"devtools",
 						"123456",
 					), tx); err != nil {
 						return
 					}
 
-					if err = orm.Staff(appCtx).SaveWithTx(model.NewStaff(
+					if err = orm.Staff(appCtx).InsertWithTx(model.NewStaff(
 						"test@huoyijie.cn",
 						"123456",
 						"11111111111",
@@ -45,7 +45,7 @@ func TestMain(m *testing.M) {
 						return
 					}
 
-					err = orm.Group(appCtx).SaveWithTx(model.NewGroup(
+					err = orm.Group(appCtx).InsertWithTx(model.NewGroup(
 						"developer",
 						1,
 						100000,

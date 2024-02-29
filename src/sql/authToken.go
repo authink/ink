@@ -8,6 +8,11 @@ import (
 
 type authToken struct{}
 
+// Save implements inkstone.SQL.
+func (*authToken) Save() string {
+	panic("unimplemented")
+}
+
 func (*authToken) Count() string {
 	return fmt.Sprintf("SELECT COUNT(id) c FROM %s", table.AuthToken)
 }

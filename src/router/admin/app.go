@@ -92,7 +92,7 @@ func addApp(c *inkstone.Context) {
 
 	secret := util.RandString(6)
 	app := model.NewApp(req.Name, secret)
-	if err := orm.App(c.AppContext()).Save(app); err != nil {
+	if err := orm.App(c.AppContext()).Insert(app); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}

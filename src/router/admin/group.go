@@ -15,12 +15,17 @@ func setupGroupGroup(gAdmin *gin.RouterGroup) {
 	gGroups := gAdmin.Group(authz.Groups.Name)
 	gGroups.Use(middleware.Authz(authz.Groups))
 	gGroups.GET("", inkstone.HandlerAdapter(groups))
+	gGroups.POST("", inkstone.HandlerAdapter(addGroup))
+}
+
+type groupReq struct {
+	Type  int `json:"type" form:"type" binding:"required,eq=1|eq=2" example:"1"`
+	AppId int `json:"appId" form:"appId" binding:"required,min=100000" example:"100000"`
 }
 
 type pagingGroupReq struct {
 	inkstone.PagingRequest
-	Type  int `form:"type" binding:"required,eq=1|eq=2"`
-	AppId int `form:"appId" binding:"required,min=100000"`
+	groupReq
 }
 
 type groupRes struct {
@@ -94,5 +99,47 @@ func groups(c *inkstone.Context) {
 		Limit:  req.Limit,
 		Total:  total,
 		Items:  res,
+	})
+}
+
+type addGroupReq struct {
+	Name string `json:"name" binding:"required,min=2" example:"developer"`
+	groupReq
+}
+
+// addGroup godoc
+//
+//	@Summary		Add a group
+//	@Description	Add a group
+//	@Tags			admin_group
+//	@Router			/admin/groups	[post]
+//	@Security		ApiKeyAuth
+//	@Param			addGroupReq	body		addGroupReq	true	"request body"
+//	@Success		200			{object}	groupRes
+//	@Failure		400			{object}	inkstone.ClientError
+//	@Failure		401			{object}	inkstone.ClientError
+//	@Failure		403			{object}	inkstone.ClientError
+//	@Failure		500			{string}	empty
+func addGroup(c *inkstone.Context) {
+	req := new(addGroupReq)
+	if err := c.ShouldBindJSON(req); err != nil {
+		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		return
+	}
+
+	group := model.NewGroup(req.Name, model.GroupType(req.Type), uint32(req.AppId))
+	if err := orm.Group(c.AppContext()).Insert(group); err != nil {
+		c.AbortWithServerError(err)
+		return
+	}
+
+	c.Response(&groupRes{
+		Response: inkstone.Response{
+			Id: int(group.Id),
+		},
+		Name:   group.Name,
+		Type:   int(group.Type),
+		AppId:  int(group.AppId),
+		Active: group.Active,
 	})
 }

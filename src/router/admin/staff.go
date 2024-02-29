@@ -122,7 +122,7 @@ func addStaff(c *inkstone.Context) {
 
 	password := util.RandString(6)
 	staff := model.NewStaff(req.Email, password, req.Phone, false)
-	if err := orm.Staff(c.AppContext()).Save(staff); err != nil {
+	if err := orm.Staff(c.AppContext()).Insert(staff); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}

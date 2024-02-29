@@ -8,6 +8,11 @@ import (
 
 type app struct{}
 
+// Save implements inkstone.SQL.
+func (*app) Save() string {
+	return fmt.Sprintf("INSERT INTO %s (name, secret) VALUES (:name, :secret) ON DUPLICATE KEY UPDATE active = :active, secret = :secret", table.App)
+}
+
 func (*app) GetForUpdate() string {
 	return fmt.Sprintf("SELECT id, name, secret, active FROM %s WHERE id = ? FOR UPDATE", table.App)
 }
@@ -34,7 +39,7 @@ func (*app) Get() string {
 
 // Insert implements inkstone.SQL.
 func (*app) Insert() string {
-	return fmt.Sprintf("INSERT INTO %s (name, secret) VALUES (:name, :secret) ON DUPLICATE KEY UPDATE active = :active, secret = :secret", table.App)
+	return fmt.Sprintf("INSERT INTO %s (name, secret) VALUES (:name, :secret)", table.App)
 }
 
 var _ inkstone.SQL = (*app)(nil)
