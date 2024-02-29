@@ -131,6 +131,16 @@ definitions:
         example: false
         type: boolean
     type: object
+  admin.updateGroupReq:
+    properties:
+      activeToggle:
+        example: false
+        type: boolean
+      name:
+        example: ceo
+        minLength: 2
+        type: string
+    type: object
   admin.updateStaffReq:
     properties:
       activeToggle:
@@ -480,6 +490,47 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Add a group
+      tags:
+      - admin_group
+  /admin/groups/{id}:
+    put:
+      description: Update a group
+      parameters:
+      - description: group id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: request body
+        in: body
+        name: updateGroupReq
+        required: true
+        schema:
+          $ref: '#/definitions/admin.updateGroupReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/admin.groupRes'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Update a group
       tags:
       - admin_group
   /admin/staffs:

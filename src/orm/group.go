@@ -9,11 +9,23 @@ import (
 
 type group interface {
 	inkstone.ORM[model.Group]
+	GetWithTx(int, *sqlx.Tx) (*model.Group, error)
 	CountWithTx(gtype, appId int, tx *sqlx.Tx) (int, error)
 	PaginationWithTx(gtype, appId, offset, limit int, tx *sqlx.Tx) ([]model.GroupWithApp, error)
 }
 
 type groupImpl inkstone.AppContext
+
+// GetWithTx implements group.
+func (g *groupImpl) GetWithTx(id int, tx *sqlx.Tx) (group *model.Group, err error) {
+	group = new(model.Group)
+	err = tx.Get(
+		group,
+		sql.Group.GetForUpdate(),
+		id,
+	)
+	return
+}
 
 // Insert implements group.
 func (g *groupImpl) Insert(group *model.Group) error {

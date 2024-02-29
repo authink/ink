@@ -13,6 +13,10 @@ func (*group) Save() string {
 	return fmt.Sprintf("INSERT INTO %s (name, type, app_id) VALUES (:name, :type, :app_id) ON DUPLICATE KEY UPDATE name = :name, active = :active", table.Group)
 }
 
+func (*group) GetForUpdate() string {
+	return fmt.Sprintf("SELECT id, name, type, app_id, active FROM %s WHERE id = ? FOR UPDATE", table.Group)
+}
+
 func (*group) Count() string {
 	return fmt.Sprintf("SELECT COUNT(id) c FROM %s WHERE type = ? AND app_id = ?", table.Group)
 }

@@ -1,6 +1,8 @@
 package admin
 
 import (
+	errs "errors"
+
 	"github.com/authink/ink.go/src/authz"
 	"github.com/authink/ink.go/src/errors"
 	"github.com/authink/ink.go/src/middleware"
@@ -195,7 +197,9 @@ func updateStaff(c *inkstone.Context) {
 			return
 		}
 
-		if req.Phone != "" {
+		if req.Phone == staff.Phone {
+			return errs.New("staff's phone not changed")
+		} else if req.Phone != "" {
 			staff.Phone = req.Phone
 		}
 		if req.ActiveToggle {

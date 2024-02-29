@@ -1,6 +1,8 @@
 package admin
 
 import (
+	errs "errors"
+
 	"github.com/authink/ink.go/src/authz"
 	"github.com/authink/ink.go/src/errors"
 	"github.com/authink/ink.go/src/middleware"
@@ -8,6 +10,8 @@ import (
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/inkstone"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -16,6 +20,7 @@ func setupGroupGroup(gAdmin *gin.RouterGroup) {
 	gGroups.Use(middleware.Authz(authz.Groups))
 	gGroups.GET("", inkstone.HandlerAdapter(groups))
 	gGroups.POST("", inkstone.HandlerAdapter(addGroup))
+	gGroups.PUT(":id", inkstone.HandlerAdapter(updateGroup))
 }
 
 type groupReq struct {
@@ -129,6 +134,85 @@ func addGroup(c *inkstone.Context) {
 
 	group := model.NewGroup(req.Name, model.GroupType(req.Type), uint32(req.AppId))
 	if err := orm.Group(c.AppContext()).Insert(group); err != nil {
+		c.AbortWithServerError(err)
+		return
+	}
+
+	c.Response(&groupRes{
+		Response: inkstone.Response{
+			Id: int(group.Id),
+		},
+		Name:   group.Name,
+		Type:   int(group.Type),
+		AppId:  int(group.AppId),
+		Active: group.Active,
+	})
+}
+
+type updateGroupParam struct {
+	Id int `uri:"id" binding:"required,min=100000"`
+}
+
+type updateGroupReq struct {
+	Name         string `json:"name" binding:"omitempty,min=2" example:"ceo"`
+	ActiveToggle bool   `json:"activeToggle" example:"false"`
+}
+
+// updateGroup godoc
+//
+//	@Summary		Update a group
+//	@Description	Update a group
+//	@Tags			admin_group
+//	@Router			/admin/groups/{id}	[put]
+//	@Security		ApiKeyAuth
+//	@Param			id				path		int				true	"group id"
+//	@Param			updateGroupReq	body		updateGroupReq	true	"request body"
+//	@Success		200				{object}	groupRes
+//	@Failure		400				{object}	inkstone.ClientError
+//	@Failure		401				{object}	inkstone.ClientError
+//	@Failure		403				{object}	inkstone.ClientError
+//	@Failure		500				{string}	empty
+func updateGroup(c *inkstone.Context) {
+	param := new(updateGroupParam)
+
+	if err := c.ShouldBindUri(param); err != nil {
+		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		return
+	}
+
+	req := new(updateGroupReq)
+
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterStructValidation(inkstone.ValidationNotAllFieldsZero, req)
+	}
+
+	if err := c.ShouldBindJSON(req); err != nil {
+		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		return
+	}
+
+	var (
+		appCtx = c.AppContext()
+		group  *model.Group
+	)
+
+	if err := inkstone.Transaction(appCtx, func(tx *sqlx.Tx) (err error) {
+		group, err = orm.Group(appCtx).GetWithTx(param.Id, tx)
+		if err != nil {
+			return
+		}
+
+		if req.Name == group.Name {
+			return errs.New("group's name not changed")
+		} else if req.Name != "" {
+			group.Name = req.Name
+		}
+		if req.ActiveToggle {
+			group.Active = !group.Active
+		}
+
+		return orm.Group(appCtx).SaveWithTx(group, tx)
+	}); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}
