@@ -50,13 +50,35 @@ func (*groupImpl) Get(int) (*model.Group, error) {
 }
 
 // Save implements group.
-func (*groupImpl) Save(*model.Group) error {
-	panic("unimplemented")
+func (g *groupImpl) Save(group *model.Group) (err error) {
+	result, err := g.DB.NamedExec(
+		sql.Group.Insert(),
+		group,
+	)
+	if err != nil {
+		return
+	}
+
+	if lastId, err := result.LastInsertId(); err == nil {
+		group.Id = uint32(lastId)
+	}
+	return
 }
 
 // SaveWithTx implements group.
-func (*groupImpl) SaveWithTx(*model.Group, *sqlx.Tx) error {
-	panic("unimplemented")
+func (*groupImpl) SaveWithTx(group *model.Group, tx *sqlx.Tx) (err error) {
+	result, err := tx.NamedExec(
+		sql.Group.Insert(),
+		group,
+	)
+	if err != nil {
+		return
+	}
+
+	if lastId, err := result.LastInsertId(); err == nil {
+		group.Id = uint32(lastId)
+	}
+	return
 }
 
 var _ group = (*groupImpl)(nil)

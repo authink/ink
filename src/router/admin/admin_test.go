@@ -36,11 +36,19 @@ func TestMain(m *testing.M) {
 						return
 					}
 
-					err = orm.Staff(appCtx).SaveWithTx(model.NewStaff(
+					if err = orm.Staff(appCtx).SaveWithTx(model.NewStaff(
 						"test@huoyijie.cn",
 						"123456",
 						"11111111111",
 						false,
+					), tx); err != nil {
+						return
+					}
+
+					err = orm.Group(appCtx).SaveWithTx(model.NewGroup(
+						"developer",
+						1,
+						100000,
 					), tx)
 					return
 				}); err != nil {

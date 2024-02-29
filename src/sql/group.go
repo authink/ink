@@ -33,7 +33,7 @@ func (*group) Get() string {
 
 // Insert implements inkstone.SQL.
 func (*group) Insert() string {
-	panic("unimplemented")
+	return fmt.Sprintf("INSERT INTO %s (name, type, app_id) VALUES (:name, :type, :app_id) ON DUPLICATE KEY UPDATE name = :name, active = :active", table.Group)
 }
 
 // Update implements inkstone.SQL.
