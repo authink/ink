@@ -18,17 +18,8 @@ type authToken interface {
 type authTokenImpl inkstone.AppContext
 
 // Insert implements authToken.
-func (at *authTokenImpl) Insert(token *model.AuthToken) (err error) {
-	result, err := at.DB.NamedExec(
-		sql.AuthToken.Insert(),
-		token,
-	)
-	if err != nil {
-		return
-	}
-
-	err = handleInsertResult(result, &token.Model)
-	return
+func (at *authTokenImpl) Insert(token *model.AuthToken) error {
+	return namedExec(at.DB, sql.AuthToken.Insert(), token, handleInsertResult)
 }
 
 // InsertWithTx implements authToken.

@@ -18,31 +18,13 @@ type staff interface {
 type staffImpl inkstone.AppContext
 
 // Insert implements staff.
-func (s *staffImpl) Insert(staff *model.Staff) (err error) {
-	result, err := s.DB.NamedExec(
-		sql.Staff.Insert(),
-		staff,
-	)
-	if err != nil {
-		return
-	}
-
-	err = handleInsertResult(result, &staff.Model)
-	return
+func (s *staffImpl) Insert(staff *model.Staff) error {
+	return namedExec(s.DB, sql.Staff.Insert(), staff, handleInsertResult)
 }
 
 // InsertWithTx implements staff.
-func (s *staffImpl) InsertWithTx(staff *model.Staff, tx *sqlx.Tx) (err error) {
-	result, err := tx.NamedExec(
-		sql.Staff.Insert(),
-		staff,
-	)
-	if err != nil {
-		return
-	}
-
-	err = handleInsertResult(result, &staff.Model)
-	return
+func (s *staffImpl) InsertWithTx(staff *model.Staff, tx *sqlx.Tx) error {
+	return namedExec(tx, sql.Staff.Insert(), staff, handleInsertResult)
 }
 
 // GetWithTx implements staff.
@@ -106,31 +88,13 @@ func (s *staffImpl) Get(id int) (staff *model.Staff, err error) {
 }
 
 // Save implements staff.
-func (s *staffImpl) Save(staff *model.Staff) (err error) {
-	result, err := s.DB.NamedExec(
-		sql.Staff.Save(),
-		staff,
-	)
-	if err != nil {
-		return
-	}
-
-	err = handleSaveResult(result, &staff.Model)
-	return
+func (s *staffImpl) Save(staff *model.Staff) error {
+	return namedExec(s.DB, sql.Staff.Save(), staff, handleSaveResult)
 }
 
 // SaveWithTx implements staff.
 func (*staffImpl) SaveWithTx(staff *model.Staff, tx *sqlx.Tx) (err error) {
-	result, err := tx.NamedExec(
-		sql.Staff.Save(),
-		staff,
-	)
-	if err != nil {
-		return
-	}
-
-	err = handleSaveResult(result, &staff.Model)
-	return
+	return namedExec(tx, sql.Staff.Save(), staff, handleSaveResult)
 }
 
 var _ staff = (*staffImpl)(nil)

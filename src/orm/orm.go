@@ -1,18 +1,33 @@
 package orm
 
 import (
-	"database/sql"
+	libsql "database/sql"
 	"errors"
 
 	"github.com/authink/inkstone"
 )
 
-func handleSaveResult(result sql.Result, model *inkstone.Model) (err error) {
-	lastId, err := result.LastInsertId()
+type resultHandlerFunc func(libsql.Result, inkstone.ModelOf) error
+
+type dbExecutor interface {
+	NamedExec(query string, arg interface{}) (libsql.Result, error)
+}
+
+func namedExec(executor dbExecutor, statement string, m inkstone.ModelOf, handleResult resultHandlerFunc) (err error) {
+	result, err := executor.NamedExec(
+		statement,
+		m,
+	)
 	if err != nil {
 		return
-	} else if lastId > 0 {
-		model.Id = uint32(lastId)
+	}
+
+	err = handleResult(result, m)
+	return
+}
+
+func handleSaveResult(result libsql.Result, m inkstone.ModelOf) (err error) {
+	if err = handleInsertResult(result, m); err != nil {
 		return
 	}
 
@@ -25,12 +40,12 @@ func handleSaveResult(result sql.Result, model *inkstone.Model) (err error) {
 	return
 }
 
-func handleInsertResult(result sql.Result, model *inkstone.Model) (err error) {
+func handleInsertResult(result libsql.Result, m inkstone.ModelOf) (err error) {
 	lastId, err := result.LastInsertId()
 	if err != nil {
 		return
 	}
 
-	model.Id = uint32(lastId)
+	m.Of().Id = uint32(lastId)
 	return
 }

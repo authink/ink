@@ -16,31 +16,13 @@ type group interface {
 type groupImpl inkstone.AppContext
 
 // Insert implements group.
-func (g *groupImpl) Insert(group *model.Group) (err error) {
-	result, err := g.DB.NamedExec(
-		sql.Group.Insert(),
-		group,
-	)
-	if err != nil {
-		return
-	}
-
-	err = handleInsertResult(result, &group.Model)
-	return
+func (g *groupImpl) Insert(group *model.Group) error {
+	return namedExec(g.DB, sql.Group.Insert(), group, handleInsertResult)
 }
 
 // InsertWithTx implements group.
-func (g *groupImpl) InsertWithTx(group *model.Group, tx *sqlx.Tx) (err error) {
-	result, err := tx.NamedExec(
-		sql.Group.Insert(),
-		group,
-	)
-	if err != nil {
-		return
-	}
-
-	err = handleInsertResult(result, &group.Model)
-	return
+func (g *groupImpl) InsertWithTx(group *model.Group, tx *sqlx.Tx) error {
+	return namedExec(tx, sql.Group.Insert(), group, handleInsertResult)
 }
 
 // CountWithTx implements group.
@@ -78,31 +60,13 @@ func (*groupImpl) Get(int) (*model.Group, error) {
 }
 
 // Save implements group.
-func (g *groupImpl) Save(group *model.Group) (err error) {
-	result, err := g.DB.NamedExec(
-		sql.Group.Save(),
-		group,
-	)
-	if err != nil {
-		return
-	}
-
-	err = handleSaveResult(result, &group.Model)
-	return
+func (g *groupImpl) Save(group *model.Group) error {
+	return namedExec(g.DB, sql.Group.Save(), group, handleSaveResult)
 }
 
 // SaveWithTx implements group.
-func (*groupImpl) SaveWithTx(group *model.Group, tx *sqlx.Tx) (err error) {
-	result, err := tx.NamedExec(
-		sql.Group.Save(),
-		group,
-	)
-	if err != nil {
-		return
-	}
-
-	err = handleSaveResult(result, &group.Model)
-	return
+func (*groupImpl) SaveWithTx(group *model.Group, tx *sqlx.Tx) error {
+	return namedExec(tx, sql.Group.Save(), group, handleSaveResult)
 }
 
 var _ group = (*groupImpl)(nil)

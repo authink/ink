@@ -15,31 +15,13 @@ type app interface {
 type appImpl inkstone.AppContext
 
 // Insert implements app.
-func (a *appImpl) Insert(app *model.App) (err error) {
-	result, err := a.DB.NamedExec(
-		sql.App.Insert(),
-		app,
-	)
-	if err != nil {
-		return
-	}
-
-	err = handleInsertResult(result, &app.Model)
-	return
+func (a *appImpl) Insert(app *model.App) error {
+	return namedExec(a.DB, sql.App.Insert(), app, handleInsertResult)
 }
 
 // InsertWithTx implements app.
-func (*appImpl) InsertWithTx(app *model.App, tx *sqlx.Tx) (err error) {
-	result, err := tx.NamedExec(
-		sql.App.Insert(),
-		app,
-	)
-	if err != nil {
-		return
-	}
-
-	err = handleInsertResult(result, &app.Model)
-	return
+func (*appImpl) InsertWithTx(app *model.App, tx *sqlx.Tx) error {
+	return namedExec(tx, sql.App.Insert(), app, handleInsertResult)
 }
 
 // GetWithTx implements app.
@@ -79,31 +61,13 @@ func (a *appImpl) Get(id int) (app *model.App, err error) {
 }
 
 // Save implements app.
-func (a *appImpl) Save(app *model.App) (err error) {
-	result, err := a.DB.NamedExec(
-		sql.App.Save(),
-		app,
-	)
-	if err != nil {
-		return
-	}
-
-	err = handleSaveResult(result, &app.Model)
-	return
+func (a *appImpl) Save(app *model.App) error {
+	return namedExec(a.DB, sql.App.Save(), app, handleSaveResult)
 }
 
 // SaveWithTx implements app.
-func (*appImpl) SaveWithTx(app *model.App, tx *sqlx.Tx) (err error) {
-	result, err := tx.NamedExec(
-		sql.App.Save(),
-		app,
-	)
-	if err != nil {
-		return
-	}
-
-	err = handleSaveResult(result, &app.Model)
-	return
+func (*appImpl) SaveWithTx(app *model.App, tx *sqlx.Tx) error {
+	return namedExec(tx, sql.App.Save(), app, handleSaveResult)
 }
 
 var _ app = (*appImpl)(nil)
