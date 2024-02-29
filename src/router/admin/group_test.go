@@ -71,3 +71,34 @@ func TestAddGroup(t *testing.T) {
 	assert.Equal(t, 1, resAddGroup.Type)
 	assert.Equal(t, 100000, resAddGroup.AppId)
 }
+
+func tUpdateGroup(accessToken string, id int, reqObj, resObj any) (*httptest.ResponseRecorder, error) {
+	return inkstone.TestFetch(
+		ctx,
+		http.MethodPut,
+		fmt.Sprintf("admin/groups/%d", id),
+		reqObj,
+		resObj,
+		accessToken,
+	)
+}
+
+func TestUpdateGroup(t *testing.T) {
+	resObj := new(token.GrantRes)
+	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
+
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.NotEmpty(t, resObj.AccessToken)
+	assert.NotEmpty(t, resObj.RefreshToken)
+
+	updateReq := &updateGroupReq{
+		Name:         "cfo",
+		ActiveToggle: true,
+	}
+	updateRes := new(groupRes)
+	w2, _ := tUpdateGroup(resObj.AccessToken, 100000, updateReq, updateRes)
+	assert.Equal(t, http.StatusOK, w2.Code)
+	assert.Equal(t, 100000, updateRes.Id)
+	assert.Equal(t, "cfo", updateRes.Name)
+	assert.False(t, updateRes.Active)
+}
