@@ -170,7 +170,7 @@ func updateApp(c *inkstone.Context) {
 			app.Active = !app.Active
 		}
 
-		return orm.App(appCtx).SaveWithTx(app, tx)
+		return orm.App(appCtx).UpdateWithTx(app, tx)
 	}); err != nil {
 		c.AbortWithServerError(err)
 		return

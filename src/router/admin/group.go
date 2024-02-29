@@ -211,7 +211,7 @@ func updateGroup(c *inkstone.Context) {
 			group.Active = !group.Active
 		}
 
-		return orm.Group(appCtx).SaveWithTx(group, tx)
+		return orm.Group(appCtx).UpdateWithTx(group, tx)
 	}); err != nil {
 		c.AbortWithServerError(err)
 		return

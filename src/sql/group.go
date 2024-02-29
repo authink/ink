@@ -47,7 +47,7 @@ func (*group) Insert() string {
 
 // Update implements inkstone.SQL.
 func (*group) Update() string {
-	panic("unimplemented")
+	return fmt.Sprintf("UPDATE %s SET name = :name, active = :active WHERE id = :id", table.Group)
 }
 
 var _ inkstone.SQL = (*group)(nil)

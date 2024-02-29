@@ -14,6 +14,16 @@ type app interface {
 
 type appImpl inkstone.AppContext
 
+// Update implements app.
+func (a *appImpl) Update(app *model.App) error {
+	return namedExec(a.DB, sql.App.Update(), app, nil)
+}
+
+// UpdateWithTx implements app.
+func (*appImpl) UpdateWithTx(app *model.App, tx *sqlx.Tx) error {
+	return namedExec(tx, sql.App.Update(), app, nil)
+}
+
 // Insert implements app.
 func (a *appImpl) Insert(app *model.App) error {
 	return namedExec(a.DB, sql.App.Insert(), app, handleInsertResult)

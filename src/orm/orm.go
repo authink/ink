@@ -22,7 +22,9 @@ func namedExec(executor dbExecutor, statement string, m inkstone.ModelOf, handle
 		return
 	}
 
-	err = handleResult(result, m)
+	if handleResult != nil {
+		err = handleResult(result, m)
+	}
 	return
 }
 

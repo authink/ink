@@ -27,7 +27,7 @@ func (*staff) Pagination() string {
 
 // Update implements inkstone.SQL.
 func (*staff) Update() string {
-	panic("unimplemented")
+	return fmt.Sprintf("UPDATE %s SET password = :password, phone = :phone, super = :super, active = :active, departure = :departure WHERE id = :id", table.Staff)
 }
 
 // Find implements inkstone.SQL.

@@ -17,6 +17,16 @@ type authToken interface {
 
 type authTokenImpl inkstone.AppContext
 
+// Update implements authToken.
+func (at *authTokenImpl) Update(*model.AuthToken) error {
+	panic("unimplemented")
+}
+
+// UpdateWithTx implements authToken.
+func (at *authTokenImpl) UpdateWithTx(*model.AuthToken, *sqlx.Tx) error {
+	panic("unimplemented")
+}
+
 // Insert implements authToken.
 func (at *authTokenImpl) Insert(token *model.AuthToken) error {
 	return namedExec(at.DB, sql.AuthToken.Insert(), token, handleInsertResult)

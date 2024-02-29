@@ -19,7 +19,7 @@ func (*app) GetForUpdate() string {
 
 // Update implements inkstone.SQL.
 func (*app) Update() string {
-	panic("unimplemented")
+	return fmt.Sprintf("UPDATE %s SET active = :active, secret = :secret WHERE id = :id", table.App)
 }
 
 // Find implements inkstone.SQL.

@@ -213,7 +213,7 @@ func updateStaff(c *inkstone.Context) {
 			staff.Reset(password)
 		}
 
-		return orm.Staff(appCtx).SaveWithTx(staff, tx)
+		return orm.Staff(appCtx).UpdateWithTx(staff, tx)
 	}); err != nil {
 		c.AbortWithServerError(err)
 		return

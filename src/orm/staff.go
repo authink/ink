@@ -17,6 +17,16 @@ type staff interface {
 
 type staffImpl inkstone.AppContext
 
+// Update implements staff.
+func (s *staffImpl) Update(staff *model.Staff) error {
+	return namedExec(s.DB, sql.Staff.Update(), staff, nil)
+}
+
+// UpdateWithTx implements staff.
+func (*staffImpl) UpdateWithTx(staff *model.Staff, tx *sqlx.Tx) error {
+	return namedExec(tx, sql.Staff.Update(), staff, nil)
+}
+
 // Insert implements staff.
 func (s *staffImpl) Insert(staff *model.Staff) error {
 	return namedExec(s.DB, sql.Staff.Insert(), staff, handleInsertResult)

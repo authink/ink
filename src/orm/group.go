@@ -16,6 +16,16 @@ type group interface {
 
 type groupImpl inkstone.AppContext
 
+// Update implements group.
+func (g *groupImpl) Update(group *model.Group) error {
+	return namedExec(g.DB, sql.Group.Update(), group, nil)
+}
+
+// UpdateWithTx implements group.
+func (*groupImpl) UpdateWithTx(group *model.Group, tx *sqlx.Tx) error {
+	return namedExec(tx, sql.Group.Update(), group, nil)
+}
+
 // GetWithTx implements group.
 func (g *groupImpl) GetWithTx(id int, tx *sqlx.Tx) (group *model.Group, err error) {
 	group = new(model.Group)
