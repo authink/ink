@@ -1431,7 +1431,7 @@ const docTemplate = `{
                 "act": {
                     "type": "string"
                 },
-                "resource": {
+                "obj": {
                     "type": "string"
                 }
             }

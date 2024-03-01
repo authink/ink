@@ -141,7 +141,7 @@ definitions:
     properties:
       act:
         type: string
-      resource:
+      obj:
         type: string
     type: object
   admin.staffRes:

@@ -23,8 +23,8 @@ type policyReq struct {
 }
 
 type policyRes struct {
-	Resource string `json:"resource,omitempty"`
-	Act      string `json:"act,omitempty"`
+	Obj string `json:"obj,omitempty"`
+	Act string `json:"act,omitempty"`
 }
 
 // policies godoc
@@ -61,8 +61,8 @@ func policies(c *inkstone.Context) {
 
 	for _, v := range permissions {
 		res = append(res, policyRes{
-			Resource: v[2],
-			Act:      v[3],
+			Obj: v[2],
+			Act: v[3],
 		})
 	}
 
