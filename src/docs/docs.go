@@ -803,6 +803,55 @@ const docTemplate = `{
                 }
             }
         },
+        "/admin/logs": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Show logs",
+                "tags": [
+                    "admin_logs"
+                ],
+                "summary": "Show logs",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/admin.logRes"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/permissions": {
             "get": {
                 "security": [
@@ -1709,6 +1758,41 @@ const docTemplate = `{
                 }
             }
         },
+        "admin.logRes": {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "type": "string"
+                },
+                "appId": {
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "pathVars": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/gin.Param"
+                    }
+                },
+                "queryVars": {
+                    "$ref": "#/definitions/url.Values"
+                },
+                "resource": {
+                    "type": "string"
+                },
+                "staffId": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
         "admin.permissionRes": {
             "type": "object",
             "properties": {
@@ -1851,6 +1935,17 @@ const docTemplate = `{
                 }
             }
         },
+        "gin.Param": {
+            "type": "object",
+            "properties": {
+                "key": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
         "inkstone.ClientError": {
             "type": "object",
             "properties": {
@@ -1983,6 +2078,15 @@ const docTemplate = `{
                 "refresh_token": {
                     "type": "string",
                     "minLength": 1
+                }
+            }
+        },
+        "url.Values": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "array",
+                "items": {
+                    "type": "string"
                 }
             }
         }

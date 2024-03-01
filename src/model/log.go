@@ -36,3 +36,9 @@ func NewLog(log fmt.Stringer) *Log {
 		Detail: log.String(),
 	}
 }
+
+func (log *Log) GetDetail() *LogDetail {
+	detail := new(LogDetail)
+	json.Unmarshal([]byte(log.Detail), detail)
+	return detail
+}

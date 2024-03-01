@@ -15,7 +15,7 @@ func (l *log) Delete() string {
 
 // Find implements inkstone.SQL.
 func (l *log) Find() string {
-	panic("unimplemented")
+	return fmt.Sprintf("SELECT id, created_at, detail FROM %s ORDER BY id DESC", table.Log)
 }
 
 // Get implements inkstone.SQL.

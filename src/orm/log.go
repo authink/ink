@@ -20,8 +20,12 @@ func (l *logImpl) Delete(int) error {
 }
 
 // Find implements log.
-func (l *logImpl) Find() ([]model.Log, error) {
-	panic("unimplemented")
+func (l *logImpl) Find() (logs []model.Log, err error) {
+	err = l.DB.Select(
+		&logs,
+		sql.Log.Find(),
+	)
+	return
 }
 
 // Get implements log.

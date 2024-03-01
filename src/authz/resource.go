@@ -101,6 +101,14 @@ var (
 		},
 		AppName: env.AppNameAdmin(),
 	}
+	Logs = Obj{
+		Name:     "logs",
+		NeedRoot: true,
+		Acts: []string{
+			http.MethodGet,
+		},
+		AppName: env.AppNameAdmin(),
+	}
 )
 
 func ObjList() []Obj {
