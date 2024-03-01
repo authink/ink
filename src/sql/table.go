@@ -5,6 +5,9 @@ type tableName struct {
 	Staff     string
 	AuthToken string
 	Group     string
+	Dept      string
+	DeptLevel string
+	DeptStaff string
 }
 
 var table = &tableName{
@@ -12,4 +15,7 @@ var table = &tableName{
 	Staff:     "s_staffs",
 	AuthToken: "s_auth_tokens",
 	Group:     "s_groups",
+	Dept:      "s_departments",
+	DeptLevel: "s_dept_levels",
+	DeptStaff: "s_dept_staffs",
 }

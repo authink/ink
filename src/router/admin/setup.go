@@ -26,4 +26,6 @@ func SetupAdminGroup(rg *gin.RouterGroup, appName string) {
 	setupPermissionGroup(gAdmin)
 
 	setupPolicyGroup(gAdmin)
+
+	setupDeptGroup(gAdmin)
 }

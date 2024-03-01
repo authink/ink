@@ -92,6 +92,15 @@ var (
 		},
 		AppName: env.AppNameAdmin(),
 	}
+	Departments = Obj{
+		Name: "departments",
+		Acts: []string{
+			http.MethodGet,
+			http.MethodPost,
+			http.MethodPut,
+		},
+		AppName: env.AppNameAdmin(),
+	}
 )
 
 func ObjList() []Obj {

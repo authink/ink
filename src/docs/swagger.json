@@ -245,6 +245,177 @@
                 }
             }
         },
+        "/admin/departments": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Add a department",
+                "tags": [
+                    "admin_department"
+                ],
+                "summary": "Add a department",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "addDeptReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.addDeptReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/departments/levels": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Add a department level",
+                "tags": [
+                    "admin_department"
+                ],
+                "summary": "Add a department level",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "addDeptLevelReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.addDeptLevelReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/departments/staffs": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Add a staff to the department",
+                "tags": [
+                    "admin_department"
+                ],
+                "summary": "Add a staff to the department",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "addDeptStaffReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/admin.addDeptStaffReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/groups": {
             "get": {
                 "security": [
@@ -1314,6 +1485,63 @@
                     "type": "string",
                     "minLength": 6,
                     "example": "appmock"
+                }
+            }
+        },
+        "admin.addDeptLevelReq": {
+            "type": "object",
+            "required": [
+                "deptId",
+                "subDeptId"
+            ],
+            "properties": {
+                "deptId": {
+                    "type": "integer",
+                    "minimum": 100000,
+                    "example": 100000
+                },
+                "subDeptId": {
+                    "type": "integer",
+                    "minimum": 100000,
+                    "example": 100001
+                }
+            }
+        },
+        "admin.addDeptReq": {
+            "type": "object",
+            "required": [
+                "name",
+                "owerId"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "minLength": 6,
+                    "example": "A company"
+                },
+                "owerId": {
+                    "type": "integer",
+                    "minimum": 100000,
+                    "example": 100000
+                }
+            }
+        },
+        "admin.addDeptStaffReq": {
+            "type": "object",
+            "required": [
+                "deptId",
+                "staffId"
+            ],
+            "properties": {
+                "deptId": {
+                    "type": "integer",
+                    "minimum": 100000,
+                    "example": 100000
+                },
+                "staffId": {
+                    "type": "integer",
+                    "minimum": 100000,
+                    "example": 100000
                 }
             }
         },

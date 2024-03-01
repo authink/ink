@@ -11,6 +11,48 @@ definitions:
     required:
     - name
     type: object
+  admin.addDeptLevelReq:
+    properties:
+      deptId:
+        example: 100000
+        minimum: 100000
+        type: integer
+      subDeptId:
+        example: 100001
+        minimum: 100000
+        type: integer
+    required:
+    - deptId
+    - subDeptId
+    type: object
+  admin.addDeptReq:
+    properties:
+      name:
+        example: A company
+        minLength: 6
+        type: string
+      owerId:
+        example: 100000
+        minimum: 100000
+        type: integer
+    required:
+    - name
+    - owerId
+    type: object
+  admin.addDeptStaffReq:
+    properties:
+      deptId:
+        example: 100000
+        minimum: 100000
+        type: integer
+      staffId:
+        example: 100000
+        minimum: 100000
+        type: integer
+    required:
+    - deptId
+    - staffId
+    type: object
   admin.addGroupReq:
     properties:
       appId:
@@ -470,6 +512,114 @@ paths:
       summary: Show dashboard
       tags:
       - dashboard
+  /admin/departments:
+    post:
+      description: Add a department
+      parameters:
+      - description: request body
+        in: body
+        name: addDeptReq
+        required: true
+        schema:
+          $ref: '#/definitions/admin.addDeptReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Add a department
+      tags:
+      - admin_department
+  /admin/departments/levels:
+    post:
+      description: Add a department level
+      parameters:
+      - description: request body
+        in: body
+        name: addDeptLevelReq
+        required: true
+        schema:
+          $ref: '#/definitions/admin.addDeptLevelReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Add a department level
+      tags:
+      - admin_department
+  /admin/departments/staffs:
+    post:
+      description: Add a staff to the department
+      parameters:
+      - description: request body
+        in: body
+        name: addDeptStaffReq
+        required: true
+        schema:
+          $ref: '#/definitions/admin.addDeptStaffReq'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Add a staff to the department
+      tags:
+      - admin_department
   /admin/groups:
     get:
       description: Show groups
