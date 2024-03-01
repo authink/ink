@@ -2,6 +2,7 @@ package admin
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/authink/ink.go/src/authz"
 	"github.com/authink/ink.go/src/errors"
@@ -15,6 +16,7 @@ func setupPolicyGroup(gAdmin *gin.RouterGroup) {
 	gPolicies.Use(middleware.Authz(authz.Policies))
 	gPolicies.GET("", inkstone.HandlerAdapter(policies))
 	gPolicies.POST("", inkstone.HandlerAdapter(addPolicy))
+	gPolicies.DELETE("", inkstone.HandlerAdapter(deletePolicy))
 }
 
 type policyReq struct {
@@ -100,6 +102,42 @@ func addPolicy(c *inkstone.Context) {
 	dom := strconv.Itoa(req.Dom)
 
 	if _, err := enforcer.AddPermissionForUser(role, dom, req.Obj, req.Act); err != nil {
+		c.AbortWithServerError(err)
+		return
+	}
+
+	c.Empty()
+}
+
+// deletePolicy godoc
+//
+//	@Summary		Delete a policy
+//	@Description	Delete a policy
+//	@Tags			admin_policy
+//	@Router			/admin/policies	[delete]
+//	@Security		ApiKeyAuth
+//	@Param			g	query		int		true	"g"
+//	@Param			dom	query		int		true	"dom"
+//	@Param			obj	query		string	true	"obj"	example(admin.dev/apps)
+//	@Param			act	query		string	true	"act"	example(GET)
+//	@Success		200	{string}	empty
+//	@Failure		400	{object}	inkstone.ClientError
+//	@Failure		401	{object}	inkstone.ClientError
+//	@Failure		403	{object}	inkstone.ClientError
+//	@Failure		500	{string}	empty
+func deletePolicy(c *inkstone.Context) {
+	req := new(addPolicyReq)
+	if err := c.ShouldBindQuery(req); err != nil {
+		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		return
+	}
+
+	enforcer := authz.RBACEnforcer()
+	role := strconv.Itoa(req.G)
+	dom := strconv.Itoa(req.Dom)
+	act := strings.ToUpper(req.Act)
+
+	if _, err := enforcer.DeletePermissionForUser(role, dom, req.Obj, act); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}

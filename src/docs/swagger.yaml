@@ -754,6 +754,57 @@ paths:
       tags:
       - admin_permissions
   /admin/policies:
+    delete:
+      description: Delete a policy
+      parameters:
+      - description: g
+        in: query
+        name: g
+        required: true
+        type: integer
+      - description: dom
+        in: query
+        name: dom
+        required: true
+        type: integer
+      - description: obj
+        example: admin.dev/apps
+        in: query
+        name: obj
+        required: true
+        type: string
+      - description: act
+        example: GET
+        in: query
+        name: act
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a policy
+      tags:
+      - admin_policy
     get:
       description: Show policies
       parameters:
