@@ -119,6 +119,19 @@ definitions:
       updatedAt:
         type: string
     type: object
+  admin.permissionRes:
+    properties:
+      acts:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+      needRoot:
+        type: boolean
+      resource:
+        type: string
+    type: object
   admin.staffRes:
     properties:
       active:
@@ -691,6 +704,43 @@ paths:
       summary: Add a groupship
       tags:
       - admin_groupship
+  /admin/permissions:
+    get:
+      description: Show permissions
+      parameters:
+      - description: appId
+        in: query
+        name: appId
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/admin.permissionRes'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/inkstone.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Show permissions
+      tags:
+      - admin_permissions
   /admin/policies:
     post:
       description: Add a policy

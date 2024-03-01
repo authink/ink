@@ -45,7 +45,7 @@ func Authz(obj authz.Obj) gin.HandlerFunc {
 
 			dom := strconv.Itoa(int(app.Id))
 
-			if ok, err := authz.RBACEnforcer().Enforce(sub, dom, obj.Name, act); err != nil || !ok {
+			if ok, err := authz.RBACEnforcer().Enforce(sub, dom, obj.Resource(), act); err != nil || !ok {
 				c.AbortWithForbidden(errors.ERR_NO_PERMISSION)
 			} else {
 				c.Next()

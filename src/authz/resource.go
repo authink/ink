@@ -1,13 +1,21 @@
 package authz
 
 import (
+	"fmt"
 	"net/http"
+
+	"github.com/authink/ink.go/src/env"
 )
 
 type Obj struct {
 	Name     string
 	NeedRoot bool
 	Acts     []string
+	AppName  string
+}
+
+func (obj *Obj) Resource() string {
+	return fmt.Sprintf("%s/%s", obj.AppName, obj.Name)
 }
 
 func (obj *Obj) Support(act string) bool {
@@ -27,6 +35,7 @@ var (
 			http.MethodPost,
 			http.MethodPut,
 		},
+		AppName: env.AppNameAdmin(),
 	}
 	Staffs = Obj{
 		Name: "staffs",
@@ -35,6 +44,7 @@ var (
 			http.MethodPost,
 			http.MethodPut,
 		},
+		AppName: env.AppNameAdmin(),
 	}
 	Tokens = Obj{
 		Name: "tokens",
@@ -42,6 +52,7 @@ var (
 			http.MethodGet,
 			http.MethodDelete,
 		},
+		AppName: env.AppNameAdmin(),
 	}
 	Groups = Obj{
 		Name:     "groups",
@@ -51,6 +62,7 @@ var (
 			http.MethodPost,
 			http.MethodPut,
 		},
+		AppName: env.AppNameAdmin(),
 	}
 	Groupships = Obj{
 		Name:     "groupships",
@@ -60,6 +72,15 @@ var (
 			http.MethodPost,
 			http.MethodDelete,
 		},
+		AppName: env.AppNameAdmin(),
+	}
+	Permissons = Obj{
+		Name:     "permissions",
+		NeedRoot: true,
+		Acts: []string{
+			http.MethodGet,
+		},
+		AppName: env.AppNameAdmin(),
 	}
 	Policies = Obj{
 		Name:     "policies",
@@ -69,16 +90,17 @@ var (
 			http.MethodPost,
 			http.MethodDelete,
 		},
+		AppName: env.AppNameAdmin(),
 	}
 )
 
-func List() []Obj {
-	return []Obj{Apps, Staffs, Tokens, Groups}
+func ObjList() []Obj {
+	return []Obj{Apps, Staffs, Tokens, Groups, Groupships, Permissons, Policies}
 }
 
-func Get(name string) *Obj {
-	for _, v := range List() {
-		if v.Name == name {
+func GetObj(appName, name string) *Obj {
+	for _, v := range ObjList() {
+		if v.AppName == appName && v.Name == name {
 			return &v
 		}
 	}

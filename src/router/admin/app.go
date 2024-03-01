@@ -49,7 +49,7 @@ func apps(c *inkstone.Context) {
 		return
 	}
 
-	var res []appRes
+	var res = []appRes{}
 	for i := range apps {
 		app := &apps[i]
 		res = append(res, appRes{

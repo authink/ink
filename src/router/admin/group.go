@@ -82,7 +82,7 @@ func groups(c *inkstone.Context) {
 		return
 	}
 
-	var res []groupRes
+	var res = []groupRes{}
 	for i := range groups {
 		group := &groups[i]
 		res = append(res, groupRes{

@@ -72,7 +72,7 @@ func staffs(c *inkstone.Context) {
 		return
 	}
 
-	var res []staffRes
+	var res = []staffRes{}
 	for i := range staffs {
 		staff := &staffs[i]
 		res = append(res, staffRes{

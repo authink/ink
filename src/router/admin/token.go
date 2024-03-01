@@ -65,7 +65,7 @@ func tokens(c *inkstone.Context) {
 		return
 	}
 
-	var res []tokenRes
+	var res = []tokenRes{}
 	for i := range tokens {
 		token := &tokens[i]
 		res = append(res, tokenRes{

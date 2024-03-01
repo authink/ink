@@ -47,9 +47,13 @@ func groupships(c *inkstone.Context) {
 	enforcer := authz.RBACEnforcer()
 	sub := strconv.Itoa(req.Sub)
 	dom := strconv.Itoa(req.Dom)
-	roles := enforcer.GetRolesForUserInDomain(sub, dom)
 
-	c.Response(roles)
+	var res = []string{}
+	if roles := enforcer.GetRolesForUserInDomain(sub, dom); len(roles) > 0 {
+		res = roles
+	}
+
+	c.Response(res)
 }
 
 type addGroupshipReq struct {
