@@ -58,7 +58,7 @@ definitions:
         minimum: 100000
         type: integer
       obj:
-        example: apps
+        example: admin.dev/apps
         minLength: 2
         type: string
     required:

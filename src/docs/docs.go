@@ -1253,7 +1253,7 @@ const docTemplate = `{
                 "obj": {
                     "type": "string",
                     "minLength": 2,
-                    "example": "apps"
+                    "example": "admin.dev/apps"
                 }
             }
         },

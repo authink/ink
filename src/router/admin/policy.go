@@ -18,7 +18,7 @@ func setupPolicyGroup(gAdmin *gin.RouterGroup) {
 
 type addPolicyReq struct {
 	G   int    `json:"g" form:"g" binding:"required,min=100000" example:"100000"`
-	Obj string `json:"obj" form:"obj" binding:"required,min=2" example:"apps"`
+	Obj string `json:"obj" form:"obj" binding:"required,min=2" example:"admin.dev/apps"`
 	Act string `json:"act" form:"act" binding:"required,eq=GET|eq=POST|eq=PUT|eq=DELETE" example:"GET"`
 }
 
