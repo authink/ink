@@ -1237,6 +1237,7 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "act",
+                "dom",
                 "g",
                 "obj"
             ],
@@ -1244,6 +1245,11 @@ const docTemplate = `{
                 "act": {
                     "type": "string",
                     "example": "GET"
+                },
+                "dom": {
+                    "type": "integer",
+                    "minimum": 100000,
+                    "example": 100000
                 },
                 "g": {
                     "type": "integer",

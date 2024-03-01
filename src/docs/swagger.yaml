@@ -53,6 +53,10 @@ definitions:
       act:
         example: GET
         type: string
+      dom:
+        example: 100000
+        minimum: 100000
+        type: integer
       g:
         example: 100000
         minimum: 100000
@@ -63,6 +67,7 @@ definitions:
         type: string
     required:
     - act
+    - dom
     - g
     - obj
     type: object

@@ -18,6 +18,7 @@ func setupPolicyGroup(gAdmin *gin.RouterGroup) {
 
 type addPolicyReq struct {
 	G   int    `json:"g" form:"g" binding:"required,min=100000" example:"100000"`
+	Dom int    `json:"dom" form:"dom" binding:"required,min=100000" example:"100000"`
 	Obj string `json:"obj" form:"obj" binding:"required,min=2" example:"admin.dev/apps"`
 	Act string `json:"act" form:"act" binding:"required,eq=GET|eq=POST|eq=PUT|eq=DELETE" example:"GET"`
 }
@@ -44,8 +45,9 @@ func addPolicy(c *inkstone.Context) {
 
 	enforcer := authz.RBACEnforcer()
 	role := strconv.Itoa(req.G)
+	dom := strconv.Itoa(req.Dom)
 
-	if _, err := enforcer.AddPermissionForUser(role, req.Obj, req.Act); err != nil {
+	if _, err := enforcer.AddPermissionForUser(role, dom, req.Obj, req.Act); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}
