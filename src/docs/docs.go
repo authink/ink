@@ -691,6 +691,69 @@ const docTemplate = `{
             }
         },
         "/admin/policies": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Show policies",
+                "tags": [
+                    "admin_policy"
+                ],
+                "summary": "Show policies",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "g",
+                        "name": "g",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "dom",
+                        "name": "dom",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/admin.policyRes"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/inkstone.ClientError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -1356,6 +1419,17 @@ const docTemplate = `{
                 },
                 "needRoot": {
                     "type": "boolean"
+                },
+                "resource": {
+                    "type": "string"
+                }
+            }
+        },
+        "admin.policyRes": {
+            "type": "object",
+            "properties": {
+                "act": {
+                    "type": "string"
                 },
                 "resource": {
                     "type": "string"

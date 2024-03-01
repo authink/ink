@@ -13,12 +13,64 @@ import (
 func setupPolicyGroup(gAdmin *gin.RouterGroup) {
 	gPolicies := gAdmin.Group(authz.Policies.Name)
 	gPolicies.Use(middleware.Authz(authz.Policies))
+	gPolicies.GET("", inkstone.HandlerAdapter(policies))
 	gPolicies.POST("", inkstone.HandlerAdapter(addPolicy))
 }
 
+type policyReq struct {
+	G   int `json:"g" form:"g" binding:"required,min=100000" example:"100000"`
+	Dom int `json:"dom" form:"dom" binding:"required,min=100000" example:"100000"`
+}
+
+type policyRes struct {
+	Resource string `json:"resource,omitempty"`
+	Act      string `json:"act,omitempty"`
+}
+
+// policies godoc
+//
+//	@Summary		Show policies
+//	@Description	Show policies
+//	@Tags			admin_policy
+//	@Router			/admin/policies	[get]
+//	@Security		ApiKeyAuth
+//	@Param			g	query		int	true	"g"
+//	@Param			dom	query		int	true	"dom"
+//	@Success		200	{array}		policyRes
+//	@Failure		400	{object}	inkstone.ClientError
+//	@Failure		401	{object}	inkstone.ClientError
+//	@Failure		403	{object}	inkstone.ClientError
+//	@Failure		500	{string}	empty
+func policies(c *inkstone.Context) {
+	req := new(policyReq)
+	if err := c.ShouldBindQuery(req); err != nil {
+		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		return
+	}
+
+	enforcer := authz.RBACEnforcer()
+	g := strconv.Itoa(req.G)
+	dom := strconv.Itoa(req.Dom)
+
+	var res = []policyRes{}
+	permissions, err := enforcer.GetPermissionsForUser(g, dom)
+	if err != nil {
+		c.AbortWithServerError(err)
+		return
+	}
+
+	for _, v := range permissions {
+		res = append(res, policyRes{
+			Resource: v[2],
+			Act:      v[3],
+		})
+	}
+
+	c.Response(res)
+}
+
 type addPolicyReq struct {
-	G   int    `json:"g" form:"g" binding:"required,min=100000" example:"100000"`
-	Dom int    `json:"dom" form:"dom" binding:"required,min=100000" example:"100000"`
+	policyReq
 	Obj string `json:"obj" form:"obj" binding:"required,min=2" example:"admin.dev/apps"`
 	Act string `json:"act" form:"act" binding:"required,eq=GET|eq=POST|eq=PUT|eq=DELETE" example:"GET"`
 }
