@@ -83,6 +83,6 @@ func delete(executor dbExecutor, statement string, args ...any) (err error) {
 	return
 }
 
-func afterDelete(result sql.Result) error {
+func afterDelete(sql.Result) error {
 	return nil
 }
