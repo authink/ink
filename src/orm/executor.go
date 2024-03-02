@@ -10,6 +10,7 @@ import (
 type afterExecFunc func(sql.Result, model.Identifier) error
 
 type dbExecutor interface {
+	Exec(string, ...any) (sql.Result, error)
 	NamedExec(string, any) (sql.Result, error)
 	Get(any, string, ...any) error
 	Select(any, string, ...any) error
@@ -68,4 +69,20 @@ func doSelect(executor dbExecutor, list any, statement string, args ...any) erro
 		statement,
 		args...,
 	)
+}
+
+func delete(executor dbExecutor, statement string, args ...any) (err error) {
+	result, err := executor.Exec(
+		statement,
+		args...,
+	)
+	if err != nil {
+		return
+	}
+	afterDelete(result)
+	return
+}
+
+func afterDelete(result sql.Result) error {
+	return nil
 }

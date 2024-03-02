@@ -33,21 +33,13 @@ func (a *authTokenImpl) CountTx(tx *sqlx.Tx, args ...any) (c int, err error) {
 }
 
 // Delete implements authToken.
-func (a *authTokenImpl) Delete(id int) (err error) {
-	_, err = a.DB.Exec(
-		sqls.AuthToken.Delete(),
-		id,
-	)
-	return
+func (a *authTokenImpl) Delete(id int) error {
+	return delete(a.DB, sqls.AuthToken.Delete(), id)
 }
 
 // DeleteTx implements authToken.
-func (a *authTokenImpl) DeleteTx(tx *sqlx.Tx, id int) (err error) {
-	_, err = a.DB.Exec(
-		sqls.AuthToken.Delete(),
-		id,
-	)
-	return
+func (a *authTokenImpl) DeleteTx(tx *sqlx.Tx, id int) error {
+	return delete(tx, sqls.AuthToken.Delete(), id)
 }
 
 // GetByAccessToken implements authToken.
