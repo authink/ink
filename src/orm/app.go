@@ -31,22 +31,14 @@ func (a *appImpl) Find(...any) (apps []models.App, err error) {
 // Subtle: this method shadows the method (*DB).Get of appImpl.DB.
 func (a *appImpl) Get(id int) (app *models.App, err error) {
 	app = new(models.App)
-	err = a.DB.Get(
-		app,
-		sqls.App.Get(),
-		id,
-	)
+	err = get(a.DB, app, sqls.App.Get(), id)
 	return
 }
 
 // GetTx implements iapp.
 func (a *appImpl) GetTx(tx *sqlx.Tx, id int) (app *models.App, err error) {
 	app = new(models.App)
-	err = tx.Get(
-		app,
-		sqls.App.GetForUpdate(),
-		id,
-	)
+	err = get(tx, app, sqls.App.GetForUpdate(), id)
 	return
 }
 

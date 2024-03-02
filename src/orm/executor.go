@@ -11,6 +11,7 @@ type resultHandlerFunc func(sql.Result, model.Identifier) error
 
 type dbExecutor interface {
 	NamedExec(string, any) (sql.Result, error)
+	Get(any, string, ...any) error
 }
 
 func namedExec(executor dbExecutor, statement string, m model.Identifier, handleResult resultHandlerFunc) (err error) {
@@ -49,5 +50,14 @@ func handleInsertResult(result sql.Result, m model.Identifier) (err error) {
 	}
 
 	m.SetId(uint32(lastId))
+	return
+}
+
+func get(executor dbExecutor, m model.Identifier, statement string, args ...any) (err error) {
+	err = executor.Get(
+		m,
+		statement,
+		args...,
+	)
 	return
 }
