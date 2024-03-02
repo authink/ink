@@ -22,21 +22,13 @@ type groupImpl app.AppContext
 
 // Count implements group.
 func (g *groupImpl) Count(args ...any) (c int, err error) {
-	stmt, err := g.DB.PrepareNamed(sqls.Group.Count())
-	if err != nil {
-		return
-	}
-	err = stmt.Get(&c, args[0])
+	err = count(g.DB, sqls.Group.Count(), &c, args[0])
 	return
 }
 
 // CountTx implements group.
 func (g *groupImpl) CountTx(tx *sqlx.Tx, args ...any) (c int, err error) {
-	stmt, err := tx.PrepareNamed(sqls.Group.Count())
-	if err != nil {
-		return
-	}
-	err = stmt.Get(&c, args[0])
+	err = count(tx, sqls.Group.Count(), &c, args[0])
 	return
 }
 

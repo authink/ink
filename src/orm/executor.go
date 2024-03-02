@@ -101,3 +101,12 @@ func pagination(executor dbExecutor, statement string, dest, arg any) (err error
 	err = stmt.Select(dest, arg)
 	return
 }
+
+func count(executor dbExecutor, statement string, dest, arg any) (err error) {
+	stmt, err := executor.PrepareNamed(statement)
+	if err != nil {
+		return
+	}
+	err = stmt.Get(dest, arg)
+	return
+}
