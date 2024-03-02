@@ -21,14 +21,14 @@ type authToken interface {
 type authTokenImpl app.AppContext
 
 // Count implements authToken.
-func (a *authTokenImpl) Count(...any) (c int, err error) {
-	err = a.DB.Get(&c, sqls.AuthToken.Count())
+func (a *authTokenImpl) Count(args ...any) (c int, err error) {
+	err = get(a.DB, &c, sqls.AuthToken.Count(), args...)
 	return
 }
 
 // CountTx implements authToken.
 func (a *authTokenImpl) CountTx(tx *sqlx.Tx, args ...any) (c int, err error) {
-	err = tx.Get(&c, sqls.AuthToken.Count())
+	err = get(tx, &c, sqls.AuthToken.Count(), args...)
 	return
 }
 

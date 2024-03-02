@@ -23,13 +23,13 @@ type staffImpl app.AppContext
 
 // Count implements staff.
 func (s *staffImpl) Count(args ...any) (c int, err error) {
-	err = s.DB.Get(&c, sqls.Staff.Count())
+	err = get(s.DB, &c, sqls.Staff.Count(), args...)
 	return
 }
 
 // CountTx implements staff.
 func (s *staffImpl) CountTx(tx *sqlx.Tx, args ...any) (c int, err error) {
-	err = tx.Get(&c, sqls.Staff.Count())
+	err = get(tx, &c, sqls.Staff.Count(), args...)
 	return
 }
 
