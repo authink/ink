@@ -1,12 +1,12 @@
 .DEFAULT_GOAL := build
-V := 0.1.3
+V := 0.1.4
 ARGS :=
 
 tidy:
 	go mod tidy
 
 fmt:
-	go fmt ./src
+	go fmt ./src/...
 fmt: tidy
 
 swag:

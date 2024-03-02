@@ -22,13 +22,13 @@ type groupImpl app.AppContext
 
 // Count implements group.
 func (g *groupImpl) Count(args ...any) (c int, err error) {
-	err = count(g.DB, sqls.Group.Count(), &c, args[0])
+	err = orm.Count(g.DB, sqls.Group.Count(), &c, args[0])
 	return
 }
 
 // CountTx implements group.
 func (g *groupImpl) CountTx(tx *sqlx.Tx, args ...any) (c int, err error) {
-	err = count(tx, sqls.Group.Count(), &c, args[0])
+	err = orm.Count(tx, sqls.Group.Count(), &c, args[0])
 	return
 }
 
@@ -36,51 +36,51 @@ func (g *groupImpl) CountTx(tx *sqlx.Tx, args ...any) (c int, err error) {
 // Subtle: this method shadows the method (*DB).Get of groupImpl.DB.
 func (g *groupImpl) Get(id int) (group *models.Group, err error) {
 	group = new(models.Group)
-	err = get(g.DB, group, sqls.Group.Get(), id)
+	err = orm.Get(g.DB, group, sqls.Group.Get(), id)
 	return
 }
 
 // GetTx implements group.
 func (g *groupImpl) GetTx(tx *sqlx.Tx, id int) (group *models.Group, err error) {
 	group = new(models.Group)
-	err = get(tx, group, sqls.Group.GetForUpdate(), id)
+	err = orm.Get(tx, group, sqls.Group.GetForUpdate(), id)
 	return
 }
 
 // Insert implements group.
 func (g *groupImpl) Insert(group *models.Group) error {
-	return namedExec(g.DB, sqls.Group.Insert(), group, afterInsert)
+	return orm.NamedInsert(g.DB, sqls.Group.Insert(), group)
 }
 
 // InsertTx implements group.
 func (g *groupImpl) InsertTx(tx *sqlx.Tx, group *models.Group) error {
-	return namedExec(tx, sqls.Group.Insert(), group, afterInsert)
+	return orm.NamedInsert(tx, sqls.Group.Insert(), group)
 }
 
 // PaginationTx implements group.
 func (g *groupImpl) PaginationTx(tx *sqlx.Tx, pager model.Pager) (groups []models.GroupWithApp, err error) {
-	err = pagination(tx, sqls.Group.Pagination(), &groups, pager)
+	err = orm.Pagination(tx, sqls.Group.Pagination(), &groups, pager)
 	return
 }
 
 // Save implements group.
 func (g *groupImpl) Save(group *models.Group) error {
-	return namedExec(g.DB, sqls.Group.Save(), group, afterSave)
+	return orm.NamedSave(g.DB, sqls.Group.Save(), group)
 }
 
 // SaveTx implements group.
 func (g *groupImpl) SaveTx(tx *sqlx.Tx, group *models.Group) error {
-	return namedExec(tx, sqls.Group.Save(), group, afterSave)
+	return orm.NamedSave(tx, sqls.Group.Save(), group)
 }
 
 // Update implements group.
 func (g *groupImpl) Update(group *models.Group) error {
-	return namedExec(g.DB, sqls.Group.Update(), group, afterUpdate)
+	return orm.NamedUpdate(g.DB, sqls.Group.Update(), group)
 }
 
 // UpdateTx implements group.
 func (g *groupImpl) UpdateTx(tx *sqlx.Tx, group *models.Group) error {
-	return namedExec(tx, sqls.Group.Update(), group, afterUpdate)
+	return orm.NamedUpdate(tx, sqls.Group.Update(), group)
 }
 
 var _ group = (*groupImpl)(nil)
