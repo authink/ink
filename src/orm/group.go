@@ -67,11 +67,7 @@ func (g *groupImpl) InsertTx(tx *sqlx.Tx, group *models.Group) error {
 
 // PaginationTx implements group.
 func (g *groupImpl) PaginationTx(tx *sqlx.Tx, pager model.Pager) (groups []models.GroupWithApp, err error) {
-	stmt, err := tx.PrepareNamed(sqls.Group.Pagination())
-	if err != nil {
-		return
-	}
-	err = stmt.Select(&groups, pager)
+	err = pagination(tx, sqls.Group.Pagination(), &groups, pager)
 	return
 }
 

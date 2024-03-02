@@ -67,11 +67,7 @@ func (s *staffImpl) InsertTx(tx *sqlx.Tx, staff *models.Staff) error {
 
 // PaginationTx implements staff.
 func (s *staffImpl) PaginationTx(tx *sqlx.Tx, pager model.Pager) (staffs []models.Staff, err error) {
-	stmt, err := tx.PrepareNamed(sqls.Staff.Pagination())
-	if err != nil {
-		return
-	}
-	err = stmt.Select(&staffs, pager)
+	err = pagination(tx, sqls.Staff.Pagination(), &staffs, pager)
 	return
 }
 

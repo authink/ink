@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/authink/inkstone/model"
+	"github.com/jmoiron/sqlx"
 )
 
 type afterExecFunc func(sql.Result, model.Identifier) error
@@ -12,6 +13,7 @@ type afterExecFunc func(sql.Result, model.Identifier) error
 type dbExecutor interface {
 	Exec(string, ...any) (sql.Result, error)
 	NamedExec(string, any) (sql.Result, error)
+	PrepareNamed(string) (*sqlx.NamedStmt, error)
 	Get(any, string, ...any) error
 	Select(any, string, ...any) error
 }
@@ -89,4 +91,13 @@ func delete(executor dbExecutor, statement string, args ...any) (err error) {
 
 func afterDelete(sql.Result) error {
 	return nil
+}
+
+func pagination(executor dbExecutor, statement string, dest, arg any) (err error) {
+	stmt, err := executor.PrepareNamed(statement)
+	if err != nil {
+		return
+	}
+	err = stmt.Select(dest, arg)
+	return
 }

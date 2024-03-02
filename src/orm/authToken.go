@@ -68,11 +68,7 @@ func (a *authTokenImpl) InsertTx(tx *sqlx.Tx, token *models.AuthToken) error {
 
 // PaginationTx implements authToken.
 func (a *authTokenImpl) PaginationTx(tx *sqlx.Tx, pager model.Pager) (tokens []models.AuthTokenWithApp, err error) {
-	stmt, err := tx.PrepareNamed(sqls.AuthToken.Pagination())
-	if err != nil {
-		return
-	}
-	err = stmt.Select(&tokens, pager)
+	err = pagination(tx, sqls.AuthToken.Pagination(), &tokens, pager)
 	return
 }
 
