@@ -61,12 +61,12 @@ func (a *appImpl) SaveTx(tx *sqlx.Tx, app *models.App) error {
 
 // Update implements iapp.
 func (a *appImpl) Update(app *models.App) error {
-	return namedExec(a.DB, sqls.App.Update(), app, nil)
+	return namedExec(a.DB, sqls.App.Update(), app, afterUpdate)
 }
 
 // UpdateTx implements iapp.
 func (a *appImpl) UpdateTx(tx *sqlx.Tx, app *models.App) error {
-	return namedExec(tx, sqls.App.Update(), app, nil)
+	return namedExec(tx, sqls.App.Update(), app, afterUpdate)
 }
 
 var _ iapp = (*appImpl)(nil)

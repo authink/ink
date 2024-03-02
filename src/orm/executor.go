@@ -55,6 +55,10 @@ func afterInsert(result sql.Result, m model.Identifier) (err error) {
 	return
 }
 
+func afterUpdate(sql.Result, model.Identifier) error {
+	return nil
+}
+
 func get(executor dbExecutor, dest any, statement string, args ...any) error {
 	return executor.Get(
 		dest,

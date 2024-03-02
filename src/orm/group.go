@@ -87,12 +87,12 @@ func (g *groupImpl) SaveTx(tx *sqlx.Tx, group *models.Group) error {
 
 // Update implements group.
 func (g *groupImpl) Update(group *models.Group) error {
-	return namedExec(g.DB, sqls.Group.Update(), group, nil)
+	return namedExec(g.DB, sqls.Group.Update(), group, afterUpdate)
 }
 
 // UpdateTx implements group.
 func (g *groupImpl) UpdateTx(tx *sqlx.Tx, group *models.Group) error {
-	return namedExec(tx, sqls.Group.Update(), group, nil)
+	return namedExec(tx, sqls.Group.Update(), group, afterUpdate)
 }
 
 var _ group = (*groupImpl)(nil)

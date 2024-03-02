@@ -87,12 +87,12 @@ func (s *staffImpl) SaveTx(tx *sqlx.Tx, staff *models.Staff) error {
 
 // Update implements staff.
 func (s *staffImpl) Update(staff *models.Staff) error {
-	return namedExec(s.DB, sqls.Staff.Update(), staff, nil)
+	return namedExec(s.DB, sqls.Staff.Update(), staff, afterUpdate)
 }
 
 // UpdateTx implements staff.
 func (s *staffImpl) UpdateTx(tx *sqlx.Tx, staff *models.Staff) error {
-	return namedExec(tx, sqls.Staff.Update(), staff, nil)
+	return namedExec(tx, sqls.Staff.Update(), staff, afterUpdate)
 }
 
 var _ staff = (*staffImpl)(nil)
