@@ -4,16 +4,16 @@ import (
 	libsql "database/sql"
 	"errors"
 
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/orm"
 )
 
-type resultHandlerFunc func(libsql.Result, inkstone.ModelOf) error
+type resultHandlerFunc func(libsql.Result, orm.Identifier) error
 
 type dbExecutor interface {
-	NamedExec(query string, arg interface{}) (libsql.Result, error)
+	NamedExec(string, any) (libsql.Result, error)
 }
 
-func namedExec(executor dbExecutor, statement string, m inkstone.ModelOf, handleResult resultHandlerFunc) (err error) {
+func namedExec(executor dbExecutor, statement string, m orm.Identifier, handleResult resultHandlerFunc) (err error) {
 	result, err := executor.NamedExec(
 		statement,
 		m,
@@ -28,7 +28,7 @@ func namedExec(executor dbExecutor, statement string, m inkstone.ModelOf, handle
 	return
 }
 
-func handleSaveResult(result libsql.Result, m inkstone.ModelOf) (err error) {
+func handleSaveResult(result libsql.Result, m orm.Identifier) (err error) {
 	if err = handleInsertResult(result, m); err != nil {
 		return
 	}
@@ -42,12 +42,12 @@ func handleSaveResult(result libsql.Result, m inkstone.ModelOf) (err error) {
 	return
 }
 
-func handleInsertResult(result libsql.Result, m inkstone.ModelOf) (err error) {
+func handleInsertResult(result libsql.Result, m orm.Identifier) (err error) {
 	lastId, err := result.LastInsertId()
 	if err != nil {
 		return
 	}
 
-	m.Of().Id = uint32(lastId)
+	m.SetId(uint32(lastId))
 	return
 }

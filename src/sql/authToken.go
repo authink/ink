@@ -3,56 +3,48 @@ package sql
 import (
 	"fmt"
 
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/sql"
 )
 
-type authToken struct{}
-
-// Save implements inkstone.SQL.
-func (*authToken) Save() string {
-	panic("unimplemented")
+type authToken interface {
+	sql.Inserter
+	sql.Deleter
+	sql.Counter
+	sql.Pager
+	GetByAccessToken() string
+	GetByRefreshToken() string
 }
 
-func (*authToken) Count() string {
+type authTokenImpl struct{}
+
+// Count implements authToken.
+func (a *authTokenImpl) Count() string {
 	return fmt.Sprintf("SELECT COUNT(id) c FROM %s", table.AuthToken)
 }
 
-func (*authToken) Pagination() string {
-	return fmt.Sprintf("SELECT at.id, at.created_at, at.updated_at, at.access_token, at.refresh_token, at.app_id, a.name app_name, at.account_id FROM %s at, %s a WHERE at.app_id = a.id ORDER BY at.id DESC LIMIT ? OFFSET ?", table.AuthToken, table.App)
-}
-
-// Update implements inkstone.SQL.
-func (*authToken) Update() string {
-	panic("unimplemented")
-}
-
-// Find implements inkstone.SQL.
-func (*authToken) Find() string {
-	panic("unimplemented")
-}
-
-// Delete implements inkstone.SQL.
-func (*authToken) Delete() string {
+// Delete implements authToken.
+func (a *authTokenImpl) Delete() string {
 	return fmt.Sprintf("DELETE FROM %s WHERE id = ?", table.AuthToken)
 }
 
-// Get implements inkstone.SQL.
-func (*authToken) Get() string {
-	panic("unimplemented")
-}
-
-// Insert implements inkstone.SQL.
-func (*authToken) Insert() string {
-	return fmt.Sprintf("INSERT INTO %s (access_token, refresh_token, app_id, account_id) VALUES (:access_token, :refresh_token, :app_id, :account_id)", table.AuthToken)
-}
-
-func (*authToken) GetByRefreshToken() string {
-	return fmt.Sprintf("SELECT id, created_at, access_token, refresh_token, app_id, account_id FROM %s WHERE refresh_token = ?", table.AuthToken)
-}
-
-func (*authToken) GetByAccessToken() string {
+// GetByAccessToken implements authToken.
+func (a *authTokenImpl) GetByAccessToken() string {
 	return fmt.Sprintf("SELECT id, created_at, access_token, refresh_token, app_id, account_id FROM %s WHERE access_token = ?", table.AuthToken)
 }
 
-var _ inkstone.SQL = (*authToken)(nil)
-var AuthToken = new(authToken)
+// GetByRefreshToken implements authToken.
+func (a *authTokenImpl) GetByRefreshToken() string {
+	return fmt.Sprintf("SELECT id, created_at, access_token, refresh_token, app_id, account_id FROM %s WHERE refresh_token = ?", table.AuthToken)
+}
+
+// Insert implements authToken.
+func (a *authTokenImpl) Insert() string {
+	return fmt.Sprintf("INSERT INTO %s (access_token, refresh_token, app_id, account_id) VALUES (:access_token, :refresh_token, :app_id, :account_id)", table.AuthToken)
+}
+
+// Pagination implements authToken.
+func (a *authTokenImpl) Pagination() string {
+	return fmt.Sprintf("SELECT at.id, at.created_at, at.access_token, at.refresh_token, at.app_id, a.name app_name, at.account_id FROM %s at, %s a WHERE at.app_id = a.id ORDER BY at.id DESC LIMIT :limit OFFSET :offset", table.AuthToken, table.App)
+}
+
+var AuthToken authToken = new(authTokenImpl)

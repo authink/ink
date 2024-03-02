@@ -1,6 +1,6 @@
 package model
 
-import "github.com/authink/inkstone"
+import "github.com/authink/inkstone/orm"
 
 type GroupType uint32
 
@@ -10,7 +10,7 @@ const (
 )
 
 type Group struct {
-	inkstone.Model
+	orm.Model
 	Name   string
 	Type   uint32
 	AppId  uint32 `db:"app_id"`

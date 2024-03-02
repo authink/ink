@@ -13,7 +13,8 @@ import (
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/ink.go/src/router/token"
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/app"
+	"github.com/authink/inkstone/test"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 )
@@ -21,35 +22,35 @@ import (
 var ctx = context.Background()
 
 func TestMain(m *testing.M) {
-	inkstone.TestRun(
+	test.Run(
 		"admin",
 		&ctx,
-		&inkstone.Options{
+		&app.Options{
 			Locales: &i18n.Locales,
-			Seed: func(appCtx *inkstone.AppContext) {
+			Seed: func(appCtx *app.AppContext) {
 				migrate.Seed(appCtx)
-				if err := inkstone.Transaction(appCtx, func(tx *sqlx.Tx) (err error) {
-					if err = orm.App(appCtx).InsertWithTx(model.NewApp(
+				if err := appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
+					if err = orm.App(appCtx).InsertTx(tx, model.NewApp(
 						"devtools",
 						"123456",
-					), tx); err != nil {
+					)); err != nil {
 						return
 					}
 
-					if err = orm.Staff(appCtx).InsertWithTx(model.NewStaff(
+					if err = orm.Staff(appCtx).InsertTx(tx, model.NewStaff(
 						"test@huoyijie.cn",
 						"123456",
 						"11111111111",
 						false,
-					), tx); err != nil {
+					)); err != nil {
 						return
 					}
 
-					err = orm.Group(appCtx).InsertWithTx(model.NewGroup(
+					err = orm.Group(appCtx).InsertTx(tx, model.NewGroup(
 						"developer",
 						1,
 						100000,
-					), tx)
+					))
 					return
 				}); err != nil {
 					panic(err)
@@ -72,7 +73,7 @@ func grantToken(appId int, appSecret, email, password string, resObj any) (*http
 		Password:  password,
 	}
 
-	return inkstone.TestFetch(
+	return test.Fetch(
 		ctx,
 		http.MethodPost,
 		"token/grant",

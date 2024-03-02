@@ -9,11 +9,12 @@ import (
 	"github.com/authink/ink.go/src/errors"
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/ink.go/src/util"
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/web"
+	u "github.com/authink/inkstone/util"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func Authn(c *inkstone.Context) {
+func Authn(c *web.Context) {
 	appCtx := c.AppContext()
 	authHeader := c.GetHeader("Authorization")
 
@@ -24,7 +25,7 @@ func Authn(c *inkstone.Context) {
 
 	accessToken := strings.TrimPrefix(authHeader, "Bearer ")
 
-	claims, err := inkstone.VerifyToken(appCtx.SecretKey, accessToken)
+	claims, err := u.VerifyToken(appCtx.SecretKey, accessToken)
 	if err != nil {
 		if errs.Is(err, jwt.ErrTokenExpired) {
 			c.AbortWithUnauthorized(errors.ERR_EXPIRED_ACCESS_TOKEN)

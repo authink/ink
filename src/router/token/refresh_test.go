@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/test"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -15,7 +15,7 @@ func refreshToken(accessToken, refreshToken string, resObj any) (*httptest.Respo
 		RefreshToken: refreshToken,
 	}
 
-	return inkstone.TestFetch(
+	return test.Fetch(
 		ctx,
 		http.MethodPost,
 		"token/refresh",

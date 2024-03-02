@@ -8,22 +8,23 @@ import (
 	"github.com/authink/ink.go/src/errors"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/orm"
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/web"
+	"github.com/authink/inkstone/util"
 	"github.com/gin-gonic/gin"
 )
 
 func SetupTokenGroup(rg *gin.RouterGroup) {
 	gToken := rg.Group("token")
-	gToken.POST("grant", inkstone.HandlerAdapter(grant))
-	gToken.POST("refresh", inkstone.HandlerAdapter(refresh))
-	gToken.POST("revoke", inkstone.HandlerAdapter(revoke))
+	gToken.POST("grant", web.HandlerAdapter(grant))
+	gToken.POST("refresh", web.HandlerAdapter(refresh))
+	gToken.POST("revoke", web.HandlerAdapter(revoke))
 }
 
-func generateAuthToken(c *inkstone.Context, app *model.App, staff *model.Staff) (res *GrantRes) {
+func generateAuthToken(c *web.Context, app *model.App, staff *model.Staff) (res *GrantRes) {
 	appCtx := c.AppContext()
 
-	jwtClaims := inkstone.NewJwtClaims(
-		inkstone.GenerateUUID(),
+	jwtClaims := util.NewJwtClaims(
+		util.GenerateUUID(),
 		appCtx.AppName,
 		app.Name,
 		staff.Email,
@@ -32,7 +33,7 @@ func generateAuthToken(c *inkstone.Context, app *model.App, staff *model.Staff) 
 		staff.Id,
 	)
 
-	accessToken, err := inkstone.GenerateToken(
+	accessToken, err := util.GenerateToken(
 		appCtx.SecretKey,
 		jwtClaims,
 	)
@@ -41,7 +42,7 @@ func generateAuthToken(c *inkstone.Context, app *model.App, staff *model.Staff) 
 		return
 	}
 
-	refreshToken := inkstone.GenerateUUID()
+	refreshToken := util.GenerateUUID()
 
 	authToken := model.NewAuthToken(jwtClaims.ID, refreshToken, app.Id, staff.Id)
 
@@ -59,7 +60,7 @@ func generateAuthToken(c *inkstone.Context, app *model.App, staff *model.Staff) 
 	return
 }
 
-func checkRefreshToken(c *inkstone.Context, refreshToken string) (authToken *model.AuthToken, ok bool) {
+func checkRefreshToken(c *web.Context, refreshToken string) (authToken *model.AuthToken, ok bool) {
 	appCtx := c.AppContext()
 	authToken, err := orm.AuthToken(appCtx).GetByRefreshToken(refreshToken)
 	if err != nil {

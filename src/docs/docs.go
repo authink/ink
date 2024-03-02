@@ -55,13 +55,13 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -104,19 +104,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -168,19 +168,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -227,19 +227,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -284,19 +284,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -341,19 +341,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -398,19 +398,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -467,25 +467,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.PagingResponse-admin_groupRes"
+                            "$ref": "#/definitions/web.PagingResponse-admin_groupRes"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -528,19 +528,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -592,19 +592,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -657,19 +657,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -712,19 +712,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -779,19 +779,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -828,19 +828,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -886,19 +886,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -951,19 +951,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -1006,19 +1006,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -1082,19 +1082,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -1137,25 +1137,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.PagingResponse-admin_staffRes"
+                            "$ref": "#/definitions/web.PagingResponse-admin_staffRes"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -1198,19 +1198,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -1262,19 +1262,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -1317,25 +1317,25 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.PagingResponse-admin_tokenRes"
+                            "$ref": "#/definitions/web.PagingResponse-admin_tokenRes"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -1378,19 +1378,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -1436,7 +1436,7 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -1476,7 +1476,7 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -1516,7 +1516,7 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/inkstone.ClientError"
+                            "$ref": "#/definitions/web.ClientError"
                         }
                     },
                     "500": {
@@ -1946,77 +1946,6 @@ const docTemplate = `{
                 }
             }
         },
-        "inkstone.ClientError": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "message": {
-                    "type": "string"
-                }
-            }
-        },
-        "inkstone.PagingResponse-admin_groupRes": {
-            "type": "object",
-            "properties": {
-                "items": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/admin.groupRes"
-                    }
-                },
-                "limit": {
-                    "type": "integer"
-                },
-                "offset": {
-                    "type": "integer"
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "inkstone.PagingResponse-admin_staffRes": {
-            "type": "object",
-            "properties": {
-                "items": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/admin.staffRes"
-                    }
-                },
-                "limit": {
-                    "type": "integer"
-                },
-                "offset": {
-                    "type": "integer"
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "inkstone.PagingResponse-admin_tokenRes": {
-            "type": "object",
-            "properties": {
-                "items": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/admin.tokenRes"
-                    }
-                },
-                "limit": {
-                    "type": "integer"
-                },
-                "offset": {
-                    "type": "integer"
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
         "token.GrantReq": {
             "type": "object",
             "required": [
@@ -2087,6 +2016,77 @@ const docTemplate = `{
                 "type": "array",
                 "items": {
                     "type": "string"
+                }
+            }
+        },
+        "web.ClientError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "web.PagingResponse-admin_groupRes": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/admin.groupRes"
+                    }
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "offset": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "web.PagingResponse-admin_staffRes": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/admin.staffRes"
+                    }
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "offset": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "web.PagingResponse-admin_tokenRes": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/admin.tokenRes"
+                    }
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "offset": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         }

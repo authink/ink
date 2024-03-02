@@ -1,11 +1,12 @@
 package model
 
 import (
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/orm"
+	"github.com/authink/inkstone/util"
 )
 
 type App struct {
-	inkstone.Model
+	orm.Model
 	Name   string
 	Secret string
 	Active bool
@@ -14,11 +15,11 @@ type App struct {
 func NewApp(name, secret string) *App {
 	return &App{
 		Name:   name,
-		Secret: inkstone.Sha256(secret),
+		Secret: util.Sha256(secret),
 		Active: true,
 	}
 }
 
 func (app *App) Reset(secret string) {
-	app.Secret = inkstone.Sha256(secret)
+	app.Secret = util.Sha256(secret)
 }

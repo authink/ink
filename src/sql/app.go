@@ -3,44 +3,48 @@ package sql
 import (
 	"fmt"
 
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/sql"
 )
 
-type app struct{}
-
-// Save implements inkstone.SQL.
-func (*app) Save() string {
-	return fmt.Sprintf("INSERT INTO %s (name, secret) VALUES (:name, :secret) ON DUPLICATE KEY UPDATE active = :active, secret = :secret", table.App)
+type app interface {
+	sql.Inserter
+	sql.Saver
+	sql.Updater
+	sql.Geter
+	sql.GeterForUpdate
+	sql.Finder
 }
 
-func (*app) GetForUpdate() string {
-	return fmt.Sprintf("SELECT id, name, secret, active FROM %s WHERE id = ? FOR UPDATE", table.App)
-}
+type appImpl struct{}
 
-// Update implements inkstone.SQL.
-func (*app) Update() string {
-	return fmt.Sprintf("UPDATE %s SET active = :active, secret = :secret WHERE id = :id", table.App)
-}
-
-// Find implements inkstone.SQL.
-func (*app) Find() string {
+// Find implements app.
+func (a *appImpl) Find() string {
 	return fmt.Sprintf("SELECT id, created_at, updated_at, name, active FROM %s ORDER BY id ASC", table.App)
 }
 
-// Delete implements inkstone.SQL.
-func (*app) Delete() string {
-	panic("unimplemented")
-}
-
-// Get implements inkstone.SQL.
-func (*app) Get() string {
+// Get implements app.
+func (a *appImpl) Get() string {
 	return fmt.Sprintf("SELECT id, name, secret, active FROM %s WHERE id = ?", table.App)
 }
 
-// Insert implements inkstone.SQL.
-func (*app) Insert() string {
+// GetForUpdate implements app.
+func (a *appImpl) GetForUpdate() string {
+	return fmt.Sprintf("SELECT id, name, secret, active FROM %s WHERE id = ? FOR UPDATE", table.App)
+}
+
+// Insert implements app.
+func (a *appImpl) Insert() string {
 	return fmt.Sprintf("INSERT INTO %s (name, secret) VALUES (:name, :secret)", table.App)
 }
 
-var _ inkstone.SQL = (*app)(nil)
-var App = new(app)
+// Save implements app.
+func (a *appImpl) Save() string {
+	return fmt.Sprintf("INSERT INTO %s (name, secret) VALUES (:name, :secret) ON DUPLICATE KEY UPDATE active = :active, secret = :secret", table.App)
+}
+
+// Update implements app.
+func (a *appImpl) Update() string {
+	return fmt.Sprintf("UPDATE %s SET active = :active, secret = :secret WHERE id = :id", table.App)
+}
+
+var App app = new(appImpl)

@@ -292,52 +292,6 @@ definitions:
       value:
         type: string
     type: object
-  inkstone.ClientError:
-    properties:
-      code:
-        type: string
-      message:
-        type: string
-    type: object
-  inkstone.PagingResponse-admin_groupRes:
-    properties:
-      items:
-        items:
-          $ref: '#/definitions/admin.groupRes'
-        type: array
-      limit:
-        type: integer
-      offset:
-        type: integer
-      total:
-        type: integer
-    type: object
-  inkstone.PagingResponse-admin_staffRes:
-    properties:
-      items:
-        items:
-          $ref: '#/definitions/admin.staffRes'
-        type: array
-      limit:
-        type: integer
-      offset:
-        type: integer
-      total:
-        type: integer
-    type: object
-  inkstone.PagingResponse-admin_tokenRes:
-    properties:
-      items:
-        items:
-          $ref: '#/definitions/admin.tokenRes'
-        type: array
-      limit:
-        type: integer
-      offset:
-        type: integer
-      total:
-        type: integer
-    type: object
   token.GrantReq:
     properties:
       appId:
@@ -390,6 +344,52 @@ definitions:
         type: string
       type: array
     type: object
+  web.ClientError:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+    type: object
+  web.PagingResponse-admin_groupRes:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/admin.groupRes'
+        type: array
+      limit:
+        type: integer
+      offset:
+        type: integer
+      total:
+        type: integer
+    type: object
+  web.PagingResponse-admin_staffRes:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/admin.staffRes'
+        type: array
+      limit:
+        type: integer
+      offset:
+        type: integer
+      total:
+        type: integer
+    type: object
+  web.PagingResponse-admin_tokenRes:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/admin.tokenRes'
+        type: array
+      limit:
+        type: integer
+      offset:
+        type: integer
+      total:
+        type: integer
+    type: object
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
@@ -420,11 +420,11 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -451,15 +451,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -492,15 +492,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -530,15 +530,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -566,15 +566,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -602,15 +602,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -638,15 +638,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -683,19 +683,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/inkstone.PagingResponse-admin_groupRes'
+            $ref: '#/definitions/web.PagingResponse-admin_groupRes'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -722,15 +722,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -763,15 +763,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -808,15 +808,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -849,15 +849,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -884,15 +884,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -915,15 +915,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -952,15 +952,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -1004,15 +1004,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -1045,15 +1045,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -1080,15 +1080,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -1115,19 +1115,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/inkstone.PagingResponse-admin_staffRes'
+            $ref: '#/definitions/web.PagingResponse-admin_staffRes'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -1154,15 +1154,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -1195,15 +1195,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -1230,19 +1230,19 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/inkstone.PagingResponse-admin_tokenRes'
+            $ref: '#/definitions/web.PagingResponse-admin_tokenRes'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -1269,15 +1269,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "403":
           description: Forbidden
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -1309,7 +1309,7 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -1335,7 +1335,7 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:
@@ -1361,7 +1361,7 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/inkstone.ClientError'
+            $ref: '#/definitions/web.ClientError'
         "500":
           description: Internal Server Error
           schema:

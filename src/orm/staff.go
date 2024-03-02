@@ -3,76 +3,37 @@ package orm
 import (
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/sql"
-	"github.com/authink/inkstone"
+	a "github.com/authink/inkstone/app"
+	"github.com/authink/inkstone/orm"
 	"github.com/jmoiron/sqlx"
 )
 
 type staff interface {
-	inkstone.ORM[model.Staff]
-	GetWithTx(int, *sqlx.Tx) (*model.Staff, error)
-	CountWithTx(*sqlx.Tx) (int, error)
-	PaginationWithTx(offset, limit int, tx *sqlx.Tx) ([]model.Staff, error)
+	orm.Inserter[model.Staff]
+	orm.Saver[model.Staff]
+	orm.Updater[model.Staff]
+	orm.Geter[model.Staff]
+	orm.Counter
+	orm.Pager[model.Staff]
+	// inkstone.ORM[model.Staff]
+	// GetWithTx(int, *sqlx.Tx) (*model.Staff, error)
+	// CountWithTx(*sqlx.Tx) (int, error)
+	// PaginationWithTx(offset, limit int, tx *sqlx.Tx) ([]model.Staff, error)
 	GetByEmail(string) (*model.Staff, error)
 }
 
-type staffImpl inkstone.AppContext
+type staffImpl a.AppContext
 
-// Update implements staff.
-func (s *staffImpl) Update(staff *model.Staff) error {
-	return namedExec(s.DB, sql.Staff.Update(), staff, nil)
-}
-
-// UpdateWithTx implements staff.
-func (*staffImpl) UpdateWithTx(staff *model.Staff, tx *sqlx.Tx) error {
-	return namedExec(tx, sql.Staff.Update(), staff, nil)
-}
-
-// Insert implements staff.
-func (s *staffImpl) Insert(staff *model.Staff) error {
-	return namedExec(s.DB, sql.Staff.Insert(), staff, handleInsertResult)
-}
-
-// InsertWithTx implements staff.
-func (s *staffImpl) InsertWithTx(staff *model.Staff, tx *sqlx.Tx) error {
-	return namedExec(tx, sql.Staff.Insert(), staff, handleInsertResult)
-}
-
-// GetWithTx implements staff.
-func (*staffImpl) GetWithTx(id int, tx *sqlx.Tx) (staff *model.Staff, err error) {
-	staff = new(model.Staff)
-	err = tx.Get(
-		staff,
-		sql.Staff.GetForUpdate(),
-		id,
-	)
+// Count implements staff.
+func (s *staffImpl) Count(args ...any) (c int, err error) {
+	err = s.DB.Get(&c, sql.Staff.Count())
 	return
 }
 
-// CountWithTx implements staff.
-func (*staffImpl) CountWithTx(tx *sqlx.Tx) (c int, err error) {
+// CountTx implements staff.
+func (s *staffImpl) CountTx(tx *sqlx.Tx, args ...any) (c int, err error) {
 	err = tx.Get(&c, sql.Staff.Count())
 	return
-}
-
-// PaginationWithTx implements staff.
-func (*staffImpl) PaginationWithTx(offset, limit int, tx *sqlx.Tx) (staffs []model.Staff, err error) {
-	err = tx.Select(
-		&staffs,
-		sql.Staff.Pagination(),
-		limit,
-		offset,
-	)
-	return
-}
-
-// Delete implements staff.
-func (*staffImpl) Delete(int) error {
-	panic("unimplemented")
-}
-
-// Find implements staff.
-func (*staffImpl) Find() ([]model.Staff, error) {
-	panic("unimplemented")
 }
 
 // GetByEmail implements staff.
@@ -87,6 +48,7 @@ func (s *staffImpl) GetByEmail(email string) (staff *model.Staff, err error) {
 }
 
 // Get implements staff.
+// Subtle: this method shadows the method (*DB).Get of staffImpl.DB.
 func (s *staffImpl) Get(id int) (staff *model.Staff, err error) {
 	staff = new(model.Staff)
 	err = s.DB.Get(
@@ -97,18 +59,59 @@ func (s *staffImpl) Get(id int) (staff *model.Staff, err error) {
 	return
 }
 
+// GetTx implements staff.
+func (s *staffImpl) GetTx(tx *sqlx.Tx, id int) (staff *model.Staff, err error) {
+	staff = new(model.Staff)
+	err = tx.Get(
+		staff,
+		sql.Staff.GetForUpdate(),
+		id,
+	)
+	return
+}
+
+// Insert implements staff.
+func (s *staffImpl) Insert(staff *model.Staff) error {
+	return namedExec(s.DB, sql.Staff.Insert(), staff, handleInsertResult)
+}
+
+// InsertTx implements staff.
+func (s *staffImpl) InsertTx(tx *sqlx.Tx, staff *model.Staff) error {
+	return namedExec(tx, sql.Staff.Insert(), staff, handleInsertResult)
+}
+
+// PaginationTx implements staff.
+func (s *staffImpl) PaginationTx(tx *sqlx.Tx, page orm.Page) (staffs []model.Staff, err error) {
+	stmt, err := tx.PrepareNamed(sql.Staff.Pagination())
+	if err != nil {
+		return
+	}
+	err = stmt.Select(&staffs, page)
+	return
+}
+
 // Save implements staff.
 func (s *staffImpl) Save(staff *model.Staff) error {
 	return namedExec(s.DB, sql.Staff.Save(), staff, handleSaveResult)
 }
 
-// SaveWithTx implements staff.
-func (*staffImpl) SaveWithTx(staff *model.Staff, tx *sqlx.Tx) (err error) {
+// SaveTx implements staff.
+func (s *staffImpl) SaveTx(tx *sqlx.Tx, staff *model.Staff) error {
 	return namedExec(tx, sql.Staff.Save(), staff, handleSaveResult)
+}
+
+// Update implements staff.
+func (s *staffImpl) Update(staff *model.Staff) error {
+	return namedExec(s.DB, sql.Staff.Update(), staff, nil)
+}
+
+// UpdateTx implements staff.
+func (s *staffImpl) UpdateTx(tx *sqlx.Tx, staff *model.Staff) error {
+	return namedExec(tx, sql.Staff.Update(), staff, nil)
 }
 
 var _ staff = (*staffImpl)(nil)
 
-func Staff(appCtx *inkstone.AppContext) staff {
+func Staff(appCtx *a.AppContext) staff {
 	return (*staffImpl)(appCtx)
 }

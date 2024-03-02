@@ -8,12 +8,12 @@ import (
 
 	"github.com/authink/ink.go/src/env"
 	"github.com/authink/ink.go/src/router/token"
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/test"
 	"github.com/stretchr/testify/assert"
 )
 
 func getApps(accessToken string, resObj any) (*httptest.ResponseRecorder, error) {
-	return inkstone.TestFetch(
+	return test.Fetch(
 		ctx,
 		http.MethodGet,
 		"admin/apps",
@@ -41,7 +41,7 @@ func TestApps(t *testing.T) {
 
 func tAddApp(accessToken, name string, resObj any) (*httptest.ResponseRecorder, error) {
 	reqObj := &addAppReq{name}
-	return inkstone.TestFetch(
+	return test.Fetch(
 		ctx,
 		http.MethodPost,
 		"admin/apps",
@@ -68,7 +68,7 @@ func TestAddApp(t *testing.T) {
 }
 
 func tUpdateApp(accessToken string, id int, reqObj, resObj any) (*httptest.ResponseRecorder, error) {
-	return inkstone.TestFetch(
+	return test.Fetch(
 		ctx,
 		http.MethodPut,
 		fmt.Sprintf("admin/apps/%d", id),

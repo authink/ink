@@ -7,7 +7,7 @@ import (
 	"github.com/authink/ink.go/src/errors"
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/ink.go/src/util"
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/web"
 )
 
 type refreshReq struct {
@@ -23,9 +23,9 @@ type refreshReq struct {
 //	@Router			/token/refresh [post]
 //	@Param			refreshReq	body		refreshReq	true	"request body"
 //	@Success		200			{object}	GrantRes
-//	@Failure		400			{object}	inkstone.ClientError
+//	@Failure		400			{object}	web.ClientError
 //	@Failure		500			{string}	empty
-func refresh(c *inkstone.Context) {
+func refresh(c *web.Context) {
 	req := new(refreshReq)
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)

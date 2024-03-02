@@ -3,40 +3,18 @@ package sql
 import (
 	"fmt"
 
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/sql"
 )
 
-type deptStaff struct{}
-
-// Delete implements inkstone.SQL.
-func (d *deptStaff) Delete() string {
-	panic("unimplemented")
+type deptStaff interface {
+	sql.Inserter
 }
 
-// Find implements inkstone.SQL.
-func (d *deptStaff) Find() string {
-	panic("unimplemented")
-}
+type deptStaffImpl struct{}
 
-// Get implements inkstone.SQL.
-func (d *deptStaff) Get() string {
-	panic("unimplemented")
-}
-
-// Insert implements inkstone.SQL.
-func (d *deptStaff) Insert() string {
+// Insert implements deptStaff.
+func (d *deptStaffImpl) Insert() string {
 	return fmt.Sprintf("INSERT INTO %s (dept_id, staff_id) VALUES (:dept_id, :staff_id)", table.DeptStaff)
 }
 
-// Save implements inkstone.SQL.
-func (d *deptStaff) Save() string {
-	panic("unimplemented")
-}
-
-// Update implements inkstone.SQL.
-func (d *deptStaff) Update() string {
-	panic("unimplemented")
-}
-
-var _ inkstone.SQL = (*deptStaff)(nil)
-var DeptStaff = new(deptStaff)
+var DeptStaff deptStaff = new(deptStaffImpl)

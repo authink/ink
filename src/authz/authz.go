@@ -3,7 +3,7 @@ package authz
 import (
 	_ "embed"
 
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/app"
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
 	"github.com/memwey/casbin-sqlx-adapter"
@@ -15,13 +15,13 @@ var (
 	enforcer *casbin.Enforcer
 )
 
-func SetupEnforcer(appCtx *inkstone.AppContext) {
+func SetupEnforcer(appCtx *app.AppContext) {
 	model, err := model.NewModelFromString(rbac)
 	if err != nil {
 		panic(err)
 	}
 
-	adapter := sqlxadapter.NewAdapterByDB(appCtx.DB)
+	adapter := sqlxadapter.NewAdapterByDB(appCtx.DB.DB)
 
 	enforcer, err = casbin.NewEnforcer(model, adapter)
 	if err != nil {

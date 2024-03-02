@@ -3,31 +3,16 @@ package orm
 import (
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/sql"
-	"github.com/authink/inkstone"
+	a "github.com/authink/inkstone/app"
+	"github.com/authink/inkstone/orm"
 	"github.com/jmoiron/sqlx"
 )
 
 type dept interface {
-	inkstone.ORM[model.Department]
+	orm.Inserter[model.Department]
 }
 
-type deptImpl inkstone.AppContext
-
-// Delete implements dept.
-func (d *deptImpl) Delete(int) error {
-	panic("unimplemented")
-}
-
-// Find implements dept.
-func (d *deptImpl) Find() ([]model.Department, error) {
-	panic("unimplemented")
-}
-
-// Get implements dept.
-// Subtle: this method shadows the method (*DB).Get of deptImpl.DB.
-func (d *deptImpl) Get(int) (*model.Department, error) {
-	panic("unimplemented")
-}
+type deptImpl a.AppContext
 
 // Insert implements dept.
 func (d *deptImpl) Insert(dept *model.Department) error {
@@ -35,32 +20,12 @@ func (d *deptImpl) Insert(dept *model.Department) error {
 }
 
 // InsertWithTx implements dept.
-func (d *deptImpl) InsertWithTx(*model.Department, *sqlx.Tx) error {
-	panic("unimplemented")
-}
-
-// Save implements dept.
-func (d *deptImpl) Save(*model.Department) error {
-	panic("unimplemented")
-}
-
-// SaveWithTx implements dept.
-func (d *deptImpl) SaveWithTx(*model.Department, *sqlx.Tx) error {
-	panic("unimplemented")
-}
-
-// Update implements dept.
-func (d *deptImpl) Update(*model.Department) error {
-	panic("unimplemented")
-}
-
-// UpdateWithTx implements dept.
-func (d *deptImpl) UpdateWithTx(*model.Department, *sqlx.Tx) error {
-	panic("unimplemented")
+func (d *deptImpl) InsertTx(tx *sqlx.Tx, dept *model.Department) error {
+	return namedExec(tx, sql.Dept.Insert(), dept, handleInsertResult)
 }
 
 var _ dept = (*deptImpl)(nil)
 
-func Dept(appCtx *inkstone.AppContext) dept {
+func Dept(appCtx *a.AppContext) dept {
 	return (*deptImpl)(appCtx)
 }

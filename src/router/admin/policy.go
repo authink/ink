@@ -7,16 +7,16 @@ import (
 	"github.com/authink/ink.go/src/authz"
 	"github.com/authink/ink.go/src/errors"
 	"github.com/authink/ink.go/src/middleware"
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
 )
 
 func setupPolicyGroup(gAdmin *gin.RouterGroup) {
 	gPolicies := gAdmin.Group(authz.Policies.Name)
 	gPolicies.Use(middleware.Authz(authz.Policies))
-	gPolicies.GET("", inkstone.HandlerAdapter(policies))
-	gPolicies.POST("", inkstone.HandlerAdapter(addPolicy))
-	gPolicies.DELETE("", inkstone.HandlerAdapter(deletePolicy))
+	gPolicies.GET("", web.HandlerAdapter(policies))
+	gPolicies.POST("", web.HandlerAdapter(addPolicy))
+	gPolicies.DELETE("", web.HandlerAdapter(deletePolicy))
 }
 
 type policyReq struct {
@@ -39,11 +39,11 @@ type policyRes struct {
 //	@Param			g	query		int	true	"g"
 //	@Param			dom	query		int	true	"dom"
 //	@Success		200	{array}		policyRes
-//	@Failure		400	{object}	inkstone.ClientError
-//	@Failure		401	{object}	inkstone.ClientError
-//	@Failure		403	{object}	inkstone.ClientError
+//	@Failure		400	{object}	web.ClientError
+//	@Failure		401	{object}	web.ClientError
+//	@Failure		403	{object}	web.ClientError
 //	@Failure		500	{string}	empty
-func policies(c *inkstone.Context) {
+func policies(c *web.Context) {
 	req := new(policyReq)
 	if err := c.ShouldBindQuery(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
@@ -86,11 +86,11 @@ type addPolicyReq struct {
 //	@Security		ApiKeyAuth
 //	@Param			addPolicyReq	body		addPolicyReq	true	"request body"
 //	@Success		200				{string}	empty
-//	@Failure		400				{object}	inkstone.ClientError
-//	@Failure		401				{object}	inkstone.ClientError
-//	@Failure		403				{object}	inkstone.ClientError
+//	@Failure		400				{object}	web.ClientError
+//	@Failure		401				{object}	web.ClientError
+//	@Failure		403				{object}	web.ClientError
 //	@Failure		500				{string}	empty
-func addPolicy(c *inkstone.Context) {
+func addPolicy(c *web.Context) {
 	req := new(addPolicyReq)
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
@@ -121,11 +121,11 @@ func addPolicy(c *inkstone.Context) {
 //	@Param			obj	query		string	true	"obj"	example(admin.dev/apps)
 //	@Param			act	query		string	true	"act"	example(GET)
 //	@Success		200	{string}	empty
-//	@Failure		400	{object}	inkstone.ClientError
-//	@Failure		401	{object}	inkstone.ClientError
-//	@Failure		403	{object}	inkstone.ClientError
+//	@Failure		400	{object}	web.ClientError
+//	@Failure		401	{object}	web.ClientError
+//	@Failure		403	{object}	web.ClientError
 //	@Failure		500	{string}	empty
-func deletePolicy(c *inkstone.Context) {
+func deletePolicy(c *web.Context) {
 	req := new(addPolicyReq)
 	if err := c.ShouldBindQuery(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)

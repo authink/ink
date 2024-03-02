@@ -7,12 +7,13 @@ import (
 	"testing"
 
 	"github.com/authink/ink.go/src/router/token"
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/test"
+	"github.com/authink/inkstone/web"
 	"github.com/stretchr/testify/assert"
 )
 
 func getStaffs(accessToken string, resObj any) (*httptest.ResponseRecorder, error) {
-	return inkstone.TestFetch(
+	return test.Fetch(
 		ctx,
 		http.MethodGet,
 		"admin/staffs?limit=1",
@@ -30,7 +31,7 @@ func TestStaffs(t *testing.T) {
 	assert.NotEmpty(t, resObj.AccessToken)
 	assert.NotEmpty(t, resObj.RefreshToken)
 
-	var res inkstone.PagingResponse[staffRes]
+	var res web.PagingResponse[staffRes]
 	w2, _ := getStaffs(resObj.AccessToken, &res)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Equal(t, 1, len(res.Items))
@@ -38,7 +39,7 @@ func TestStaffs(t *testing.T) {
 
 func tAddStaff(accessToken, email, phone string, resObj any) (*httptest.ResponseRecorder, error) {
 	reqObj := &addStaffReq{email, phone}
-	return inkstone.TestFetch(
+	return test.Fetch(
 		ctx,
 		http.MethodPost,
 		"admin/staffs",
@@ -65,7 +66,7 @@ func TestAddStaff(t *testing.T) {
 }
 
 func tUpdateStaff(accessToken string, id int, reqObj, resObj any) (*httptest.ResponseRecorder, error) {
-	return inkstone.TestFetch(
+	return test.Fetch(
 		ctx,
 		http.MethodPut,
 		fmt.Sprintf("admin/staffs/%d", id),

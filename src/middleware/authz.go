@@ -10,14 +10,14 @@ import (
 	"github.com/authink/ink.go/src/errors"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/orm"
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
 )
 
 const ROOT string = "root"
 
 func Authz(obj authz.Obj) gin.HandlerFunc {
-	return inkstone.HandlerAdapter(func(c *inkstone.Context) {
+	return web.HandlerAdapter(func(c *web.Context) {
 		var app = c.MustGet("app").(*model.App)
 
 		switch app.Name {

@@ -6,16 +6,16 @@ import (
 	"github.com/authink/ink.go/src/middleware"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/orm"
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
 )
 
 func setupDeptGroup(gAdmin *gin.RouterGroup) {
 	gDepts := gAdmin.Group(authz.Departments.Name)
 	gDepts.Use(middleware.Authz(authz.Departments))
-	gDepts.POST("", inkstone.HandlerAdapter(addDept))
-	gDepts.POST("levels", inkstone.HandlerAdapter(addDeptLevel))
-	gDepts.POST("staffs", inkstone.HandlerAdapter(addDeptStaff))
+	gDepts.POST("", web.HandlerAdapter(addDept))
+	gDepts.POST("levels", web.HandlerAdapter(addDeptLevel))
+	gDepts.POST("staffs", web.HandlerAdapter(addDeptStaff))
 }
 
 type addDeptReq struct {
@@ -32,11 +32,11 @@ type addDeptReq struct {
 //	@Security		ApiKeyAuth
 //	@Param			addDeptReq	body		addDeptReq	true	"request body"
 //	@Success		200			{string}	empty
-//	@Failure		400			{object}	inkstone.ClientError
-//	@Failure		401			{object}	inkstone.ClientError
-//	@Failure		403			{object}	inkstone.ClientError
+//	@Failure		400			{object}	web.ClientError
+//	@Failure		401			{object}	web.ClientError
+//	@Failure		403			{object}	web.ClientError
 //	@Failure		500			{string}	empty
-func addDept(c *inkstone.Context) {
+func addDept(c *web.Context) {
 	req := new(addDeptReq)
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
@@ -65,11 +65,11 @@ type addDeptLevelReq struct {
 //	@Security		ApiKeyAuth
 //	@Param			addDeptLevelReq	body		addDeptLevelReq	true	"request body"
 //	@Success		200				{string}	empty
-//	@Failure		400				{object}	inkstone.ClientError
-//	@Failure		401				{object}	inkstone.ClientError
-//	@Failure		403				{object}	inkstone.ClientError
+//	@Failure		400				{object}	web.ClientError
+//	@Failure		401				{object}	web.ClientError
+//	@Failure		403				{object}	web.ClientError
 //	@Failure		500				{string}	empty
-func addDeptLevel(c *inkstone.Context) {
+func addDeptLevel(c *web.Context) {
 	req := new(addDeptLevelReq)
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
@@ -101,11 +101,11 @@ type addDeptStaffReq struct {
 //	@Security		ApiKeyAuth
 //	@Param			addDeptStaffReq	body		addDeptStaffReq	true	"request body"
 //	@Success		200				{string}	empty
-//	@Failure		400				{object}	inkstone.ClientError
-//	@Failure		401				{object}	inkstone.ClientError
-//	@Failure		403				{object}	inkstone.ClientError
+//	@Failure		400				{object}	web.ClientError
+//	@Failure		401				{object}	web.ClientError
+//	@Failure		403				{object}	web.ClientError
 //	@Failure		500				{string}	empty
-func addDeptStaff(c *inkstone.Context) {
+func addDeptStaff(c *web.Context) {
 	req := new(addDeptStaffReq)
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)

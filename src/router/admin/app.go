@@ -7,7 +7,7 @@ import (
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/ink.go/src/util"
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
@@ -17,13 +17,13 @@ import (
 func setupAppGroup(gAdmin *gin.RouterGroup) {
 	gApps := gAdmin.Group(authz.Apps.Name)
 	gApps.Use(middleware.Authz(authz.Apps))
-	gApps.GET("", inkstone.HandlerAdapter(apps))
-	gApps.POST("", inkstone.HandlerAdapter(addApp))
-	gApps.PUT(":id", inkstone.HandlerAdapter(updateApp))
+	gApps.GET("", web.HandlerAdapter(apps))
+	gApps.POST("", web.HandlerAdapter(addApp))
+	gApps.PUT(":id", web.HandlerAdapter(updateApp))
 }
 
 type appRes struct {
-	inkstone.Response
+	web.Response
 	Name   string `json:"name,omitempty"`
 	Secret string `json:"secret,omitempty"`
 	Active bool   `json:"active"`
@@ -37,10 +37,10 @@ type appRes struct {
 //	@Router			/admin/apps	[get]
 //	@Security		ApiKeyAuth
 //	@Success		200	{array}		appRes
-//	@Failure		401	{object}	inkstone.ClientError
-//	@Failure		403	{object}	inkstone.ClientError
+//	@Failure		401	{object}	web.ClientError
+//	@Failure		403	{object}	web.ClientError
 //	@Failure		500	{string}	empty
-func apps(c *inkstone.Context) {
+func apps(c *web.Context) {
 	appCtx := c.AppContext()
 
 	apps, err := orm.App(appCtx).Find()
@@ -53,7 +53,7 @@ func apps(c *inkstone.Context) {
 	for i := range apps {
 		app := &apps[i]
 		res = append(res, appRes{
-			Response: inkstone.Response{
+			Response: web.Response{
 				Id:        int(app.Id),
 				CreatedAt: app.CreatedAt,
 				UpdatedAt: app.UpdatedAt,
@@ -79,11 +79,11 @@ type addAppReq struct {
 //	@Security		ApiKeyAuth
 //	@Param			addAppReq	body		addAppReq	true	"request body"
 //	@Success		200			{object}	appRes
-//	@Failure		400			{object}	inkstone.ClientError
-//	@Failure		401			{object}	inkstone.ClientError
-//	@Failure		403			{object}	inkstone.ClientError
+//	@Failure		400			{object}	web.ClientError
+//	@Failure		401			{object}	web.ClientError
+//	@Failure		403			{object}	web.ClientError
 //	@Failure		500			{string}	empty
-func addApp(c *inkstone.Context) {
+func addApp(c *web.Context) {
 	req := new(addAppReq)
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
@@ -98,7 +98,7 @@ func addApp(c *inkstone.Context) {
 	}
 
 	c.Response(&appRes{
-		Response: inkstone.Response{
+		Response: web.Response{
 			Id: int(app.Id),
 		},
 		Name:   app.Name,
@@ -126,11 +126,11 @@ type updateAppReq struct {
 //	@Param			id				path		int				true	"app id"
 //	@Param			updateAppReq	body		updateAppReq	true	"request body"
 //	@Success		200				{object}	appRes
-//	@Failure		400				{object}	inkstone.ClientError
-//	@Failure		401				{object}	inkstone.ClientError
-//	@Failure		403				{object}	inkstone.ClientError
+//	@Failure		400				{object}	web.ClientError
+//	@Failure		401				{object}	web.ClientError
+//	@Failure		403				{object}	web.ClientError
 //	@Failure		500				{string}	empty
-func updateApp(c *inkstone.Context) {
+func updateApp(c *web.Context) {
 	param := new(updateAppParam)
 
 	if err := c.ShouldBindUri(param); err != nil {
@@ -141,7 +141,7 @@ func updateApp(c *inkstone.Context) {
 	req := new(updateAppReq)
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-		v.RegisterStructValidation(inkstone.ValidationNotAllFieldsZero, req)
+		v.RegisterStructValidation(web.ValidationNotAllFieldsZero, req)
 	}
 
 	var currentApp = c.MustGet("app").(*model.App)
@@ -156,8 +156,8 @@ func updateApp(c *inkstone.Context) {
 		secret string
 	)
 
-	if err := inkstone.Transaction(appCtx, func(tx *sqlx.Tx) (err error) {
-		app, err = orm.App(appCtx).GetWithTx(param.Id, tx)
+	if err := appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
+		app, err = orm.App(appCtx).GetTx(tx, param.Id)
 		if err != nil {
 			return
 		}
@@ -170,14 +170,14 @@ func updateApp(c *inkstone.Context) {
 			app.Active = !app.Active
 		}
 
-		return orm.App(appCtx).UpdateWithTx(app, tx)
+		return orm.App(appCtx).UpdateTx(tx, app)
 	}); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}
 
 	c.Response(&appRes{
-		Response: inkstone.Response{
+		Response: web.Response{
 			Id: int(app.Id),
 		},
 		Name:   app.Name,

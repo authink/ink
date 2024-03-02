@@ -8,7 +8,8 @@ import (
 	"github.com/authink/ink.go/src/middleware"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/orm"
-	"github.com/authink/inkstone"
+	o "github.com/authink/inkstone/orm"
+	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
@@ -18,9 +19,9 @@ import (
 func setupGroupGroup(gAdmin *gin.RouterGroup) {
 	gGroups := gAdmin.Group(authz.Groups.Name)
 	gGroups.Use(middleware.Authz(authz.Groups))
-	gGroups.GET("", inkstone.HandlerAdapter(groups))
-	gGroups.POST("", inkstone.HandlerAdapter(addGroup))
-	gGroups.PUT(":id", inkstone.HandlerAdapter(updateGroup))
+	gGroups.GET("", web.HandlerAdapter(groups))
+	gGroups.POST("", web.HandlerAdapter(addGroup))
+	gGroups.PUT(":id", web.HandlerAdapter(updateGroup))
 }
 
 type groupReq struct {
@@ -29,12 +30,12 @@ type groupReq struct {
 }
 
 type pagingGroupReq struct {
-	inkstone.PagingRequest
+	web.PagingRequest
 	groupReq
 }
 
 type groupRes struct {
-	inkstone.Response
+	web.Response
 	Name    string `json:"name,omitempty"`
 	Type    int    `json:"type,omitempty"`
 	AppId   int    `json:"appId,omitempty"`
@@ -53,12 +54,12 @@ type groupRes struct {
 //	@Param			appId	query		int	true	"appId"
 //	@Param			offset	query		int	false	"offset"
 //	@Param			limit	query		int	true	"limit"
-//	@Success		200		{object}	inkstone.PagingResponse[groupRes]
-//	@Failure		400		{object}	inkstone.ClientError
-//	@Failure		401		{object}	inkstone.ClientError
-//	@Failure		403		{object}	inkstone.ClientError
+//	@Success		200		{object}	web.PagingResponse[groupRes]
+//	@Failure		400		{object}	web.ClientError
+//	@Failure		401		{object}	web.ClientError
+//	@Failure		403		{object}	web.ClientError
 //	@Failure		500		{string}	empty
-func groups(c *inkstone.Context) {
+func groups(c *web.Context) {
 	appCtx := c.AppContext()
 
 	req := new(pagingGroupReq)
@@ -70,12 +71,21 @@ func groups(c *inkstone.Context) {
 	var total int
 	var groups []model.GroupWithApp
 
-	if err := inkstone.Transaction(appCtx, func(tx *sqlx.Tx) (err error) {
-		if total, err = orm.Group(appCtx).CountWithTx(req.Type, req.AppId, tx); err != nil {
+	if err := appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
+		groupPage := orm.GroupPageArg{
+			PageArgs: o.PageArgs{
+				Offset: req.Offset,
+				Limit:  req.Limit,
+			},
+			Type:  req.Type,
+			AppId: req.AppId,
+		}
+
+		if total, err = orm.Group(appCtx).CountTx(tx, &groupPage); err != nil {
 			return
 		}
 
-		groups, err = orm.Group(appCtx).PaginationWithTx(req.Type, req.AppId, req.Offset, req.Limit, tx)
+		groups, err = orm.Group(appCtx).PaginationTx(tx, &groupPage)
 		return
 	}); err != nil {
 		c.AbortWithServerError(err)
@@ -86,7 +96,7 @@ func groups(c *inkstone.Context) {
 	for i := range groups {
 		group := &groups[i]
 		res = append(res, groupRes{
-			Response: inkstone.Response{
+			Response: web.Response{
 				Id:        int(group.Id),
 				CreatedAt: group.CreatedAt,
 				UpdatedAt: group.UpdatedAt,
@@ -99,7 +109,7 @@ func groups(c *inkstone.Context) {
 		})
 	}
 
-	c.Response(&inkstone.PagingResponse[groupRes]{
+	c.Response(&web.PagingResponse[groupRes]{
 		Offset: req.Offset,
 		Limit:  req.Limit,
 		Total:  total,
@@ -121,11 +131,11 @@ type addGroupReq struct {
 //	@Security		ApiKeyAuth
 //	@Param			addGroupReq	body		addGroupReq	true	"request body"
 //	@Success		200			{object}	groupRes
-//	@Failure		400			{object}	inkstone.ClientError
-//	@Failure		401			{object}	inkstone.ClientError
-//	@Failure		403			{object}	inkstone.ClientError
+//	@Failure		400			{object}	web.ClientError
+//	@Failure		401			{object}	web.ClientError
+//	@Failure		403			{object}	web.ClientError
 //	@Failure		500			{string}	empty
-func addGroup(c *inkstone.Context) {
+func addGroup(c *web.Context) {
 	req := new(addGroupReq)
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
@@ -139,7 +149,7 @@ func addGroup(c *inkstone.Context) {
 	}
 
 	c.Response(&groupRes{
-		Response: inkstone.Response{
+		Response: web.Response{
 			Id: int(group.Id),
 		},
 		Name:   group.Name,
@@ -168,11 +178,11 @@ type updateGroupReq struct {
 //	@Param			id				path		int				true	"group id"
 //	@Param			updateGroupReq	body		updateGroupReq	true	"request body"
 //	@Success		200				{object}	groupRes
-//	@Failure		400				{object}	inkstone.ClientError
-//	@Failure		401				{object}	inkstone.ClientError
-//	@Failure		403				{object}	inkstone.ClientError
+//	@Failure		400				{object}	web.ClientError
+//	@Failure		401				{object}	web.ClientError
+//	@Failure		403				{object}	web.ClientError
 //	@Failure		500				{string}	empty
-func updateGroup(c *inkstone.Context) {
+func updateGroup(c *web.Context) {
 	param := new(updateGroupParam)
 
 	if err := c.ShouldBindUri(param); err != nil {
@@ -183,7 +193,7 @@ func updateGroup(c *inkstone.Context) {
 	req := new(updateGroupReq)
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-		v.RegisterStructValidation(inkstone.ValidationNotAllFieldsZero, req)
+		v.RegisterStructValidation(web.ValidationNotAllFieldsZero, req)
 	}
 
 	if err := c.ShouldBindJSON(req); err != nil {
@@ -196,8 +206,8 @@ func updateGroup(c *inkstone.Context) {
 		group  *model.Group
 	)
 
-	if err := inkstone.Transaction(appCtx, func(tx *sqlx.Tx) (err error) {
-		group, err = orm.Group(appCtx).GetWithTx(param.Id, tx)
+	if err := appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
+		group, err = orm.Group(appCtx).GetTx(tx, param.Id)
 		if err != nil {
 			return
 		}
@@ -211,14 +221,14 @@ func updateGroup(c *inkstone.Context) {
 			group.Active = !group.Active
 		}
 
-		return orm.Group(appCtx).UpdateWithTx(group, tx)
+		return orm.Group(appCtx).UpdateTx(tx, group)
 	}); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}
 
 	c.Response(&groupRes{
-		Response: inkstone.Response{
+		Response: web.Response{
 			Id: int(group.Id),
 		},
 		Name:   group.Name,

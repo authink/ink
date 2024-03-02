@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/orm"
 	"github.com/gin-gonic/gin"
 )
 
@@ -27,7 +27,7 @@ func (ld *LogDetail) String() string {
 }
 
 type Log struct {
-	inkstone.Model
+	orm.Created
 	Detail string
 }
 

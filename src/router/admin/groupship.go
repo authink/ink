@@ -6,16 +6,16 @@ import (
 	"github.com/authink/ink.go/src/authz"
 	"github.com/authink/ink.go/src/errors"
 	"github.com/authink/ink.go/src/middleware"
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
 )
 
 func setupGroupshipGroup(gAdmin *gin.RouterGroup) {
 	gGroupships := gAdmin.Group(authz.Groupships.Name)
 	gGroupships.Use(middleware.Authz(authz.Groupships))
-	gGroupships.GET("", inkstone.HandlerAdapter(groupships))
-	gGroupships.POST("", inkstone.HandlerAdapter(addGroupship))
-	gGroupships.DELETE("", inkstone.HandlerAdapter(deleteGroupship))
+	gGroupships.GET("", web.HandlerAdapter(groupships))
+	gGroupships.POST("", web.HandlerAdapter(addGroupship))
+	gGroupships.DELETE("", web.HandlerAdapter(deleteGroupship))
 }
 
 type groupshipReq struct {
@@ -33,11 +33,11 @@ type groupshipReq struct {
 //	@Param			sub	query		int	true	"sub"
 //	@Param			dom	query		int	true	"dom"
 //	@Success		200	{array}		string
-//	@Failure		400	{object}	inkstone.ClientError
-//	@Failure		401	{object}	inkstone.ClientError
-//	@Failure		403	{object}	inkstone.ClientError
+//	@Failure		400	{object}	web.ClientError
+//	@Failure		401	{object}	web.ClientError
+//	@Failure		403	{object}	web.ClientError
 //	@Failure		500	{string}	empty
-func groupships(c *inkstone.Context) {
+func groupships(c *web.Context) {
 	req := new(groupshipReq)
 	if err := c.ShouldBindQuery(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
@@ -70,11 +70,11 @@ type addGroupshipReq struct {
 //	@Security		ApiKeyAuth
 //	@Param			addGroupshipReq	body		addGroupshipReq	true	"request body"
 //	@Success		200				{string}	empty
-//	@Failure		400				{object}	inkstone.ClientError
-//	@Failure		401				{object}	inkstone.ClientError
-//	@Failure		403				{object}	inkstone.ClientError
+//	@Failure		400				{object}	web.ClientError
+//	@Failure		401				{object}	web.ClientError
+//	@Failure		403				{object}	web.ClientError
 //	@Failure		500				{string}	empty
-func addGroupship(c *inkstone.Context) {
+func addGroupship(c *web.Context) {
 	req := new(addGroupshipReq)
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
@@ -104,11 +104,11 @@ func addGroupship(c *inkstone.Context) {
 //	@Param			dom	query		int	true	"dom"
 //	@Param			g	query		int	true	"g"
 //	@Success		200	{string}	empty
-//	@Failure		400	{object}	inkstone.ClientError
-//	@Failure		401	{object}	inkstone.ClientError
-//	@Failure		403	{object}	inkstone.ClientError
+//	@Failure		400	{object}	web.ClientError
+//	@Failure		401	{object}	web.ClientError
+//	@Failure		403	{object}	web.ClientError
 //	@Failure		500	{string}	empty
-func deleteGroupship(c *inkstone.Context) {
+func deleteGroupship(c *web.Context) {
 	req := new(addGroupshipReq)
 	if err := c.ShouldBindQuery(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)

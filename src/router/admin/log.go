@@ -5,18 +5,18 @@ import (
 	"github.com/authink/ink.go/src/middleware"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/orm"
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
 )
 
 func setupLogGroup(gAdmin *gin.RouterGroup) {
 	gLogs := gAdmin.Group(authz.Logs.Name)
 	gLogs.Use(middleware.Authz(authz.Logs))
-	gLogs.GET("", inkstone.HandlerAdapter(logs))
+	gLogs.GET("", web.HandlerAdapter(logs))
 }
 
 type logRes struct {
-	inkstone.Response
+	web.Response
 	*model.LogDetail
 }
 
@@ -28,11 +28,11 @@ type logRes struct {
 //	@Router			/admin/logs	[get]
 //	@Security		ApiKeyAuth
 //	@Success		200	{array}		logRes
-//	@Failure		400	{object}	inkstone.ClientError
-//	@Failure		401	{object}	inkstone.ClientError
-//	@Failure		403	{object}	inkstone.ClientError
+//	@Failure		400	{object}	web.ClientError
+//	@Failure		401	{object}	web.ClientError
+//	@Failure		403	{object}	web.ClientError
 //	@Failure		500	{string}	empty
-func logs(c *inkstone.Context) {
+func logs(c *web.Context) {
 	logs, err := orm.Log(c.AppContext()).Find()
 	if err != nil {
 		c.AbortWithServerError(err)
@@ -41,7 +41,7 @@ func logs(c *inkstone.Context) {
 	var res = []logRes{}
 	for _, v := range logs {
 		res = append(res, logRes{
-			Response: inkstone.Response{
+			Response: web.Response{
 				Id:        int(v.Id),
 				CreatedAt: v.CreatedAt,
 			},

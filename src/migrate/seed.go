@@ -4,11 +4,11 @@ import (
 	"github.com/authink/ink.go/src/env"
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/orm"
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/app"
 	"github.com/jmoiron/sqlx"
 )
 
-func Seed(appCtx *inkstone.AppContext) {
+func Seed(appCtx *app.AppContext) {
 	admin := model.NewStaff(
 		"admin@huoyijie.cn",
 		"123456",
@@ -21,12 +21,12 @@ func Seed(appCtx *inkstone.AppContext) {
 		"123456",
 	)
 
-	if err := inkstone.Transaction(appCtx, func(tx *sqlx.Tx) (err error) {
-		if err = orm.Staff(appCtx).InsertWithTx(admin, tx); err != nil {
+	if err := appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
+		if err = orm.Staff(appCtx).InsertTx(tx, admin); err != nil {
 			return
 		}
 
-		return orm.App(appCtx).InsertWithTx(app, tx)
+		return orm.App(appCtx).InsertTx(tx, app)
 	}); err != nil {
 		panic(err)
 	}

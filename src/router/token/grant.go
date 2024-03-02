@@ -7,7 +7,8 @@ import (
 	"github.com/authink/ink.go/src/errors"
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/ink.go/src/util"
-	"github.com/authink/inkstone"
+	u "github.com/authink/inkstone/util"
+	"github.com/authink/inkstone/web"
 )
 
 type GrantReq struct {
@@ -33,9 +34,9 @@ type GrantRes struct {
 //	@Param			lang		query		string		false	"language"
 //	@Param			grantReq	body		GrantReq	true	"request body"
 //	@Success		200			{object}	GrantRes
-//	@Failure		400			{object}	inkstone.ClientError
+//	@Failure		400			{object}	web.ClientError
 //	@Failure		500			{string}	empty
-func grant(c *inkstone.Context) {
+func grant(c *web.Context) {
 	req := new(GrantReq)
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
@@ -49,7 +50,7 @@ func grant(c *inkstone.Context) {
 		case env.AppNameAdmin():
 			staff, err := orm.Staff(appCtx).GetByEmail(req.Email)
 
-			if ok := util.CheckStaff(c, err, staff.Active, staff.Departure, func() bool { return inkstone.CheckPassword(staff.Password, req.Password) == nil }, http.StatusBadRequest); !ok {
+			if ok := util.CheckStaff(c, err, staff.Active, staff.Departure, func() bool { return u.CheckPassword(staff.Password, req.Password) == nil }, http.StatusBadRequest); !ok {
 				return
 			}
 

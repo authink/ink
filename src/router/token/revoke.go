@@ -2,7 +2,7 @@ package token
 
 import (
 	"github.com/authink/ink.go/src/errors"
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/web"
 )
 
 // revoke godoc
@@ -13,9 +13,9 @@ import (
 //	@Router			/token/revoke [post]
 //	@Param			refreshReq	body		refreshReq	true	"request body"
 //	@Success		200			{string}	empty
-//	@Failure		400			{object}	inkstone.ClientError
+//	@Failure		400			{object}	web.ClientError
 //	@Failure		500			{string}	empty
-func revoke(c *inkstone.Context) {
+func revoke(c *web.Context) {
 	req := new(refreshReq)
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)

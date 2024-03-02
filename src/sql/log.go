@@ -3,40 +3,24 @@ package sql
 import (
 	"fmt"
 
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/sql"
 )
 
-type log struct{}
-
-// Delete implements inkstone.SQL.
-func (l *log) Delete() string {
-	panic("unimplemented")
+type log interface {
+	sql.Inserter
+	sql.Finder
 }
 
-// Find implements inkstone.SQL.
-func (l *log) Find() string {
+type logImpl struct{}
+
+// Find implements log.
+func (l *logImpl) Find() string {
 	return fmt.Sprintf("SELECT id, created_at, detail FROM %s ORDER BY id DESC", table.Log)
 }
 
-// Get implements inkstone.SQL.
-func (l *log) Get() string {
-	panic("unimplemented")
-}
-
-// Insert implements inkstone.SQL.
-func (l *log) Insert() string {
+// Insert implements log.
+func (l *logImpl) Insert() string {
 	return fmt.Sprintf("INSERT INTO %s (detail) VALUES (:detail)", table.Log)
 }
 
-// Save implements inkstone.SQL.
-func (l *log) Save() string {
-	panic("unimplemented")
-}
-
-// Update implements inkstone.SQL.
-func (l *log) Update() string {
-	panic("unimplemented")
-}
-
-var _ inkstone.SQL = (*log)(nil)
-var Log = new(log)
+var Log log = new(logImpl)

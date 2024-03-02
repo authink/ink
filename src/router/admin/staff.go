@@ -9,7 +9,8 @@ import (
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/ink.go/src/util"
-	"github.com/authink/inkstone"
+	o "github.com/authink/inkstone/orm"
+	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
@@ -19,13 +20,13 @@ import (
 func setupStaffGroup(gAdmin *gin.RouterGroup) {
 	gStaffs := gAdmin.Group(authz.Staffs.Name)
 	gStaffs.Use(middleware.Authz(authz.Staffs))
-	gStaffs.GET("", inkstone.HandlerAdapter(staffs))
-	gStaffs.POST("", inkstone.HandlerAdapter(addStaff))
-	gStaffs.PUT(":id", inkstone.HandlerAdapter(updateStaff))
+	gStaffs.GET("", web.HandlerAdapter(staffs))
+	gStaffs.POST("", web.HandlerAdapter(addStaff))
+	gStaffs.PUT(":id", web.HandlerAdapter(updateStaff))
 }
 
 type staffRes struct {
-	inkstone.Response
+	web.Response
 	Email     string `json:"email,omitempty"`
 	Password  string `json:"password,omitempty"`
 	Phone     string `json:"phone,omitempty"`
@@ -43,15 +44,15 @@ type staffRes struct {
 //	@Security		ApiKeyAuth
 //	@Param			offset	query		int	false	"offset"
 //	@Param			limit	query		int	true	"limit"
-//	@Success		200		{object}	inkstone.PagingResponse[staffRes]
-//	@Failure		400		{object}	inkstone.ClientError
-//	@Failure		401		{object}	inkstone.ClientError
-//	@Failure		403		{object}	inkstone.ClientError
+//	@Success		200		{object}	web.PagingResponse[staffRes]
+//	@Failure		400		{object}	web.ClientError
+//	@Failure		401		{object}	web.ClientError
+//	@Failure		403		{object}	web.ClientError
 //	@Failure		500		{string}	empty
-func staffs(c *inkstone.Context) {
+func staffs(c *web.Context) {
 	appCtx := c.AppContext()
 
-	req := new(inkstone.PagingRequest)
+	req := new(web.PagingRequest)
 	if err := c.ShouldBindQuery(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
 		return
@@ -60,12 +61,17 @@ func staffs(c *inkstone.Context) {
 	var total int
 	var staffs []model.Staff
 
-	if err := inkstone.Transaction(appCtx, func(tx *sqlx.Tx) (err error) {
-		if total, err = orm.Staff(appCtx).CountWithTx(tx); err != nil {
+	if err := appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
+		if total, err = orm.Staff(appCtx).CountTx(tx); err != nil {
 			return
 		}
 
-		staffs, err = orm.Staff(appCtx).PaginationWithTx(req.Offset, req.Limit, tx)
+		pageArgs := o.PageArgs{
+			Offset: req.Offset,
+			Limit:  req.Limit,
+		}
+
+		staffs, err = orm.Staff(appCtx).PaginationTx(tx, &pageArgs)
 		return
 	}); err != nil {
 		c.AbortWithServerError(err)
@@ -76,7 +82,7 @@ func staffs(c *inkstone.Context) {
 	for i := range staffs {
 		staff := &staffs[i]
 		res = append(res, staffRes{
-			Response: inkstone.Response{
+			Response: web.Response{
 				Id:        int(staff.Id),
 				CreatedAt: staff.CreatedAt,
 				UpdatedAt: staff.UpdatedAt,
@@ -89,7 +95,7 @@ func staffs(c *inkstone.Context) {
 		})
 	}
 
-	c.Response(&inkstone.PagingResponse[staffRes]{
+	c.Response(&web.PagingResponse[staffRes]{
 		Offset: req.Offset,
 		Limit:  req.Limit,
 		Total:  total,
@@ -111,11 +117,11 @@ type addStaffReq struct {
 //	@Security		ApiKeyAuth
 //	@Param			addStaffReq	body		addStaffReq	true	"request body"
 //	@Success		200			{object}	staffRes
-//	@Failure		400			{object}	inkstone.ClientError
-//	@Failure		401			{object}	inkstone.ClientError
-//	@Failure		403			{object}	inkstone.ClientError
+//	@Failure		400			{object}	web.ClientError
+//	@Failure		401			{object}	web.ClientError
+//	@Failure		403			{object}	web.ClientError
 //	@Failure		500			{string}	empty
-func addStaff(c *inkstone.Context) {
+func addStaff(c *web.Context) {
 	req := new(addStaffReq)
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
@@ -130,7 +136,7 @@ func addStaff(c *inkstone.Context) {
 	}
 
 	c.Response(&staffRes{
-		Response: inkstone.Response{
+		Response: web.Response{
 			Id: int(staff.Id),
 		},
 		Email:     staff.Email,
@@ -162,11 +168,11 @@ type updateStaffReq struct {
 //	@Param			id				path		int				true	"staff id"
 //	@Param			updateStaffReq	body		updateStaffReq	true	"request body"
 //	@Success		200				{object}	staffRes
-//	@Failure		400				{object}	inkstone.ClientError
-//	@Failure		401				{object}	inkstone.ClientError
-//	@Failure		403				{object}	inkstone.ClientError
+//	@Failure		400				{object}	web.ClientError
+//	@Failure		401				{object}	web.ClientError
+//	@Failure		403				{object}	web.ClientError
 //	@Failure		500				{string}	empty
-func updateStaff(c *inkstone.Context) {
+func updateStaff(c *web.Context) {
 	param := new(updateStaffParam)
 
 	if err := c.ShouldBindUri(param); err != nil {
@@ -177,7 +183,7 @@ func updateStaff(c *inkstone.Context) {
 	req := new(updateStaffReq)
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-		v.RegisterStructValidation(inkstone.ValidationNotAllFieldsZero, req)
+		v.RegisterStructValidation(web.ValidationNotAllFieldsZero, req)
 	}
 
 	if err := c.ShouldBindJSON(req); err != nil {
@@ -191,8 +197,8 @@ func updateStaff(c *inkstone.Context) {
 		password string
 	)
 
-	if err := inkstone.Transaction(appCtx, func(tx *sqlx.Tx) (err error) {
-		staff, err = orm.Staff(appCtx).GetWithTx(param.Id, tx)
+	if err := appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
+		staff, err = orm.Staff(appCtx).GetTx(tx, param.Id)
 		if err != nil {
 			return
 		}
@@ -213,14 +219,14 @@ func updateStaff(c *inkstone.Context) {
 			staff.Reset(password)
 		}
 
-		return orm.Staff(appCtx).UpdateWithTx(staff, tx)
+		return orm.Staff(appCtx).UpdateTx(tx, staff)
 	}); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}
 
 	c.Response(&staffRes{
-		Response: inkstone.Response{
+		Response: web.Response{
 			Id: int(staff.Id),
 		},
 		Email:     staff.Email,

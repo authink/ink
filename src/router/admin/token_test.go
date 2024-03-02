@@ -7,12 +7,13 @@ import (
 	"testing"
 
 	"github.com/authink/ink.go/src/router/token"
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/test"
+	"github.com/authink/inkstone/web"
 	"github.com/stretchr/testify/assert"
 )
 
 func getTokens(accessToken string, resObj any) (*httptest.ResponseRecorder, error) {
-	return inkstone.TestFetch(
+	return test.Fetch(
 		ctx,
 		http.MethodGet,
 		"admin/tokens?limit=2",
@@ -37,14 +38,14 @@ func TestTokens(t *testing.T) {
 	assert.NotEmpty(t, resObj2.AccessToken)
 	assert.NotEmpty(t, resObj2.RefreshToken)
 
-	var res inkstone.PagingResponse[tokenRes]
+	var res web.PagingResponse[tokenRes]
 	w3, _ := getTokens(resObj.AccessToken, &res)
 	assert.Equal(t, http.StatusOK, w3.Code)
 	assert.Equal(t, 2, len(res.Items))
 }
 
 func tDeleteToken(accessToken string, id int) (*httptest.ResponseRecorder, error) {
-	return inkstone.TestFetch(
+	return test.Fetch(
 		ctx,
 		http.MethodDelete,
 		fmt.Sprintf("admin/tokens/%d", id),

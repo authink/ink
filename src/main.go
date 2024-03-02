@@ -6,10 +6,11 @@ import (
 	"github.com/authink/ink.go/src/migrate"
 	"github.com/authink/ink.go/src/router"
 	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/app"
 )
 
 func main() {
-	inkstone.Run(&inkstone.Options{
+	inkstone.Run(&app.Options{
 		Locales:       &i18n.Locales,
 		Seed:          migrate.Seed,
 		SetupAPIGroup: router.SetupRouter,

@@ -1,11 +1,12 @@
 package model
 
 import (
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/orm"
+	"github.com/authink/inkstone/util"
 )
 
 type Staff struct {
-	inkstone.Model
+	orm.Model
 	Email     string
 	Password  string
 	Phone     string
@@ -17,7 +18,7 @@ type Staff struct {
 func NewStaff(email, password, phone string, super bool) *Staff {
 	return &Staff{
 		Email:    email,
-		Password: inkstone.HashPassword(password),
+		Password: util.HashPassword(password),
 		Phone:    phone,
 		Super:    super,
 		Active:   true,
@@ -25,5 +26,5 @@ func NewStaff(email, password, phone string, super bool) *Staff {
 }
 
 func (s *Staff) Reset(password string) {
-	s.Password = inkstone.HashPassword(password)
+	s.Password = util.HashPassword(password)
 }

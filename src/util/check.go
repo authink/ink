@@ -6,17 +6,18 @@ import (
 	"net/http"
 
 	"github.com/authink/ink.go/src/errors"
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/util"
+	"github.com/authink/inkstone/web"
 	"github.com/golang-jwt/jwt/v5"
 )
 
 type CheckSecretFunc func() bool
 
 func CompareSecrets(secret, reqAppSecret string) (ok bool) {
-	return secret == inkstone.Sha256(reqAppSecret)
+	return secret == util.Sha256(reqAppSecret)
 }
 
-func CheckApp(c *inkstone.Context, err error, active bool, checkSecret CheckSecretFunc, code int) (ok bool) {
+func CheckApp(c *web.Context, err error, active bool, checkSecret CheckSecretFunc, code int) (ok bool) {
 	if err != nil || !active || !checkSecret() {
 		if err != nil && !errs.Is(err, sql.ErrNoRows) {
 			c.AbortWithServerError(err)
@@ -37,7 +38,7 @@ func CheckApp(c *inkstone.Context, err error, active bool, checkSecret CheckSecr
 
 type CheckPasswordFunc func() bool
 
-func CheckStaff(c *inkstone.Context, err error, active, departure bool, checkPassword CheckPasswordFunc, code int) (ok bool) {
+func CheckStaff(c *web.Context, err error, active, departure bool, checkPassword CheckPasswordFunc, code int) (ok bool) {
 	if err != nil || !active || departure || !checkPassword() {
 		if err != nil && !errs.Is(err, sql.ErrNoRows) {
 			c.AbortWithServerError(err)
@@ -56,8 +57,8 @@ func CheckStaff(c *inkstone.Context, err error, active, departure bool, checkPas
 	return true
 }
 
-func CheckAccessToken(c *inkstone.Context, secretKey, accessToken, uuid string) (jwtClaims *inkstone.JwtClaims, ok bool) {
-	jwtClaims, err := inkstone.VerifyToken(secretKey, accessToken)
+func CheckAccessToken(c *web.Context, secretKey, accessToken, uuid string) (jwtClaims *util.JwtClaims, ok bool) {
+	jwtClaims, err := util.VerifyToken(secretKey, accessToken)
 
 	if (err != nil && !errs.Is(err, jwt.ErrTokenExpired)) || jwtClaims.ID != uuid {
 		c.AbortWithClientError(errors.ERR_INVALID_ACCESS_TOKEN)

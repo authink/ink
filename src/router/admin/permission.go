@@ -5,14 +5,14 @@ import (
 	"github.com/authink/ink.go/src/errors"
 	"github.com/authink/ink.go/src/middleware"
 	"github.com/authink/ink.go/src/orm"
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
 )
 
 func setupPermissionGroup(gAdmin *gin.RouterGroup) {
 	gPerms := gAdmin.Group(authz.Permissons.Name)
 	gPerms.Use(middleware.Authz(authz.Permissons))
-	gPerms.GET("", inkstone.HandlerAdapter(permissions))
+	gPerms.GET("", web.HandlerAdapter(permissions))
 }
 
 type permissionReq struct {
@@ -35,11 +35,11 @@ type permissionRes struct {
 //	@Security		ApiKeyAuth
 //	@Param			appId	query		int	true	"appId"
 //	@Success		200		{array}		permissionRes
-//	@Failure		400		{object}	inkstone.ClientError
-//	@Failure		401		{object}	inkstone.ClientError
-//	@Failure		403		{object}	inkstone.ClientError
+//	@Failure		400		{object}	web.ClientError
+//	@Failure		401		{object}	web.ClientError
+//	@Failure		403		{object}	web.ClientError
 //	@Failure		500		{string}	empty
-func permissions(c *inkstone.Context) {
+func permissions(c *web.Context) {
 	req := new(permissionReq)
 	if err := c.ShouldBindQuery(req); err != nil {
 		c.AbortWithClientError(errors.ERR_BAD_REQUEST)

@@ -3,31 +3,16 @@ package orm
 import (
 	"github.com/authink/ink.go/src/model"
 	"github.com/authink/ink.go/src/sql"
-	"github.com/authink/inkstone"
+	a "github.com/authink/inkstone/app"
+	"github.com/authink/inkstone/orm"
 	"github.com/jmoiron/sqlx"
 )
 
 type deptStaff interface {
-	inkstone.ORM[model.DeptStaff]
+	orm.Inserter[model.DeptStaff]
 }
 
-type deptStaffImpl inkstone.AppContext
-
-// Delete implements deptStaff.
-func (d *deptStaffImpl) Delete(int) error {
-	panic("unimplemented")
-}
-
-// Find implements deptStaff.
-func (d *deptStaffImpl) Find() ([]model.DeptStaff, error) {
-	panic("unimplemented")
-}
-
-// Get implements deptStaff.
-// Subtle: this method shadows the method (*DB).Get of deptStaffImpl.DB.
-func (d *deptStaffImpl) Get(int) (*model.DeptStaff, error) {
-	panic("unimplemented")
-}
+type deptStaffImpl a.AppContext
 
 // Insert implements deptStaff.
 func (d *deptStaffImpl) Insert(deptStaff *model.DeptStaff) error {
@@ -35,32 +20,12 @@ func (d *deptStaffImpl) Insert(deptStaff *model.DeptStaff) error {
 }
 
 // InsertWithTx implements deptStaff.
-func (d *deptStaffImpl) InsertWithTx(*model.DeptStaff, *sqlx.Tx) error {
-	panic("unimplemented")
-}
-
-// Save implements deptStaff.
-func (d *deptStaffImpl) Save(*model.DeptStaff) error {
-	panic("unimplemented")
-}
-
-// SaveWithTx implements deptStaff.
-func (d *deptStaffImpl) SaveWithTx(*model.DeptStaff, *sqlx.Tx) error {
-	panic("unimplemented")
-}
-
-// Update implements deptStaff.
-func (d *deptStaffImpl) Update(*model.DeptStaff) error {
-	panic("unimplemented")
-}
-
-// UpdateWithTx implements deptStaff.
-func (d *deptStaffImpl) UpdateWithTx(*model.DeptStaff, *sqlx.Tx) error {
-	panic("unimplemented")
+func (d *deptStaffImpl) InsertTx(tx *sqlx.Tx, deptStaff *model.DeptStaff) error {
+	return namedExec(tx, sql.DeptStaff.Insert(), deptStaff, handleInsertResult)
 }
 
 var _ deptStaff = (*deptStaffImpl)(nil)
 
-func DeptStaff(appCtx *inkstone.AppContext) deptStaff {
+func DeptStaff(appCtx *a.AppContext) deptStaff {
 	return (*deptStaffImpl)(appCtx)
 }

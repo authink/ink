@@ -7,12 +7,13 @@ import (
 	"testing"
 
 	"github.com/authink/ink.go/src/router/token"
-	"github.com/authink/inkstone"
+	"github.com/authink/inkstone/test"
+	"github.com/authink/inkstone/web"
 	"github.com/stretchr/testify/assert"
 )
 
 func getGroups(accessToken string, gtype, appId int, resObj any) (*httptest.ResponseRecorder, error) {
-	return inkstone.TestFetch(
+	return test.Fetch(
 		ctx,
 		http.MethodGet,
 		fmt.Sprintf("admin/groups?type=%d&appId=%d&limit=1", gtype, appId),
@@ -30,7 +31,7 @@ func TestGroups(t *testing.T) {
 	assert.NotEmpty(t, resObj.AccessToken)
 	assert.NotEmpty(t, resObj.RefreshToken)
 
-	var res inkstone.PagingResponse[groupRes]
+	var res web.PagingResponse[groupRes]
 	w2, _ := getGroups(resObj.AccessToken, 1, 100000, &res)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Equal(t, 1, res.Total)
@@ -45,7 +46,7 @@ func tAddGroup(accessToken, name string, gtype, appId int, resObj any) (*httptes
 			AppId: appId,
 		},
 	}
-	return inkstone.TestFetch(
+	return test.Fetch(
 		ctx,
 		http.MethodPost,
 		"admin/groups",
@@ -73,7 +74,7 @@ func TestAddGroup(t *testing.T) {
 }
 
 func tUpdateGroup(accessToken string, id int, reqObj, resObj any) (*httptest.ResponseRecorder, error) {
-	return inkstone.TestFetch(
+	return test.Fetch(
 		ctx,
 		http.MethodPut,
 		fmt.Sprintf("admin/groups/%d", id),
