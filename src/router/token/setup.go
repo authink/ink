@@ -8,6 +8,7 @@ import (
 	"github.com/authink/ink.go/src/errs"
 	"github.com/authink/ink.go/src/models"
 	"github.com/authink/ink.go/src/orm"
+	"github.com/authink/inkstone/jwtx"
 	"github.com/authink/inkstone/util"
 	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
@@ -23,7 +24,7 @@ func SetupTokenGroup(rg *gin.RouterGroup) {
 func generateAuthToken(c *web.Context, app *models.App, staff *models.Staff) (res *GrantRes) {
 	appCtx := c.AppContext()
 
-	jwtClaims := util.NewJwtClaims(
+	jwtClaims := jwtx.NewJwtClaims(
 		util.GenerateUUID(),
 		appCtx.AppName,
 		app.Name,
@@ -33,7 +34,7 @@ func generateAuthToken(c *web.Context, app *models.App, staff *models.Staff) (re
 		staff.Id,
 	)
 
-	accessToken, err := util.GenerateToken(
+	accessToken, err := jwtx.GenerateToken(
 		appCtx.SecretKey,
 		jwtClaims,
 	)

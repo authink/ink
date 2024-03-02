@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/authink/ink.go/src/errs"
+	"github.com/authink/inkstone/jwtx"
 	"github.com/authink/inkstone/util"
 	"github.com/authink/inkstone/web"
 	"github.com/golang-jwt/jwt/v5"
@@ -57,8 +58,8 @@ func CheckStaff(c *web.Context, err error, active, departure bool, checkPassword
 	return true
 }
 
-func CheckAccessToken(c *web.Context, secretKey, accessToken, uuid string) (jwtClaims *util.JwtClaims, ok bool) {
-	jwtClaims, err := util.VerifyToken(secretKey, accessToken)
+func CheckAccessToken(c *web.Context, secretKey, accessToken, uuid string) (jwtClaims *jwtx.JwtClaims, ok bool) {
+	jwtClaims, err := jwtx.VerifyToken(secretKey, accessToken)
 
 	if (err != nil && !errors.Is(err, jwt.ErrTokenExpired)) || jwtClaims.ID != uuid {
 		c.AbortWithClientError(errs.ERR_INVALID_ACCESS_TOKEN)
