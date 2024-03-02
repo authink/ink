@@ -66,12 +66,12 @@ func (a *authTokenImpl) GetByRefreshToken(refreshToken string) (token *models.Au
 
 // Insert implements authToken.
 func (a *authTokenImpl) Insert(token *models.AuthToken) error {
-	return namedExec(a.DB, sqls.AuthToken.Insert(), token, handleInsertResult)
+	return namedExec(a.DB, sqls.AuthToken.Insert(), token, afterInsert)
 }
 
 // InsertTx implements authToken.
 func (a *authTokenImpl) InsertTx(tx *sqlx.Tx, token *models.AuthToken) error {
-	return namedExec(tx, sqls.AuthToken.Insert(), token, handleInsertResult)
+	return namedExec(tx, sqls.AuthToken.Insert(), token, afterInsert)
 }
 
 // PaginationTx implements authToken.

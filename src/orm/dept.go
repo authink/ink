@@ -16,12 +16,12 @@ type deptImpl app.AppContext
 
 // Insert implements dept.
 func (d *deptImpl) Insert(dept *models.Department) error {
-	return namedExec(d.DB, sqls.Dept.Insert(), dept, handleInsertResult)
+	return namedExec(d.DB, sqls.Dept.Insert(), dept, afterInsert)
 }
 
 // InsertWithTx implements dept.
 func (d *deptImpl) InsertTx(tx *sqlx.Tx, dept *models.Department) error {
-	return namedExec(tx, sqls.Dept.Insert(), dept, handleInsertResult)
+	return namedExec(tx, sqls.Dept.Insert(), dept, afterInsert)
 }
 
 var _ dept = (*deptImpl)(nil)

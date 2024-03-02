@@ -16,12 +16,12 @@ type deptLevelImpl app.AppContext
 
 // Insert implements deptLevel.
 func (d *deptLevelImpl) Insert(deptLevel *models.DeptLevel) error {
-	return namedExec(d.DB, sqls.DeptLevel.Insert(), deptLevel, handleInsertResult)
+	return namedExec(d.DB, sqls.DeptLevel.Insert(), deptLevel, afterInsert)
 }
 
 // InsertWithTx implements deptLevel.
 func (d *deptLevelImpl) InsertTx(tx *sqlx.Tx, deptLevel *models.DeptLevel) error {
-	return namedExec(tx, sqls.DeptLevel.Insert(), deptLevel, handleInsertResult)
+	return namedExec(tx, sqls.DeptLevel.Insert(), deptLevel, afterInsert)
 }
 
 var _ deptLevel = (*deptLevelImpl)(nil)

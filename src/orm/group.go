@@ -57,12 +57,12 @@ func (g *groupImpl) GetTx(tx *sqlx.Tx, id int) (group *models.Group, err error) 
 
 // Insert implements group.
 func (g *groupImpl) Insert(group *models.Group) error {
-	return namedExec(g.DB, sqls.Group.Insert(), group, handleInsertResult)
+	return namedExec(g.DB, sqls.Group.Insert(), group, afterInsert)
 }
 
 // InsertTx implements group.
 func (g *groupImpl) InsertTx(tx *sqlx.Tx, group *models.Group) error {
-	return namedExec(tx, sqls.Group.Insert(), group, handleInsertResult)
+	return namedExec(tx, sqls.Group.Insert(), group, afterInsert)
 }
 
 // PaginationTx implements group.
@@ -77,12 +77,12 @@ func (g *groupImpl) PaginationTx(tx *sqlx.Tx, pager model.Pager) (groups []model
 
 // Save implements group.
 func (g *groupImpl) Save(group *models.Group) error {
-	return namedExec(g.DB, sqls.Group.Save(), group, handleSaveResult)
+	return namedExec(g.DB, sqls.Group.Save(), group, afterSave)
 }
 
 // SaveTx implements group.
 func (g *groupImpl) SaveTx(tx *sqlx.Tx, group *models.Group) error {
-	return namedExec(tx, sqls.Group.Save(), group, handleSaveResult)
+	return namedExec(tx, sqls.Group.Save(), group, afterSave)
 }
 
 // Update implements group.

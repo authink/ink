@@ -19,11 +19,8 @@ type iapp interface {
 type appImpl app.AppContext
 
 // Find implements iapp.
-func (a *appImpl) Find(...any) (apps []models.App, err error) {
-	err = a.DB.Select(
-		&apps,
-		sqls.App.Find(),
-	)
+func (a *appImpl) Find(args ...any) (apps []models.App, err error) {
+	err = doSelect(a.DB, &apps, sqls.App.Find(), args...)
 	return
 }
 
@@ -44,22 +41,22 @@ func (a *appImpl) GetTx(tx *sqlx.Tx, id int) (app *models.App, err error) {
 
 // Insert implements iapp.
 func (a *appImpl) Insert(app *models.App) error {
-	return namedExec(a.DB, sqls.App.Insert(), app, handleInsertResult)
+	return namedExec(a.DB, sqls.App.Insert(), app, afterInsert)
 }
 
 // InsertTx implements iapp.
 func (a *appImpl) InsertTx(tx *sqlx.Tx, app *models.App) error {
-	return namedExec(tx, sqls.App.Insert(), app, handleInsertResult)
+	return namedExec(tx, sqls.App.Insert(), app, afterInsert)
 }
 
 // Save implements iapp.
 func (a *appImpl) Save(app *models.App) error {
-	return namedExec(a.DB, sqls.App.Save(), app, handleSaveResult)
+	return namedExec(a.DB, sqls.App.Save(), app, afterSave)
 }
 
 // SaveTx implements iapp.
 func (a *appImpl) SaveTx(tx *sqlx.Tx, app *models.App) error {
-	return namedExec(tx, sqls.App.Save(), app, handleSaveResult)
+	return namedExec(tx, sqls.App.Save(), app, afterSave)
 }
 
 // Update implements iapp.

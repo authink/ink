@@ -7,14 +7,15 @@ import (
 	"github.com/authink/inkstone/model"
 )
 
-type resultHandlerFunc func(sql.Result, model.Identifier) error
+type afterExecFunc func(sql.Result, model.Identifier) error
 
 type dbExecutor interface {
 	NamedExec(string, any) (sql.Result, error)
 	Get(any, string, ...any) error
+	Select(any, string, ...any) error
 }
 
-func namedExec(executor dbExecutor, statement string, m model.Identifier, handleResult resultHandlerFunc) (err error) {
+func namedExec(executor dbExecutor, statement string, m model.Identifier, afterExec afterExecFunc) (err error) {
 	result, err := executor.NamedExec(
 		statement,
 		m,
@@ -23,14 +24,14 @@ func namedExec(executor dbExecutor, statement string, m model.Identifier, handle
 		return
 	}
 
-	if handleResult != nil {
-		err = handleResult(result, m)
+	if afterExec != nil {
+		err = afterExec(result, m)
 	}
 	return
 }
 
-func handleSaveResult(result sql.Result, m model.Identifier) (err error) {
-	if err = handleInsertResult(result, m); err != nil {
+func afterSave(result sql.Result, m model.Identifier) (err error) {
+	if err = afterInsert(result, m); err != nil {
 		return
 	}
 
@@ -43,7 +44,7 @@ func handleSaveResult(result sql.Result, m model.Identifier) (err error) {
 	return
 }
 
-func handleInsertResult(result sql.Result, m model.Identifier) (err error) {
+func afterInsert(result sql.Result, m model.Identifier) (err error) {
 	lastId, err := result.LastInsertId()
 	if err != nil {
 		return
@@ -53,11 +54,18 @@ func handleInsertResult(result sql.Result, m model.Identifier) (err error) {
 	return
 }
 
-func get(executor dbExecutor, m model.Identifier, statement string, args ...any) (err error) {
-	err = executor.Get(
+func get(executor dbExecutor, m model.Identifier, statement string, args ...any) error {
+	return executor.Get(
 		m,
 		statement,
 		args...,
 	)
-	return
+}
+
+func doSelect(executor dbExecutor, list any, statement string, args ...any) error {
+	return executor.Select(
+		list,
+		statement,
+		args...,
+	)
 }

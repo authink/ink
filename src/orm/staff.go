@@ -57,12 +57,12 @@ func (s *staffImpl) GetTx(tx *sqlx.Tx, id int) (staff *models.Staff, err error) 
 
 // Insert implements staff.
 func (s *staffImpl) Insert(staff *models.Staff) error {
-	return namedExec(s.DB, sqls.Staff.Insert(), staff, handleInsertResult)
+	return namedExec(s.DB, sqls.Staff.Insert(), staff, afterInsert)
 }
 
 // InsertTx implements staff.
 func (s *staffImpl) InsertTx(tx *sqlx.Tx, staff *models.Staff) error {
-	return namedExec(tx, sqls.Staff.Insert(), staff, handleInsertResult)
+	return namedExec(tx, sqls.Staff.Insert(), staff, afterInsert)
 }
 
 // PaginationTx implements staff.
@@ -77,12 +77,12 @@ func (s *staffImpl) PaginationTx(tx *sqlx.Tx, pager model.Pager) (staffs []model
 
 // Save implements staff.
 func (s *staffImpl) Save(staff *models.Staff) error {
-	return namedExec(s.DB, sqls.Staff.Save(), staff, handleSaveResult)
+	return namedExec(s.DB, sqls.Staff.Save(), staff, afterSave)
 }
 
 // SaveTx implements staff.
 func (s *staffImpl) SaveTx(tx *sqlx.Tx, staff *models.Staff) error {
-	return namedExec(tx, sqls.Staff.Save(), staff, handleSaveResult)
+	return namedExec(tx, sqls.Staff.Save(), staff, afterSave)
 }
 
 // Update implements staff.

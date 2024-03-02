@@ -16,12 +16,12 @@ type deptStaffImpl app.AppContext
 
 // Insert implements deptStaff.
 func (d *deptStaffImpl) Insert(deptStaff *models.DeptStaff) error {
-	return namedExec(d.DB, sqls.DeptStaff.Insert(), deptStaff, handleInsertResult)
+	return namedExec(d.DB, sqls.DeptStaff.Insert(), deptStaff, afterInsert)
 }
 
 // InsertWithTx implements deptStaff.
 func (d *deptStaffImpl) InsertTx(tx *sqlx.Tx, deptStaff *models.DeptStaff) error {
-	return namedExec(tx, sqls.DeptStaff.Insert(), deptStaff, handleInsertResult)
+	return namedExec(tx, sqls.DeptStaff.Insert(), deptStaff, afterInsert)
 }
 
 var _ deptStaff = (*deptStaffImpl)(nil)

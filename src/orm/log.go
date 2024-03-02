@@ -16,22 +16,19 @@ type log interface {
 type logImpl app.AppContext
 
 // Find implements log.
-func (l *logImpl) Find(...any) (logs []models.Log, err error) {
-	err = l.DB.Select(
-		&logs,
-		sqls.Log.Find(),
-	)
+func (l *logImpl) Find(args ...any) (logs []models.Log, err error) {
+	err = doSelect(l.DB, &logs, sqls.Log.Find(), args...)
 	return
 }
 
 // Insert implements log.
 func (l *logImpl) Insert(log *models.Log) error {
-	return namedExec(l.DB, sqls.Log.Insert(), log, handleInsertResult)
+	return namedExec(l.DB, sqls.Log.Insert(), log, afterInsert)
 }
 
 // InsertTx implements log.
 func (l *logImpl) InsertTx(tx *sqlx.Tx, log *models.Log) error {
-	return namedExec(tx, sqls.Log.Insert(), log, handleInsertResult)
+	return namedExec(tx, sqls.Log.Insert(), log, afterInsert)
 }
 
 var _ log = (*logImpl)(nil)
