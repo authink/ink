@@ -15,10 +15,6 @@ type staff interface {
 	orm.Geter[model.Staff]
 	orm.Counter
 	orm.Pager[model.Staff]
-	// inkstone.ORM[model.Staff]
-	// GetWithTx(int, *sqlx.Tx) (*model.Staff, error)
-	// CountWithTx(*sqlx.Tx) (int, error)
-	// PaginationWithTx(offset, limit int, tx *sqlx.Tx) ([]model.Staff, error)
 	GetByEmail(string) (*model.Staff, error)
 }
 
