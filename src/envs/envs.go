@@ -1,4 +1,4 @@
-package env
+package envs
 
 import "github.com/authink/inkstone/env"
 

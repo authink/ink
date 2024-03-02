@@ -1,31 +1,31 @@
 package orm
 
 import (
-	"github.com/authink/ink.go/src/model"
-	"github.com/authink/ink.go/src/sql"
-	a "github.com/authink/inkstone/app"
+	"github.com/authink/ink.go/src/models"
+	"github.com/authink/ink.go/src/sqls"
+	"github.com/authink/inkstone/app"
 	"github.com/authink/inkstone/orm"
 	"github.com/jmoiron/sqlx"
 )
 
 type dept interface {
-	orm.Inserter[model.Department]
+	orm.Inserter[models.Department]
 }
 
-type deptImpl a.AppContext
+type deptImpl app.AppContext
 
 // Insert implements dept.
-func (d *deptImpl) Insert(dept *model.Department) error {
-	return namedExec(d.DB, sql.Dept.Insert(), dept, handleInsertResult)
+func (d *deptImpl) Insert(dept *models.Department) error {
+	return namedExec(d.DB, sqls.Dept.Insert(), dept, handleInsertResult)
 }
 
 // InsertWithTx implements dept.
-func (d *deptImpl) InsertTx(tx *sqlx.Tx, dept *model.Department) error {
-	return namedExec(tx, sql.Dept.Insert(), dept, handleInsertResult)
+func (d *deptImpl) InsertTx(tx *sqlx.Tx, dept *models.Department) error {
+	return namedExec(tx, sqls.Dept.Insert(), dept, handleInsertResult)
 }
 
 var _ dept = (*deptImpl)(nil)
 
-func Dept(appCtx *a.AppContext) dept {
+func Dept(appCtx *app.AppContext) dept {
 	return (*deptImpl)(appCtx)
 }

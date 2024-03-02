@@ -1,4 +1,4 @@
-package sql
+package sqls
 
 type tableName struct {
 	App       string

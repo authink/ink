@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/authink/ink.go/src/env"
+	"github.com/authink/ink.go/src/envs"
 	"github.com/authink/ink.go/src/router/token"
 	"github.com/authink/inkstone/test"
 	"github.com/stretchr/testify/assert"
@@ -35,7 +35,7 @@ func TestApps(t *testing.T) {
 	w2, _ := getApps(resObj.AccessToken, &apps)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Equal(t, 2, len(apps))
-	assert.Equal(t, env.AppNameAdmin(), apps[0].Name)
+	assert.Equal(t, envs.AppNameAdmin(), apps[0].Name)
 	assert.True(t, apps[0].Active)
 }
 

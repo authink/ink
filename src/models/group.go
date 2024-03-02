@@ -1,6 +1,6 @@
-package model
+package models
 
-import "github.com/authink/inkstone/orm"
+import "github.com/authink/inkstone/model"
 
 type GroupType uint32
 
@@ -10,7 +10,7 @@ const (
 )
 
 type Group struct {
-	orm.Model
+	model.Base
 	Name   string
 	Type   uint32
 	AppId  uint32 `db:"app_id"`
@@ -37,4 +37,10 @@ func (g *Group) IsTypeResource() bool {
 type GroupWithApp struct {
 	Group
 	AppName string `db:"app_name"`
+}
+
+type GroupPage struct {
+	model.Page
+	Type  int
+	AppId int `db:"app_id"`
 }

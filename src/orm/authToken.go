@@ -1,40 +1,41 @@
 package orm
 
 import (
-	"github.com/authink/ink.go/src/model"
-	"github.com/authink/ink.go/src/sql"
-	a "github.com/authink/inkstone/app"
+	"github.com/authink/ink.go/src/models"
+	"github.com/authink/ink.go/src/sqls"
+	"github.com/authink/inkstone/app"
+	"github.com/authink/inkstone/model"
 	"github.com/authink/inkstone/orm"
 	"github.com/jmoiron/sqlx"
 )
 
 type authToken interface {
-	orm.Inserter[model.AuthToken]
-	orm.Deleter[model.AuthToken]
+	orm.Inserter[models.AuthToken]
+	orm.Deleter[models.AuthToken]
 	orm.Counter
-	orm.Pager[model.AuthTokenWithApp]
-	GetByAccessToken(string) (*model.AuthToken, error)
-	GetByRefreshToken(string) (*model.AuthToken, error)
+	orm.Pager[models.AuthTokenWithApp]
+	GetByAccessToken(string) (*models.AuthToken, error)
+	GetByRefreshToken(string) (*models.AuthToken, error)
 }
 
-type authTokenImpl a.AppContext
+type authTokenImpl app.AppContext
 
 // Count implements authToken.
 func (a *authTokenImpl) Count(...any) (c int, err error) {
-	err = a.DB.Get(&c, sql.AuthToken.Count())
+	err = a.DB.Get(&c, sqls.AuthToken.Count())
 	return
 }
 
 // CountTx implements authToken.
 func (a *authTokenImpl) CountTx(tx *sqlx.Tx, args ...any) (c int, err error) {
-	err = tx.Get(&c, sql.AuthToken.Count())
+	err = tx.Get(&c, sqls.AuthToken.Count())
 	return
 }
 
 // Delete implements authToken.
 func (a *authTokenImpl) Delete(id int) (err error) {
 	_, err = a.DB.Exec(
-		sql.AuthToken.Delete(),
+		sqls.AuthToken.Delete(),
 		id,
 	)
 	return
@@ -43,56 +44,56 @@ func (a *authTokenImpl) Delete(id int) (err error) {
 // DeleteTx implements authToken.
 func (a *authTokenImpl) DeleteTx(tx *sqlx.Tx, id int) (err error) {
 	_, err = a.DB.Exec(
-		sql.AuthToken.Delete(),
+		sqls.AuthToken.Delete(),
 		id,
 	)
 	return
 }
 
 // GetByAccessToken implements authToken.
-func (a *authTokenImpl) GetByAccessToken(accessToken string) (token *model.AuthToken, err error) {
-	token = new(model.AuthToken)
+func (a *authTokenImpl) GetByAccessToken(accessToken string) (token *models.AuthToken, err error) {
+	token = new(models.AuthToken)
 	err = a.DB.Get(
 		token,
-		sql.AuthToken.GetByAccessToken(),
+		sqls.AuthToken.GetByAccessToken(),
 		accessToken,
 	)
 	return
 }
 
 // GetByRefreshToken implements authToken.
-func (a *authTokenImpl) GetByRefreshToken(refreshToken string) (token *model.AuthToken, err error) {
-	token = new(model.AuthToken)
+func (a *authTokenImpl) GetByRefreshToken(refreshToken string) (token *models.AuthToken, err error) {
+	token = new(models.AuthToken)
 	err = a.DB.Get(
 		token,
-		sql.AuthToken.GetByRefreshToken(),
+		sqls.AuthToken.GetByRefreshToken(),
 		refreshToken,
 	)
 	return
 }
 
 // Insert implements authToken.
-func (a *authTokenImpl) Insert(token *model.AuthToken) error {
-	return namedExec(a.DB, sql.AuthToken.Insert(), token, handleInsertResult)
+func (a *authTokenImpl) Insert(token *models.AuthToken) error {
+	return namedExec(a.DB, sqls.AuthToken.Insert(), token, handleInsertResult)
 }
 
 // InsertTx implements authToken.
-func (a *authTokenImpl) InsertTx(tx *sqlx.Tx, token *model.AuthToken) error {
-	return namedExec(tx, sql.AuthToken.Insert(), token, handleInsertResult)
+func (a *authTokenImpl) InsertTx(tx *sqlx.Tx, token *models.AuthToken) error {
+	return namedExec(tx, sqls.AuthToken.Insert(), token, handleInsertResult)
 }
 
 // PaginationTx implements authToken.
-func (a *authTokenImpl) PaginationTx(tx *sqlx.Tx, page orm.Page) (tokens []model.AuthTokenWithApp, err error) {
-	stmt, err := tx.PrepareNamed(sql.AuthToken.Pagination())
+func (a *authTokenImpl) PaginationTx(tx *sqlx.Tx, pager model.Pager) (tokens []models.AuthTokenWithApp, err error) {
+	stmt, err := tx.PrepareNamed(sqls.AuthToken.Pagination())
 	if err != nil {
 		return
 	}
-	err = stmt.Select(&tokens, page)
+	err = stmt.Select(&tokens, pager)
 	return
 }
 
 var _ authToken = (*authTokenImpl)(nil)
 
-func AuthToken(appCtx *a.AppContext) authToken {
+func AuthToken(appCtx *app.AppContext) authToken {
 	return (*authTokenImpl)(appCtx)
 }

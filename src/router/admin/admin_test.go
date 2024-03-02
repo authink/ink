@@ -7,10 +7,10 @@ import (
 	"testing"
 
 	"github.com/authink/ink.go/src/authz"
-	"github.com/authink/ink.go/src/env"
+	"github.com/authink/ink.go/src/envs"
 	"github.com/authink/ink.go/src/i18n"
 	"github.com/authink/ink.go/src/migrate"
-	"github.com/authink/ink.go/src/model"
+	"github.com/authink/ink.go/src/models"
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/ink.go/src/router/token"
 	"github.com/authink/inkstone/app"
@@ -30,14 +30,14 @@ func TestMain(m *testing.M) {
 			Seed: func(appCtx *app.AppContext) {
 				migrate.Seed(appCtx)
 				if err := appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
-					if err = orm.App(appCtx).InsertTx(tx, model.NewApp(
+					if err = orm.App(appCtx).InsertTx(tx, models.NewApp(
 						"devtools",
 						"123456",
 					)); err != nil {
 						return
 					}
 
-					if err = orm.Staff(appCtx).InsertTx(tx, model.NewStaff(
+					if err = orm.Staff(appCtx).InsertTx(tx, models.NewStaff(
 						"test@huoyijie.cn",
 						"123456",
 						"11111111111",
@@ -46,7 +46,7 @@ func TestMain(m *testing.M) {
 						return
 					}
 
-					err = orm.Group(appCtx).InsertTx(tx, model.NewGroup(
+					err = orm.Group(appCtx).InsertTx(tx, models.NewGroup(
 						"developer",
 						1,
 						100000,
@@ -58,7 +58,7 @@ func TestMain(m *testing.M) {
 			},
 			SetupAPIGroup: func(apiGroup *gin.RouterGroup) {
 				token.SetupTokenGroup(apiGroup)
-				SetupAdminGroup(apiGroup, env.AppNameAdmin())
+				SetupAdminGroup(apiGroup, envs.AppNameAdmin())
 			},
 			FinishSetup: authz.SetupEnforcer,
 		},

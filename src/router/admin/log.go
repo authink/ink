@@ -3,7 +3,7 @@ package admin
 import (
 	"github.com/authink/ink.go/src/authz"
 	"github.com/authink/ink.go/src/middleware"
-	"github.com/authink/ink.go/src/model"
+	"github.com/authink/ink.go/src/models"
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
@@ -17,7 +17,7 @@ func setupLogGroup(gAdmin *gin.RouterGroup) {
 
 type logRes struct {
 	web.Response
-	*model.LogDetail
+	*models.LogDetail
 }
 
 // logs godoc

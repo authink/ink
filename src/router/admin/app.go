@@ -2,11 +2,11 @@ package admin
 
 import (
 	"github.com/authink/ink.go/src/authz"
-	"github.com/authink/ink.go/src/errors"
+	"github.com/authink/ink.go/src/errs"
 	"github.com/authink/ink.go/src/middleware"
-	"github.com/authink/ink.go/src/model"
+	"github.com/authink/ink.go/src/models"
 	"github.com/authink/ink.go/src/orm"
-	"github.com/authink/ink.go/src/util"
+	"github.com/authink/ink.go/src/utils"
 	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -86,12 +86,12 @@ type addAppReq struct {
 func addApp(c *web.Context) {
 	req := new(addAppReq)
 	if err := c.ShouldBindJSON(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
-	secret := util.RandString(6)
-	app := model.NewApp(req.Name, secret)
+	secret := utils.RandString(6)
+	app := models.NewApp(req.Name, secret)
 	if err := orm.App(c.AppContext()).Insert(app); err != nil {
 		c.AbortWithServerError(err)
 		return
@@ -134,7 +134,7 @@ func updateApp(c *web.Context) {
 	param := new(updateAppParam)
 
 	if err := c.ShouldBindUri(param); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
@@ -144,15 +144,15 @@ func updateApp(c *web.Context) {
 		v.RegisterStructValidation(web.ValidationNotAllFieldsZero, req)
 	}
 
-	var currentApp = c.MustGet("app").(*model.App)
+	var currentApp = c.MustGet("app").(*models.App)
 	if err := c.ShouldBindJSON(req); err != nil || (req.ActiveToggle && param.Id == int(currentApp.Id)) {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
 	var (
 		appCtx = c.AppContext()
-		app    *model.App
+		app    *models.App
 		secret string
 	)
 
@@ -163,7 +163,7 @@ func updateApp(c *web.Context) {
 		}
 
 		if req.ResetSecret {
-			secret = util.RandString(6)
+			secret = utils.RandString(6)
 			app.Reset(secret)
 		}
 		if req.ActiveToggle {

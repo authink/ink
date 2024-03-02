@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/authink/ink.go/src/authz"
-	"github.com/authink/ink.go/src/errors"
+	"github.com/authink/ink.go/src/errs"
 	"github.com/authink/ink.go/src/middleware"
 	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
@@ -40,7 +40,7 @@ type groupshipReq struct {
 func groupships(c *web.Context) {
 	req := new(groupshipReq)
 	if err := c.ShouldBindQuery(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
@@ -77,7 +77,7 @@ type addGroupshipReq struct {
 func addGroupship(c *web.Context) {
 	req := new(addGroupshipReq)
 	if err := c.ShouldBindJSON(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
@@ -111,7 +111,7 @@ func addGroupship(c *web.Context) {
 func deleteGroupship(c *web.Context) {
 	req := new(addGroupshipReq)
 	if err := c.ShouldBindQuery(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 

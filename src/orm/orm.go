@@ -1,19 +1,19 @@
 package orm
 
 import (
-	libsql "database/sql"
+	"database/sql"
 	"errors"
 
-	"github.com/authink/inkstone/orm"
+	"github.com/authink/inkstone/model"
 )
 
-type resultHandlerFunc func(libsql.Result, orm.Identifier) error
+type resultHandlerFunc func(sql.Result, model.Identifier) error
 
 type dbExecutor interface {
-	NamedExec(string, any) (libsql.Result, error)
+	NamedExec(string, any) (sql.Result, error)
 }
 
-func namedExec(executor dbExecutor, statement string, m orm.Identifier, handleResult resultHandlerFunc) (err error) {
+func namedExec(executor dbExecutor, statement string, m model.Identifier, handleResult resultHandlerFunc) (err error) {
 	result, err := executor.NamedExec(
 		statement,
 		m,
@@ -28,7 +28,7 @@ func namedExec(executor dbExecutor, statement string, m orm.Identifier, handleRe
 	return
 }
 
-func handleSaveResult(result libsql.Result, m orm.Identifier) (err error) {
+func handleSaveResult(result sql.Result, m model.Identifier) (err error) {
 	if err = handleInsertResult(result, m); err != nil {
 		return
 	}
@@ -42,7 +42,7 @@ func handleSaveResult(result libsql.Result, m orm.Identifier) (err error) {
 	return
 }
 
-func handleInsertResult(result libsql.Result, m orm.Identifier) (err error) {
+func handleInsertResult(result sql.Result, m model.Identifier) (err error) {
 	lastId, err := result.LastInsertId()
 	if err != nil {
 		return

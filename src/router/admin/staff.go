@@ -1,15 +1,15 @@
 package admin
 
 import (
-	errs "errors"
+	"errors"
 
 	"github.com/authink/ink.go/src/authz"
-	"github.com/authink/ink.go/src/errors"
+	"github.com/authink/ink.go/src/errs"
 	"github.com/authink/ink.go/src/middleware"
-	"github.com/authink/ink.go/src/model"
+	"github.com/authink/ink.go/src/models"
 	"github.com/authink/ink.go/src/orm"
-	"github.com/authink/ink.go/src/util"
-	o "github.com/authink/inkstone/orm"
+	"github.com/authink/ink.go/src/utils"
+	"github.com/authink/inkstone/model"
 	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -54,24 +54,24 @@ func staffs(c *web.Context) {
 
 	req := new(web.PagingRequest)
 	if err := c.ShouldBindQuery(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
 	var total int
-	var staffs []model.Staff
+	var staffs []models.Staff
 
 	if err := appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
 		if total, err = orm.Staff(appCtx).CountTx(tx); err != nil {
 			return
 		}
 
-		pageArgs := o.PageArgs{
+		page := model.Page{
 			Offset: req.Offset,
 			Limit:  req.Limit,
 		}
 
-		staffs, err = orm.Staff(appCtx).PaginationTx(tx, &pageArgs)
+		staffs, err = orm.Staff(appCtx).PaginationTx(tx, &page)
 		return
 	}); err != nil {
 		c.AbortWithServerError(err)
@@ -124,12 +124,12 @@ type addStaffReq struct {
 func addStaff(c *web.Context) {
 	req := new(addStaffReq)
 	if err := c.ShouldBindJSON(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
-	password := util.RandString(6)
-	staff := model.NewStaff(req.Email, password, req.Phone, false)
+	password := utils.RandString(6)
+	staff := models.NewStaff(req.Email, password, req.Phone, false)
 	if err := orm.Staff(c.AppContext()).Insert(staff); err != nil {
 		c.AbortWithServerError(err)
 		return
@@ -176,7 +176,7 @@ func updateStaff(c *web.Context) {
 	param := new(updateStaffParam)
 
 	if err := c.ShouldBindUri(param); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
@@ -187,13 +187,13 @@ func updateStaff(c *web.Context) {
 	}
 
 	if err := c.ShouldBindJSON(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
 	var (
 		appCtx   = c.AppContext()
-		staff    *model.Staff
+		staff    *models.Staff
 		password string
 	)
 
@@ -204,7 +204,7 @@ func updateStaff(c *web.Context) {
 		}
 
 		if req.Phone == staff.Phone {
-			return errs.New("staff's phone not changed")
+			return errors.New("staff's phone not changed")
 		} else if req.Phone != "" {
 			staff.Phone = req.Phone
 		}
@@ -215,7 +215,7 @@ func updateStaff(c *web.Context) {
 			staff.Departure = !staff.Departure
 		}
 		if req.ResetPassword {
-			password = util.RandString(6)
+			password = utils.RandString(6)
 			staff.Reset(password)
 		}
 

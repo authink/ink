@@ -2,7 +2,7 @@ package admin
 
 import (
 	"github.com/authink/ink.go/src/authz"
-	"github.com/authink/ink.go/src/errors"
+	"github.com/authink/ink.go/src/errs"
 	"github.com/authink/ink.go/src/middleware"
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/inkstone/web"
@@ -42,7 +42,7 @@ type permissionRes struct {
 func permissions(c *web.Context) {
 	req := new(permissionReq)
 	if err := c.ShouldBindQuery(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 

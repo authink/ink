@@ -3,11 +3,11 @@ package token
 import (
 	"net/http"
 
-	"github.com/authink/ink.go/src/env"
-	"github.com/authink/ink.go/src/errors"
+	"github.com/authink/ink.go/src/envs"
+	"github.com/authink/ink.go/src/errs"
 	"github.com/authink/ink.go/src/orm"
-	"github.com/authink/ink.go/src/util"
-	u "github.com/authink/inkstone/util"
+	"github.com/authink/ink.go/src/utils"
+	"github.com/authink/inkstone/util"
 	"github.com/authink/inkstone/web"
 )
 
@@ -39,18 +39,18 @@ type GrantRes struct {
 func grant(c *web.Context) {
 	req := new(GrantReq)
 	if err := c.ShouldBindJSON(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
 	appCtx := c.AppContext()
 
-	if app, err := orm.App(appCtx).Get(req.AppId); util.CheckApp(c, err, app.Active, func() bool { return util.CompareSecrets(app.Secret, req.AppSecret) }, http.StatusBadRequest) {
+	if app, err := orm.App(appCtx).Get(req.AppId); utils.CheckApp(c, err, app.Active, func() bool { return utils.CompareSecrets(app.Secret, req.AppSecret) }, http.StatusBadRequest) {
 		switch app.Name {
-		case env.AppNameAdmin():
+		case envs.AppNameAdmin():
 			staff, err := orm.Staff(appCtx).GetByEmail(req.Email)
 
-			if ok := util.CheckStaff(c, err, staff.Active, staff.Departure, func() bool { return u.CheckPassword(staff.Password, req.Password) == nil }, http.StatusBadRequest); !ok {
+			if ok := utils.CheckStaff(c, err, staff.Active, staff.Departure, func() bool { return util.CheckPassword(staff.Password, req.Password) == nil }, http.StatusBadRequest); !ok {
 				return
 			}
 
@@ -59,7 +59,7 @@ func grant(c *web.Context) {
 			}
 
 		default:
-			c.AbortWithClientError(errors.ERR_UNSUPPORTED_APP)
+			c.AbortWithClientError(errs.ERR_UNSUPPORTED_APP)
 		}
 	}
 }

@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/authink/ink.go/src/errors"
+	"github.com/authink/ink.go/src/errs"
 	"github.com/authink/inkstone/test"
 	"github.com/authink/inkstone/web"
 	"github.com/stretchr/testify/assert"
@@ -34,11 +34,11 @@ func TestGrant(t *testing.T) {
 	// go test -v -p 2 # 缺省 -p 参数会根据 cpu 核心数量设置
 	var (
 		ok                 = []any{http.StatusOK, &GrantRes{TokenType: "Bearer", ExpiresIn: 7200}, 100000, "123456", "admin@huoyijie.cn", "123456", new(GrantRes)}
-		invalidAppId       = []any{http.StatusBadRequest, errors.ERR_INVALID_APP, 999999, "123456", "admin@huoyijie.cn", "123456", new(web.ClientError)}
-		invalidAppSecret   = []any{http.StatusBadRequest, errors.ERR_INVALID_APP, 100000, "1234567", "admin@huoyijie.cn", "123456", new(web.ClientError)}
+		invalidAppId       = []any{http.StatusBadRequest, errs.ERR_INVALID_APP, 999999, "123456", "admin@huoyijie.cn", "123456", new(web.ClientError)}
+		invalidAppSecret   = []any{http.StatusBadRequest, errs.ERR_INVALID_APP, 100000, "1234567", "admin@huoyijie.cn", "123456", new(web.ClientError)}
 		invalidEmailFormat = []any{http.StatusBadRequest, nil, 100000, "123456", "admin", "123456", new(web.ClientError)}
-		invalidEmail       = []any{http.StatusBadRequest, errors.ERR_INVALID_ACCOUNT, 100000, "123456", "admin1@huoyijie.cn", "123456", new(web.ClientError)}
-		invalidPassword    = []any{http.StatusBadRequest, errors.ERR_INVALID_ACCOUNT, 100000, "123456", "admin@huoyijie.cn", "1234567", new(web.ClientError)}
+		invalidEmail       = []any{http.StatusBadRequest, errs.ERR_INVALID_ACCOUNT, 100000, "123456", "admin1@huoyijie.cn", "123456", new(web.ClientError)}
+		invalidPassword    = []any{http.StatusBadRequest, errs.ERR_INVALID_ACCOUNT, 100000, "123456", "admin@huoyijie.cn", "1234567", new(web.ClientError)}
 	)
 
 	var tests = []any{

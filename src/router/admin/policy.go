@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/authink/ink.go/src/authz"
-	"github.com/authink/ink.go/src/errors"
+	"github.com/authink/ink.go/src/errs"
 	"github.com/authink/ink.go/src/middleware"
 	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
@@ -46,7 +46,7 @@ type policyRes struct {
 func policies(c *web.Context) {
 	req := new(policyReq)
 	if err := c.ShouldBindQuery(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
@@ -93,7 +93,7 @@ type addPolicyReq struct {
 func addPolicy(c *web.Context) {
 	req := new(addPolicyReq)
 	if err := c.ShouldBindJSON(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
@@ -128,7 +128,7 @@ func addPolicy(c *web.Context) {
 func deletePolicy(c *web.Context) {
 	req := new(addPolicyReq)
 	if err := c.ShouldBindQuery(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 

@@ -1,9 +1,9 @@
-package model
+package models
 
-import "github.com/authink/inkstone/orm"
+import "github.com/authink/inkstone/model"
 
 type Department struct {
-	orm.Model
+	model.Base
 	Name    string
 	OwnerId uint32 `db:"owner_id"`
 	Active  bool
@@ -18,13 +18,13 @@ func NewDept(name string, ownerId int) *Department {
 }
 
 type DeptLevel struct {
-	orm.Record
+	model.Record
 	DeptId    uint32 `db:"dept_id"`
 	SubDeptId uint32 `db:"sub_dept_id"`
 }
 
 type DeptStaff struct {
-	orm.Record
+	model.Record
 	DeptId  uint32 `db:"dept_id"`
 	StaffId uint32 `db:"staff_id"`
 }

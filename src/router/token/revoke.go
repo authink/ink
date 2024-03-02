@@ -1,7 +1,7 @@
 package token
 
 import (
-	"github.com/authink/ink.go/src/errors"
+	"github.com/authink/ink.go/src/errs"
 	"github.com/authink/inkstone/web"
 )
 
@@ -18,7 +18,7 @@ import (
 func revoke(c *web.Context) {
 	req := new(refreshReq)
 	if err := c.ShouldBindJSON(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 

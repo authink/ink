@@ -1,11 +1,11 @@
-package util
+package utils
 
 import (
 	"database/sql"
-	errs "errors"
+	"errors"
 	"net/http"
 
-	"github.com/authink/ink.go/src/errors"
+	"github.com/authink/ink.go/src/errs"
 	"github.com/authink/inkstone/util"
 	"github.com/authink/inkstone/web"
 	"github.com/golang-jwt/jwt/v5"
@@ -19,16 +19,16 @@ func CompareSecrets(secret, reqAppSecret string) (ok bool) {
 
 func CheckApp(c *web.Context, err error, active bool, checkSecret CheckSecretFunc, code int) (ok bool) {
 	if err != nil || !active || !checkSecret() {
-		if err != nil && !errs.Is(err, sql.ErrNoRows) {
+		if err != nil && !errors.Is(err, sql.ErrNoRows) {
 			c.AbortWithServerError(err)
 			return
 		}
 
 		switch code {
 		case http.StatusUnauthorized:
-			c.AbortWithUnauthorized(errors.ERR_INVALID_APP)
+			c.AbortWithUnauthorized(errs.ERR_INVALID_APP)
 		default:
-			c.AbortWithClientError(errors.ERR_INVALID_APP)
+			c.AbortWithClientError(errs.ERR_INVALID_APP)
 		}
 
 		return
@@ -40,16 +40,16 @@ type CheckPasswordFunc func() bool
 
 func CheckStaff(c *web.Context, err error, active, departure bool, checkPassword CheckPasswordFunc, code int) (ok bool) {
 	if err != nil || !active || departure || !checkPassword() {
-		if err != nil && !errs.Is(err, sql.ErrNoRows) {
+		if err != nil && !errors.Is(err, sql.ErrNoRows) {
 			c.AbortWithServerError(err)
 			return
 		}
 
 		switch code {
 		case http.StatusUnauthorized:
-			c.AbortWithUnauthorized(errors.ERR_INVALID_ACCOUNT)
+			c.AbortWithUnauthorized(errs.ERR_INVALID_ACCOUNT)
 		default:
-			c.AbortWithClientError(errors.ERR_INVALID_ACCOUNT)
+			c.AbortWithClientError(errs.ERR_INVALID_ACCOUNT)
 		}
 
 		return
@@ -60,8 +60,8 @@ func CheckStaff(c *web.Context, err error, active, departure bool, checkPassword
 func CheckAccessToken(c *web.Context, secretKey, accessToken, uuid string) (jwtClaims *util.JwtClaims, ok bool) {
 	jwtClaims, err := util.VerifyToken(secretKey, accessToken)
 
-	if (err != nil && !errs.Is(err, jwt.ErrTokenExpired)) || jwtClaims.ID != uuid {
-		c.AbortWithClientError(errors.ERR_INVALID_ACCESS_TOKEN)
+	if (err != nil && !errors.Is(err, jwt.ErrTokenExpired)) || jwtClaims.ID != uuid {
+		c.AbortWithClientError(errs.ERR_INVALID_ACCESS_TOKEN)
 		return
 	}
 

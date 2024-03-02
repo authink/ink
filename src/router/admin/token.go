@@ -2,11 +2,11 @@ package admin
 
 import (
 	"github.com/authink/ink.go/src/authz"
-	"github.com/authink/ink.go/src/errors"
+	"github.com/authink/ink.go/src/errs"
 	"github.com/authink/ink.go/src/middleware"
-	"github.com/authink/ink.go/src/model"
+	"github.com/authink/ink.go/src/models"
 	"github.com/authink/ink.go/src/orm"
-	o "github.com/authink/inkstone/orm"
+	"github.com/authink/inkstone/model"
 	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
@@ -47,24 +47,24 @@ func tokens(c *web.Context) {
 
 	req := new(web.PagingRequest)
 	if err := c.ShouldBindQuery(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
 	var total int
-	var tokens []model.AuthTokenWithApp
+	var tokens []models.AuthTokenWithApp
 
 	if err := appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
 		if total, err = orm.AuthToken(appCtx).CountTx(tx); err != nil {
 			return
 		}
 
-		pageArgs := o.PageArgs{
+		page := model.Page{
 			Offset: req.Offset,
 			Limit:  req.Limit,
 		}
 
-		tokens, err = orm.AuthToken(appCtx).PaginationTx(tx, &pageArgs)
+		tokens, err = orm.AuthToken(appCtx).PaginationTx(tx, &page)
 		return
 	}); err != nil {
 		c.AbortWithServerError(err)
@@ -115,7 +115,7 @@ type delTokenReq struct {
 func deleteToken(c *web.Context) {
 	req := new(delTokenReq)
 	if err := c.ShouldBindUri(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 

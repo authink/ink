@@ -2,7 +2,7 @@ package router
 
 import (
 	_ "github.com/authink/ink.go/src/docs"
-	"github.com/authink/ink.go/src/env"
+	"github.com/authink/ink.go/src/envs"
 	"github.com/authink/ink.go/src/router/admin"
 	"github.com/authink/ink.go/src/router/token"
 	"github.com/gin-gonic/gin"
@@ -34,5 +34,5 @@ import (
 // @externalDocs.url			https://swagger.io/resources/open-api/
 func SetupRouter(apiGroup *gin.RouterGroup) {
 	token.SetupTokenGroup(apiGroup)
-	admin.SetupAdminGroup(apiGroup, env.AppNameAdmin())
+	admin.SetupAdminGroup(apiGroup, envs.AppNameAdmin())
 }

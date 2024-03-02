@@ -2,9 +2,9 @@ package admin
 
 import (
 	"github.com/authink/ink.go/src/authz"
-	"github.com/authink/ink.go/src/errors"
+	"github.com/authink/ink.go/src/errs"
 	"github.com/authink/ink.go/src/middleware"
-	"github.com/authink/ink.go/src/model"
+	"github.com/authink/ink.go/src/models"
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
@@ -39,11 +39,11 @@ type addDeptReq struct {
 func addDept(c *web.Context) {
 	req := new(addDeptReq)
 	if err := c.ShouldBindJSON(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
-	if err := orm.Dept(c.AppContext()).Insert(model.NewDept(req.Name, req.OwerId)); err != nil {
+	if err := orm.Dept(c.AppContext()).Insert(models.NewDept(req.Name, req.OwerId)); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}
@@ -72,11 +72,11 @@ type addDeptLevelReq struct {
 func addDeptLevel(c *web.Context) {
 	req := new(addDeptLevelReq)
 	if err := c.ShouldBindJSON(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
-	if err := orm.DeptLevel(c.AppContext()).Insert(&model.DeptLevel{
+	if err := orm.DeptLevel(c.AppContext()).Insert(&models.DeptLevel{
 		DeptId:    uint32(req.DeptId),
 		SubDeptId: uint32(req.SubDeptId),
 	}); err != nil {
@@ -108,11 +108,11 @@ type addDeptStaffReq struct {
 func addDeptStaff(c *web.Context) {
 	req := new(addDeptStaffReq)
 	if err := c.ShouldBindJSON(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
-	if err := orm.DeptStaff(c.AppContext()).Insert(&model.DeptStaff{
+	if err := orm.DeptStaff(c.AppContext()).Insert(&models.DeptStaff{
 		DeptId:  uint32(req.DeptId),
 		StaffId: uint32(req.StaffId),
 	}); err != nil {

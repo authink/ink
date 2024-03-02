@@ -1,14 +1,14 @@
 package admin
 
 import (
-	errs "errors"
+	"errors"
 
 	"github.com/authink/ink.go/src/authz"
-	"github.com/authink/ink.go/src/errors"
+	"github.com/authink/ink.go/src/errs"
 	"github.com/authink/ink.go/src/middleware"
-	"github.com/authink/ink.go/src/model"
+	"github.com/authink/ink.go/src/models"
 	"github.com/authink/ink.go/src/orm"
-	o "github.com/authink/inkstone/orm"
+	"github.com/authink/inkstone/model"
 	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
@@ -64,16 +64,16 @@ func groups(c *web.Context) {
 
 	req := new(pagingGroupReq)
 	if err := c.ShouldBindQuery(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
 	var total int
-	var groups []model.GroupWithApp
+	var groups []models.GroupWithApp
 
 	if err := appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
-		groupPage := orm.GroupPageArg{
-			PageArgs: o.PageArgs{
+		groupPage := models.GroupPage{
+			Page: model.Page{
 				Offset: req.Offset,
 				Limit:  req.Limit,
 			},
@@ -138,11 +138,11 @@ type addGroupReq struct {
 func addGroup(c *web.Context) {
 	req := new(addGroupReq)
 	if err := c.ShouldBindJSON(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
-	group := model.NewGroup(req.Name, model.GroupType(req.Type), uint32(req.AppId))
+	group := models.NewGroup(req.Name, models.GroupType(req.Type), uint32(req.AppId))
 	if err := orm.Group(c.AppContext()).Insert(group); err != nil {
 		c.AbortWithServerError(err)
 		return
@@ -186,7 +186,7 @@ func updateGroup(c *web.Context) {
 	param := new(updateGroupParam)
 
 	if err := c.ShouldBindUri(param); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
@@ -197,13 +197,13 @@ func updateGroup(c *web.Context) {
 	}
 
 	if err := c.ShouldBindJSON(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
 	var (
 		appCtx = c.AppContext()
-		group  *model.Group
+		group  *models.Group
 	)
 
 	if err := appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
@@ -213,7 +213,7 @@ func updateGroup(c *web.Context) {
 		}
 
 		if req.Name == group.Name {
-			return errs.New("group's name not changed")
+			return errors.New("group's name not changed")
 		} else if req.Name != "" {
 			group.Name = req.Name
 		}

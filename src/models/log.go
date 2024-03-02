@@ -1,11 +1,11 @@
-package model
+package models
 
 import (
 	"encoding/json"
 	"fmt"
 	"net/url"
 
-	"github.com/authink/inkstone/orm"
+	"github.com/authink/inkstone/model"
 	"github.com/gin-gonic/gin"
 )
 
@@ -27,7 +27,7 @@ func (ld *LogDetail) String() string {
 }
 
 type Log struct {
-	orm.Created
+	model.Created
 	Detail string
 }
 

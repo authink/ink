@@ -6,9 +6,9 @@ import (
 	"strings"
 
 	"github.com/authink/ink.go/src/authz"
-	"github.com/authink/ink.go/src/env"
-	"github.com/authink/ink.go/src/errors"
-	"github.com/authink/ink.go/src/model"
+	"github.com/authink/ink.go/src/envs"
+	"github.com/authink/ink.go/src/errs"
+	"github.com/authink/ink.go/src/models"
 	"github.com/authink/ink.go/src/orm"
 	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
@@ -18,21 +18,21 @@ const ROOT string = "root"
 
 func Authz(obj authz.Obj) gin.HandlerFunc {
 	return web.HandlerAdapter(func(c *web.Context) {
-		var app = c.MustGet("app").(*model.App)
+		var app = c.MustGet("app").(*models.App)
 
 		switch app.Name {
-		case env.AppNameAdmin():
-			var staff = c.MustGet("account").(*model.Staff)
+		case envs.AppNameAdmin():
+			var staff = c.MustGet("account").(*models.Staff)
 			act := strings.ToUpper(c.Request.Method)
 
 			if obj.NeedRoot {
 				if !staff.Super {
-					c.AbortWithForbidden(errors.ERR_NO_PERMISSION)
+					c.AbortWithForbidden(errs.ERR_NO_PERMISSION)
 					return
 				}
 			} else {
 				if !obj.Support(act) {
-					c.AbortWithForbidden(errors.ERR_NO_PERMISSION)
+					c.AbortWithForbidden(errs.ERR_NO_PERMISSION)
 					return
 				}
 
@@ -44,14 +44,14 @@ func Authz(obj authz.Obj) gin.HandlerFunc {
 				dom := strconv.Itoa(int(app.Id))
 
 				if ok, err := authz.RBACEnforcer().Enforce(sub, dom, obj.Resource(), act); err != nil || !ok {
-					c.AbortWithForbidden(errors.ERR_NO_PERMISSION)
+					c.AbortWithForbidden(errs.ERR_NO_PERMISSION)
 					return
 				}
 			}
 
 			c.Next()
 			if statusCode := c.Writer.Status(); statusCode == http.StatusOK {
-				orm.Log(c.AppContext()).Insert(model.NewLog(&model.LogDetail{
+				orm.Log(c.AppContext()).Insert(models.NewLog(&models.LogDetail{
 					AppId:     int(app.Id),
 					StaffId:   int(staff.Id),
 					Resource:  obj.Resource(),
@@ -62,7 +62,7 @@ func Authz(obj authz.Obj) gin.HandlerFunc {
 			}
 
 		default:
-			c.AbortWithForbidden(errors.ERR_UNSUPPORTED_APP)
+			c.AbortWithForbidden(errs.ERR_UNSUPPORTED_APP)
 		}
 	})
 }

@@ -1,12 +1,12 @@
-package model
+package models
 
 import (
-	"github.com/authink/inkstone/orm"
+	"github.com/authink/inkstone/model"
 	"github.com/authink/inkstone/util"
 )
 
 type App struct {
-	orm.Model
+	model.Base
 	Name   string
 	Secret string
 	Active bool

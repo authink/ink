@@ -3,10 +3,10 @@ package token
 import (
 	"net/http"
 
-	"github.com/authink/ink.go/src/env"
-	"github.com/authink/ink.go/src/errors"
+	"github.com/authink/ink.go/src/envs"
+	"github.com/authink/ink.go/src/errs"
 	"github.com/authink/ink.go/src/orm"
-	"github.com/authink/ink.go/src/util"
+	"github.com/authink/ink.go/src/utils"
 	"github.com/authink/inkstone/web"
 )
 
@@ -28,7 +28,7 @@ type refreshReq struct {
 func refresh(c *web.Context) {
 	req := new(refreshReq)
 	if err := c.ShouldBindJSON(req); err != nil {
-		c.AbortWithClientError(errors.ERR_BAD_REQUEST)
+		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
@@ -39,17 +39,17 @@ func refresh(c *web.Context) {
 
 	appCtx := c.AppContext()
 
-	jwtClaims, ok := util.CheckAccessToken(c, appCtx.SecretKey, req.AccessToken, authToken.AccessToken)
+	jwtClaims, ok := utils.CheckAccessToken(c, appCtx.SecretKey, req.AccessToken, authToken.AccessToken)
 	if !ok {
 		return
 	}
 
-	if app, err := orm.App(appCtx).Get(jwtClaims.AppId); util.CheckApp(c, err, app.Active, func() bool { return true }, http.StatusBadRequest) {
+	if app, err := orm.App(appCtx).Get(jwtClaims.AppId); utils.CheckApp(c, err, app.Active, func() bool { return true }, http.StatusBadRequest) {
 		switch app.Name {
-		case env.AppNameAdmin():
+		case envs.AppNameAdmin():
 			staff, err := orm.Staff(appCtx).Get(jwtClaims.AccountId)
 
-			if ok := util.CheckStaff(c, err, staff.Active, staff.Departure, func() bool { return true }, http.StatusBadRequest); !ok {
+			if ok := utils.CheckStaff(c, err, staff.Active, staff.Departure, func() bool { return true }, http.StatusBadRequest); !ok {
 				return
 			}
 
@@ -58,7 +58,7 @@ func refresh(c *web.Context) {
 			}
 
 		default:
-			c.AbortWithClientError(errors.ERR_UNSUPPORTED_APP)
+			c.AbortWithClientError(errs.ERR_UNSUPPORTED_APP)
 		}
 	}
 }

@@ -1,12 +1,12 @@
-package model
+package models
 
 import (
-	"github.com/authink/inkstone/orm"
+	"github.com/authink/inkstone/model"
 	"github.com/authink/inkstone/util"
 )
 
 type Staff struct {
-	orm.Model
+	model.Base
 	Email     string
 	Password  string
 	Phone     string

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/authink/ink.go/src/env"
+	"github.com/authink/ink.go/src/envs"
 )
 
 type Obj struct {
@@ -35,7 +35,7 @@ var (
 			http.MethodPost,
 			http.MethodPut,
 		},
-		AppName: env.AppNameAdmin(),
+		AppName: envs.AppNameAdmin(),
 	}
 	Staffs = Obj{
 		Name: "staffs",
@@ -44,7 +44,7 @@ var (
 			http.MethodPost,
 			http.MethodPut,
 		},
-		AppName: env.AppNameAdmin(),
+		AppName: envs.AppNameAdmin(),
 	}
 	Tokens = Obj{
 		Name: "tokens",
@@ -52,7 +52,7 @@ var (
 			http.MethodGet,
 			http.MethodDelete,
 		},
-		AppName: env.AppNameAdmin(),
+		AppName: envs.AppNameAdmin(),
 	}
 	Groups = Obj{
 		Name:     "groups",
@@ -62,7 +62,7 @@ var (
 			http.MethodPost,
 			http.MethodPut,
 		},
-		AppName: env.AppNameAdmin(),
+		AppName: envs.AppNameAdmin(),
 	}
 	Groupships = Obj{
 		Name:     "groupships",
@@ -72,7 +72,7 @@ var (
 			http.MethodPost,
 			http.MethodDelete,
 		},
-		AppName: env.AppNameAdmin(),
+		AppName: envs.AppNameAdmin(),
 	}
 	Permissons = Obj{
 		Name:     "permissions",
@@ -80,7 +80,7 @@ var (
 		Acts: []string{
 			http.MethodGet,
 		},
-		AppName: env.AppNameAdmin(),
+		AppName: envs.AppNameAdmin(),
 	}
 	Policies = Obj{
 		Name:     "policies",
@@ -90,7 +90,7 @@ var (
 			http.MethodPost,
 			http.MethodDelete,
 		},
-		AppName: env.AppNameAdmin(),
+		AppName: envs.AppNameAdmin(),
 	}
 	Departments = Obj{
 		Name: "departments",
@@ -99,7 +99,7 @@ var (
 			http.MethodPost,
 			http.MethodPut,
 		},
-		AppName: env.AppNameAdmin(),
+		AppName: envs.AppNameAdmin(),
 	}
 	Logs = Obj{
 		Name:     "logs",
@@ -107,7 +107,7 @@ var (
 		Acts: []string{
 			http.MethodGet,
 		},
-		AppName: env.AppNameAdmin(),
+		AppName: envs.AppNameAdmin(),
 	}
 )
 
