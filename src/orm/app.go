@@ -10,7 +10,6 @@ import (
 
 type iapp interface {
 	orm.Inserter[models.App]
-	orm.Saver[models.App]
 	orm.Updater[models.App]
 	orm.Geter[models.App]
 	orm.Finder[models.App]
@@ -47,16 +46,6 @@ func (a *appImpl) Insert(app *models.App) error {
 // InsertTx implements iapp.
 func (a *appImpl) InsertTx(tx *sqlx.Tx, app *models.App) error {
 	return orm.NamedInsert(tx, sqls.App.Insert(), app)
-}
-
-// Save implements iapp.
-func (a *appImpl) Save(app *models.App) error {
-	return orm.NamedSave(a.DB, sqls.App.Save(), app)
-}
-
-// SaveTx implements iapp.
-func (a *appImpl) SaveTx(tx *sqlx.Tx, app *models.App) error {
-	return orm.NamedSave(tx, sqls.App.Save(), app)
 }
 
 // Update implements iapp.

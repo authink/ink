@@ -1,14 +1,18 @@
 package sqls
 
 import (
-	"fmt"
-
+	"github.com/authink/ink.go/src/orm/tables"
 	"github.com/authink/inkstone/orm/sql"
+	"github.com/huandu/go-sqlbuilder"
+)
+
+var (
+	tbApp  = tables.App
+	tbnApp = tbApp.TbName()
 )
 
 type app interface {
 	sql.Inserter
-	sql.Saver
 	sql.Updater
 	sql.Geter
 	sql.GeterForUpdate
@@ -18,33 +22,89 @@ type app interface {
 type appImpl struct{}
 
 // Find implements app.
-func (a *appImpl) Find() string {
-	return fmt.Sprintf("SELECT id, created_at, updated_at, name, active FROM %s ORDER BY id ASC", table.App)
+func (a *appImpl) Find() (statement string) {
+	statement, _ = sqlbuilder.
+		Select(
+			sql.Id,
+			sql.CreatedAt,
+			sql.UpdatedAt,
+			tbApp.Name,
+			tbApp.Active,
+		).
+		From(tbnApp).
+		OrderBy(sql.Id).
+		Asc().
+		Build()
+	return statement
 }
 
 // Get implements app.
-func (a *appImpl) Get() string {
-	return fmt.Sprintf("SELECT id, name, secret, active FROM %s WHERE id = ?", table.App)
+func (a *appImpl) Get() (statement string) {
+	statement, _ = sqlbuilder.
+		Select(
+			sql.Id,
+			tbApp.Name,
+			tbApp.Secret,
+			tbApp.Active,
+		).
+		From(tbnApp).
+		Where(sql.EQ(sql.Id, "?")).
+		Build()
+	return statement
 }
 
 // GetForUpdate implements app.
-func (a *appImpl) GetForUpdate() string {
-	return fmt.Sprintf("SELECT id, name, secret, active FROM %s WHERE id = ? FOR UPDATE", table.App)
+func (a *appImpl) GetForUpdate() (statement string) {
+	statement, _ = sqlbuilder.
+		Select(
+			sql.Id,
+			tbApp.Name,
+			tbApp.Secret,
+			tbApp.Active,
+		).
+		From(tbnApp).
+		Where(sql.EQ(sql.Id, "?")).
+		ForUpdate().
+		Build()
+	return statement
 }
 
 // Insert implements app.
-func (a *appImpl) Insert() string {
-	return fmt.Sprintf("INSERT INTO %s (name, secret) VALUES (:name, :secret)", table.App)
-}
-
-// Save implements app.
-func (a *appImpl) Save() string {
-	return fmt.Sprintf("INSERT INTO %s (name, secret) VALUES (:name, :secret) ON DUPLICATE KEY UPDATE active = :active, secret = :secret", table.App)
+func (a *appImpl) Insert() (statement string) {
+	statement, _ = sqlbuilder.
+		InsertInto(tbnApp).
+		Cols(
+			tbApp.Name,
+			tbApp.Secret,
+		).
+		Values(
+			sql.Named(tbApp.Name),
+			sql.Named(tbApp.Secret),
+		).
+		Build()
+	return sql.ReplaceAtWithColon(statement)
 }
 
 // Update implements app.
-func (a *appImpl) Update() string {
-	return fmt.Sprintf("UPDATE %s SET active = :active, secret = :secret WHERE id = :id", table.App)
+func (a *appImpl) Update() (statement string) {
+	sb := sqlbuilder.NewUpdateBuilder()
+	statement, _ = sb.
+		Update(tbnApp).
+		Set(
+			sb.Assign(
+				tbApp.Active,
+				sql.Named(tbApp.Active),
+			),
+			sb.Assign(
+				tbApp.Secret,
+				sql.Named(tbApp.Secret),
+			),
+		).
+		Where(
+			sb.EQ(sql.Id, sql.Named(sql.Id)),
+		).
+		Build()
+	return sql.ReplaceAtWithColon(statement)
 }
 
 var App app = new(appImpl)

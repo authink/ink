@@ -3,6 +3,7 @@ package sqls
 import (
 	"fmt"
 
+	"github.com/authink/ink.go/src/orm/tables"
 	"github.com/authink/inkstone/orm/sql"
 )
 
@@ -14,7 +15,7 @@ type deptImpl struct{}
 
 // Insert implements dept.
 func (d *deptImpl) Insert() string {
-	return fmt.Sprintf("INSERT INTO %s (name, owner_id) VALUES (:name, :owner_id)", table.Dept)
+	return fmt.Sprintf("INSERT INTO %s (name, owner_id) VALUES (:name, :owner_id)", tables.Dept.TbName())
 }
 
 var Dept dept = new(deptImpl)
