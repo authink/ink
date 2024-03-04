@@ -25,13 +25,25 @@ type authToken interface {
 type authTokenImpl struct{}
 
 // Count implements authToken.
-func (a *authTokenImpl) Count() string {
-	return fmt.Sprintf("SELECT COUNT(id) c FROM %s", tbnToken)
+func (a *authTokenImpl) Count() (statement string) {
+	tbnAlias := "at"
+	sb := sqlbuilder.NewSelectBuilder()
+	statement, _ = sb.
+		Select(
+			sql.Count(tbnAlias),
+		).
+		From(sb.As(tbnToken, tbnAlias)).
+		Build()
+	return statement
 }
 
 // Delete implements authToken.
-func (a *authTokenImpl) Delete() string {
-	return fmt.Sprintf("DELETE FROM %s WHERE id = ?", tbnToken)
+func (a *authTokenImpl) Delete() (statement string) {
+	statement, _ = sqlbuilder.
+		DeleteFrom(tbnToken).
+		Where(sql.EQ(sql.Id, "?")).
+		Build()
+	return statement
 }
 
 // GetByAccessToken implements authToken.
