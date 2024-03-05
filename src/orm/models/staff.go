@@ -5,6 +5,8 @@ import (
 	"github.com/authink/inkstone/util"
 )
 
+// @model
+// @db s_staffs
 type Staff struct {
 	model.Base
 	Email     string

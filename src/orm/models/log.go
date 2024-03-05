@@ -26,6 +26,8 @@ func (ld *LogDetail) String() string {
 	return string(bytes)
 }
 
+// @model
+// @db s_logs
 type Log struct {
 	model.Created
 	Detail string

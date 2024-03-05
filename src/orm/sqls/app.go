@@ -1,14 +1,9 @@
 package sqls
 
 import (
-	"github.com/authink/ink.go/src/orm/tables"
+	"github.com/authink/ink.go/src/orm/db"
 	"github.com/authink/inkstone/orm/sql"
 	"github.com/huandu/go-sqlbuilder"
-)
-
-var (
-	tbApp  = tables.App
-	tbnApp = tbApp.TbName()
 )
 
 type app interface {
@@ -28,10 +23,10 @@ func (a *appImpl) Find() (statement string) {
 			sql.Id,
 			sql.CreatedAt,
 			sql.UpdatedAt,
-			tbApp.Name,
-			tbApp.Active,
+			db.App.Name,
+			db.App.Active,
 		).
-		From(tbnApp).
+		From(db.App.Tname()).
 		OrderBy(sql.Id).
 		Asc().
 		Build()
@@ -43,11 +38,11 @@ func (a *appImpl) Get() (statement string) {
 	statement, _ = sqlbuilder.
 		Select(
 			sql.Id,
-			tbApp.Name,
-			tbApp.Secret,
-			tbApp.Active,
+			db.App.Name,
+			db.App.Secret,
+			db.App.Active,
 		).
-		From(tbnApp).
+		From(db.App.Tname()).
 		Where(sql.EQ(sql.Id, "?")).
 		Build()
 	return statement
@@ -58,11 +53,11 @@ func (a *appImpl) GetForUpdate() (statement string) {
 	statement, _ = sqlbuilder.
 		Select(
 			sql.Id,
-			tbApp.Name,
-			tbApp.Secret,
-			tbApp.Active,
+			db.App.Name,
+			db.App.Secret,
+			db.App.Active,
 		).
-		From(tbnApp).
+		From(db.App.Tname()).
 		Where(sql.EQ(sql.Id, "?")).
 		ForUpdate().
 		Build()
@@ -72,14 +67,14 @@ func (a *appImpl) GetForUpdate() (statement string) {
 // Insert implements app.
 func (a *appImpl) Insert() (statement string) {
 	statement, _ = sqlbuilder.
-		InsertInto(tbnApp).
+		InsertInto(db.App.Tname()).
 		Cols(
-			tbApp.Name,
-			tbApp.Secret,
+			db.App.Name,
+			db.App.Secret,
 		).
 		Values(
-			sql.Named(tbApp.Name),
-			sql.Named(tbApp.Secret),
+			sql.Named(db.App.Name),
+			sql.Named(db.App.Secret),
 		).
 		Build()
 	return sql.ReplaceAtWithColon(statement)
@@ -89,15 +84,15 @@ func (a *appImpl) Insert() (statement string) {
 func (a *appImpl) Update() (statement string) {
 	sb := sqlbuilder.NewUpdateBuilder()
 	statement, _ = sb.
-		Update(tbnApp).
+		Update(db.App.Tname()).
 		Set(
 			sb.Assign(
-				tbApp.Active,
-				sql.Named(tbApp.Active),
+				db.App.Active,
+				sql.Named(db.App.Active),
 			),
 			sb.Assign(
-				tbApp.Secret,
-				sql.Named(tbApp.Secret),
+				db.App.Secret,
+				sql.Named(db.App.Secret),
 			),
 		).
 		Where(

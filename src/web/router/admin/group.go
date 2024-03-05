@@ -142,7 +142,7 @@ func addGroup(c *web.Context) {
 		return
 	}
 
-	group := models.NewGroup(req.Name, models.GroupType(req.Type), uint32(req.AppId))
+	group := models.NewGroup(req.Name, uint16(req.Type), uint32(req.AppId))
 	if err := orm.Group(c.AppContext()).Insert(group); err != nil {
 		c.AbortWithServerError(err)
 		return

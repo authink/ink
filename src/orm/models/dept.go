@@ -2,6 +2,8 @@ package models
 
 import "github.com/authink/inkstone/orm/model"
 
+// @model
+// @db s_departments
 type Department struct {
 	model.Base
 	Name    string
@@ -17,12 +19,16 @@ func NewDept(name string, ownerId int) *Department {
 	}
 }
 
+// @model
+// @db s_dept_leves
 type DeptLevel struct {
 	model.Record
 	DeptId    uint32 `db:"dept_id"`
 	SubDeptId uint32 `db:"sub_dept_id"`
 }
 
+// @model
+// @db s_dept_staffs
 type DeptStaff struct {
 	model.Record
 	DeptId  uint32 `db:"dept_id"`

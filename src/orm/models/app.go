@@ -5,6 +5,8 @@ import (
 	"github.com/authink/inkstone/util"
 )
 
+// @model
+// @db s_apps
 type App struct {
 	model.Base
 	Name   string

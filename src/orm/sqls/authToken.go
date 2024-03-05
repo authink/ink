@@ -3,14 +3,9 @@ package sqls
 import (
 	"fmt"
 
-	"github.com/authink/ink.go/src/orm/tables"
+	"github.com/authink/ink.go/src/orm/db"
 	"github.com/authink/inkstone/orm/sql"
 	"github.com/huandu/go-sqlbuilder"
-)
-
-var (
-	tbToken  = tables.AuthToken
-	tbnToken = tbToken.TbName()
 )
 
 type authToken interface {
@@ -32,7 +27,7 @@ func (a *authTokenImpl) Count() (statement string) {
 		Select(
 			sql.Count(tbnAlias),
 		).
-		From(sb.As(tbnToken, tbnAlias)).
+		From(sb.As(db.AuthToken.Tname(), tbnAlias)).
 		Build()
 	return statement
 }
@@ -40,7 +35,7 @@ func (a *authTokenImpl) Count() (statement string) {
 // Delete implements authToken.
 func (a *authTokenImpl) Delete() (statement string) {
 	statement, _ = sqlbuilder.
-		DeleteFrom(tbnToken).
+		DeleteFrom(db.AuthToken.Tname()).
 		Where(sql.EQ(sql.Id, "?")).
 		Build()
 	return statement
@@ -48,17 +43,17 @@ func (a *authTokenImpl) Delete() (statement string) {
 
 // GetByAccessToken implements authToken.
 func (a *authTokenImpl) GetByAccessToken() string {
-	return fmt.Sprintf("SELECT id, created_at, access_token, refresh_token, app_id, account_id FROM %s WHERE access_token = ?", tbnToken)
+	return fmt.Sprintf("SELECT id, created_at, access_token, refresh_token, app_id, account_id FROM %s WHERE access_token = ?", db.AuthToken.Tname())
 }
 
 // GetByRefreshToken implements authToken.
 func (a *authTokenImpl) GetByRefreshToken() string {
-	return fmt.Sprintf("SELECT id, created_at, access_token, refresh_token, app_id, account_id FROM %s WHERE refresh_token = ?", tbnToken)
+	return fmt.Sprintf("SELECT id, created_at, access_token, refresh_token, app_id, account_id FROM %s WHERE refresh_token = ?", db.AuthToken.Tname())
 }
 
 // Insert implements authToken.
 func (a *authTokenImpl) Insert() string {
-	return fmt.Sprintf("INSERT INTO %s (access_token, refresh_token, app_id, account_id) VALUES (:access_token, :refresh_token, :app_id, :account_id)", tbnToken)
+	return fmt.Sprintf("INSERT INTO %s (access_token, refresh_token, app_id, account_id) VALUES (:access_token, :refresh_token, :app_id, :account_id)", db.AuthToken.Tname())
 }
 
 // Pagination implements authToken.
@@ -70,21 +65,21 @@ func (a *authTokenImpl) Pagination() (statement string) {
 		Select(
 			sql.Col(tbnAlias1, sql.Id),
 			sql.Col(tbnAlias1, sql.CreatedAt),
-			sql.Col(tbnAlias1, tbToken.AccessToken),
-			sql.Col(tbnAlias1, tbToken.RefreshToken),
-			sql.Col(tbnAlias1, tbToken.AppId),
+			sql.Col(tbnAlias1, db.AuthToken.AccessToken),
+			sql.Col(tbnAlias1, db.AuthToken.RefreshToken),
+			sql.Col(tbnAlias1, db.AuthToken.AppId),
 			sb.As(
-				sql.Col(tbnAlias2, tbApp.Name),
-				"app_name",
+				sql.Col(tbnAlias2, db.App.Name),
+				db.AuthTokenWithApp.AppName,
 			),
-			sql.Col(tbnAlias1, tbToken.AccountId),
+			sql.Col(tbnAlias1, db.AuthToken.AccountId),
 		).
 		From(
-			sb.As(tbnToken, tbnAlias1),
-			sb.As(tbnApp, tbnAlias2),
+			sb.As(db.AuthToken.Tname(), tbnAlias1),
+			sb.As(db.App.Tname(), tbnAlias2),
 		).
 		Where(sql.EQ(
-			sql.Col(tbnAlias1, tbToken.AppId),
+			sql.Col(tbnAlias1, db.AuthToken.AppId),
 			sql.Col(tbnAlias2, sql.Id),
 		)).
 		OrderBy(sql.Col(tbnAlias1, sql.Id)).

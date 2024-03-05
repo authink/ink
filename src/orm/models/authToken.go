@@ -2,6 +2,8 @@ package models
 
 import "github.com/authink/inkstone/orm/model"
 
+// @model
+// @db s_auth_tokens
 type AuthToken struct {
 	model.Created
 	AccessToken  string `db:"access_token"`
@@ -19,6 +21,8 @@ func NewAuthToken(accessToken, refreshToken string, appId, accountId uint32) *Au
 	}
 }
 
+// @model
+// @embed AuthToken
 type AuthTokenWithApp struct {
 	AuthToken
 	AppName string `db:"app_name"`
