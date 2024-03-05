@@ -15,9 +15,10 @@ Usage:
 
 Available Commands:
   completion  Generate the autocompletion script for the specified shell
+  gen         Generate DB Models
   help        Help about any command
   migrate     Migrate schema up or down
-  run         Run ink server
+  run         Run server
   seed        Seed the database
   swag        Generate swagger docs
 
@@ -63,7 +64,7 @@ DB_PASSWORD={your_db_password}
 CREATE DATABASE `ink` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 ```
 
-- make，方便执行 swag/test/build/run 等任务
+- make，方便执行 gen/swag/test/build/run 等任务
 
 如果未安装 make，可参考 Makefile 中的任务命令，手动执行
 
@@ -81,6 +82,12 @@ $ APP_ENV=dev ./bin/ink migrate -d down
 
 ```bash
 $ APP_ENV=dev ./bin/ink seed
+```
+
+## Generate DB Models
+
+```bash
+$ make gen
 ```
 
 ## 生成 API swagger 文档
