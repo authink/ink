@@ -15,7 +15,7 @@ type deptImpl struct{}
 
 // Insert implements dept.
 func (d *deptImpl) Insert() string {
-	return fmt.Sprintf("INSERT INTO %s (name, owner_id) VALUES (:name, :owner_id)", db.Dept.Tname())
+	return fmt.Sprintf("INSERT INTO %s (name, owner_id) VALUES (:name, :owner_id)", db.Department.Tname())
 }
 
 var Dept dept = &deptImpl{}

@@ -2,8 +2,12 @@
 V := 0.1.4
 ARGS :=
 
+gen:
+	go run ./src gen
+
 tidy:
 	go mod tidy
+tidy: gen
 
 fmt:
 	go fmt ./src/...

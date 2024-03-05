@@ -28,7 +28,6 @@ type GroupWithApp struct {
 	AppName string `db:"app_name"`
 }
 
-// @param
 type GroupPage struct {
 	model.Page
 	Type  int

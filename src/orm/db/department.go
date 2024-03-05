@@ -6,29 +6,23 @@ import (
 	"github.com/authink/inkstone/orm/db"
 )
 
-type staff struct {
-	Email string
+type department struct {
+	Name string
 
-	Password string
-
-	Phone string
-
-	Super string
+	OwnerId string
 
 	Active string
-
-	Departure string
 }
 
 // Tname implements db.Table.
-func (*staff) Tname() string {
-	return "s_staffs"
+func (*department) Tname() string {
+	return "s_departments"
 }
 
-var _ db.Table = (*staff)(nil)
+var _ db.Table = (*department)(nil)
 
-var Staff staff
+var Department department
 
 func init() {
-	db.Bind(&Staff, &models.Staff{})
+	db.Bind(&Department, &models.Department{})
 }

@@ -6,19 +6,14 @@ import (
 	"github.com/authink/inkstone/orm/db"
 )
 
-type log struct {
-	Detail string
+type authTokenWithApp struct {
+	authToken
+
+	AppName string
 }
 
-// Tname implements db.Table.
-func (*log) Tname() string {
-	return "s_logs"
-}
-
-var _ db.Table = (*log)(nil)
-
-var Log log
+var AuthTokenWithApp authTokenWithApp
 
 func init() {
-	db.Bind(&Log, &models.Log{})
+	db.Bind(&AuthTokenWithApp, &models.AuthTokenWithApp{})
 }

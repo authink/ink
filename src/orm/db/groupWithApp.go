@@ -6,19 +6,14 @@ import (
 	"github.com/authink/inkstone/orm/db"
 )
 
-type log struct {
-	Detail string
+type groupWithApp struct {
+	group
+
+	AppName string
 }
 
-// Tname implements db.Table.
-func (*log) Tname() string {
-	return "s_logs"
-}
-
-var _ db.Table = (*log)(nil)
-
-var Log log
+var GroupWithApp groupWithApp
 
 func init() {
-	db.Bind(&Log, &models.Log{})
+	db.Bind(&GroupWithApp, &models.GroupWithApp{})
 }
