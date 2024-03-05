@@ -1,8 +1,6 @@
 package sqls
 
 import (
-	"fmt"
-
 	"github.com/authink/ink.go/src/orm/db"
 	"github.com/authink/inkstone/orm/sql"
 	"github.com/huandu/go-sqlbuilder"
@@ -42,18 +40,55 @@ func (a *authTokenImpl) Delete() (statement string) {
 }
 
 // GetByAccessToken implements authToken.
-func (a *authTokenImpl) GetByAccessToken() string {
-	return fmt.Sprintf("SELECT id, created_at, access_token, refresh_token, app_id, account_id FROM %s WHERE access_token = ?", db.AuthToken.Tname())
+func (a *authTokenImpl) GetByAccessToken() (statement string) {
+	statement, _ = sqlbuilder.
+		Select(
+			sql.Id,
+			sql.CreatedAt,
+			db.AuthToken.AccessToken,
+			db.AuthToken.RefreshToken,
+			db.AuthToken.AppId,
+			db.AuthToken.AccountId,
+		).
+		From(db.AuthToken.Tname()).
+		Where(sql.EQ(db.AuthToken.AccessToken, "?")).
+		Build()
+	return statement
 }
 
 // GetByRefreshToken implements authToken.
-func (a *authTokenImpl) GetByRefreshToken() string {
-	return fmt.Sprintf("SELECT id, created_at, access_token, refresh_token, app_id, account_id FROM %s WHERE refresh_token = ?", db.AuthToken.Tname())
+func (a *authTokenImpl) GetByRefreshToken() (statement string) {
+	statement, _ = sqlbuilder.
+		Select(
+			sql.Id,
+			sql.CreatedAt,
+			db.AuthToken.AccessToken,
+			db.AuthToken.RefreshToken,
+			db.AuthToken.AppId,
+			db.AuthToken.AccountId,
+		).
+		From(db.AuthToken.Tname()).
+		Where(sql.EQ(db.AuthToken.RefreshToken, "?")).
+		Build()
+	return statement
 }
 
 // Insert implements authToken.
-func (a *authTokenImpl) Insert() string {
-	return fmt.Sprintf("INSERT INTO %s (access_token, refresh_token, app_id, account_id) VALUES (:access_token, :refresh_token, :app_id, :account_id)", db.AuthToken.Tname())
+func (a *authTokenImpl) Insert() (statement string) {
+	statement, _ = sqlbuilder.
+		InsertInto(db.AuthToken.Tname()).
+		Cols(
+			db.AuthToken.AccessToken,
+			db.AuthToken.RefreshToken,
+			db.AuthToken.AppId,
+			db.AuthToken.AccountId,
+		).Values(
+		sql.Named(db.AuthToken.AccessToken),
+		sql.Named(db.AuthToken.RefreshToken),
+		sql.Named(db.AuthToken.AppId),
+		sql.Named(db.AuthToken.AccountId),
+	).Build()
+	return sql.ReplaceAtWithColon(statement)
 }
 
 // Pagination implements authToken.

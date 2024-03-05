@@ -1,10 +1,9 @@
 package sqls
 
 import (
-	"fmt"
-
 	"github.com/authink/ink.go/src/orm/db"
 	"github.com/authink/inkstone/orm/sql"
+	"github.com/huandu/go-sqlbuilder"
 )
 
 type dept interface {
@@ -14,8 +13,12 @@ type dept interface {
 type deptImpl struct{}
 
 // Insert implements dept.
-func (d *deptImpl) Insert() string {
-	return fmt.Sprintf("INSERT INTO %s (name, owner_id) VALUES (:name, :owner_id)", db.Department.Tname())
+func (d *deptImpl) Insert() (statement string) {
+	statement, _ = sqlbuilder.InsertInto(db.Department.Tname()).Cols(db.Department.Name, db.Department.OwnerId).Values(
+		sql.Named(db.Department.Name),
+		sql.Named(db.Department.OwnerId),
+	).Build()
+	return sql.ReplaceAtWithColon(statement)
 }
 
 var Dept dept = &deptImpl{}
