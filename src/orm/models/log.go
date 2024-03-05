@@ -40,7 +40,7 @@ func NewLog(log fmt.Stringer) *Log {
 }
 
 func (log *Log) GetDetail() *LogDetail {
-	detail := new(LogDetail)
+	detail := &LogDetail{}
 	json.Unmarshal([]byte(log.Detail), detail)
 	return detail
 }

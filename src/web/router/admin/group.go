@@ -62,7 +62,7 @@ type groupRes struct {
 func groups(c *web.Context) {
 	appCtx := c.AppContext()
 
-	req := new(pagingGroupReq)
+	req := &pagingGroupReq{}
 	if err := c.ShouldBindQuery(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
@@ -136,7 +136,7 @@ type addGroupReq struct {
 //	@Failure		403			{object}	web.ClientError
 //	@Failure		500			{string}	empty
 func addGroup(c *web.Context) {
-	req := new(addGroupReq)
+	req := &addGroupReq{}
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
@@ -183,14 +183,14 @@ type updateGroupReq struct {
 //	@Failure		403				{object}	web.ClientError
 //	@Failure		500				{string}	empty
 func updateGroup(c *web.Context) {
-	param := new(updateGroupParam)
+	param := &updateGroupParam{}
 
 	if err := c.ShouldBindUri(param); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
-	req := new(updateGroupReq)
+	req := &updateGroupReq{}
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterStructValidation(web.ValidationNotAllFieldsZero, req)

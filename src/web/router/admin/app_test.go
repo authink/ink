@@ -24,7 +24,7 @@ func getApps(accessToken string, resObj any) (*httptest.ResponseRecorder, error)
 }
 
 func TestApps(t *testing.T) {
-	resObj := new(token.GrantRes)
+	resObj := &token.GrantRes{}
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)
@@ -34,9 +34,11 @@ func TestApps(t *testing.T) {
 	var apps []appRes
 	w2, _ := getApps(resObj.AccessToken, &apps)
 	assert.Equal(t, http.StatusOK, w2.Code)
-	assert.Equal(t, 2, len(apps))
-	assert.Equal(t, envs.AppNameAdmin(), apps[0].Name)
-	assert.True(t, apps[0].Active)
+	if w2.Code == http.StatusOK {
+		assert.Equal(t, 2, len(apps))
+		assert.Equal(t, envs.AppNameAdmin(), apps[0].Name)
+		assert.True(t, apps[0].Active)
+	}
 }
 
 func tAddApp(accessToken, name string, resObj any) (*httptest.ResponseRecorder, error) {
@@ -52,14 +54,14 @@ func tAddApp(accessToken, name string, resObj any) (*httptest.ResponseRecorder, 
 }
 
 func TestAddApp(t *testing.T) {
-	resObj := new(token.GrantRes)
+	resObj := &token.GrantRes{}
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.NotEmpty(t, resObj.AccessToken)
 	assert.NotEmpty(t, resObj.RefreshToken)
 
-	resAddApp := new(appRes)
+	resAddApp := &appRes{}
 	w2, _ := tAddApp(resObj.AccessToken, "appmock", resAddApp)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Less(t, 100001, resAddApp.Id)
@@ -79,7 +81,7 @@ func tUpdateApp(accessToken string, id int, reqObj, resObj any) (*httptest.Respo
 }
 
 func TestResetApp(t *testing.T) {
-	resObj := new(token.GrantRes)
+	resObj := &token.GrantRes{}
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)
@@ -89,7 +91,7 @@ func TestResetApp(t *testing.T) {
 	resetAppReq := &updateAppReq{
 		ResetSecret: true,
 	}
-	resetAppRes := new(appRes)
+	resetAppRes := &appRes{}
 	w2, _ := tUpdateApp(resObj.AccessToken, 100001, resetAppReq, resetAppRes)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Equal(t, 100001, resetAppRes.Id)
@@ -98,7 +100,7 @@ func TestResetApp(t *testing.T) {
 }
 
 func TestToggleApp(t *testing.T) {
-	resObj := new(token.GrantRes)
+	resObj := &token.GrantRes{}
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)
@@ -108,7 +110,7 @@ func TestToggleApp(t *testing.T) {
 	resetAppReq := &updateAppReq{
 		ActiveToggle: true,
 	}
-	toggleAppRes := new(appRes)
+	toggleAppRes := &appRes{}
 	w2, _ := tUpdateApp(resObj.AccessToken, 100001, resetAppReq, toggleAppRes)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Equal(t, 100001, toggleAppRes.Id)

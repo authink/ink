@@ -44,14 +44,14 @@ func (a *authTokenImpl) DeleteTx(tx *sqlx.Tx, id int) error {
 
 // GetByAccessToken implements authToken.
 func (a *authTokenImpl) GetByAccessToken(accessToken string) (token *models.AuthToken, err error) {
-	token = new(models.AuthToken)
+	token = &models.AuthToken{}
 	err = orm.Get(a.DB, token, sqls.AuthToken.GetByAccessToken(), accessToken)
 	return
 }
 
 // GetByRefreshToken implements authToken.
 func (a *authTokenImpl) GetByRefreshToken(refreshToken string) (token *models.AuthToken, err error) {
-	token = new(models.AuthToken)
+	token = &models.AuthToken{}
 	err = orm.Get(a.DB, token, sqls.AuthToken.GetByRefreshToken(), refreshToken)
 	return
 }

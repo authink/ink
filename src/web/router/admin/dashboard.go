@@ -27,5 +27,5 @@ type dashboardRes struct {
 //	@Failure		403			{object}	web.ClientError
 //	@Failure		500			{string}	empty
 func dashboard(c *web.Context) {
-	c.Response(new(dashboardRes))
+	c.Response(&dashboardRes{})
 }

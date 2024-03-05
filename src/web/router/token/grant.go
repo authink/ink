@@ -37,7 +37,7 @@ type GrantRes struct {
 //	@Failure		400			{object}	web.ClientError
 //	@Failure		500			{string}	empty
 func grant(c *web.Context) {
-	req := new(GrantReq)
+	req := &GrantReq{}
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return

@@ -18,4 +18,4 @@ func (d *deptLevelImpl) Insert() string {
 	return fmt.Sprintf("INSERT INTO %s (dept_id, sub_dept_id) VALUES (:dept_id, :sub_dept_id)", db.DeptLevel.Tname())
 }
 
-var DeptLevel deptLevel = new(deptLevelImpl)
+var DeptLevel deptLevel = &deptLevelImpl{}

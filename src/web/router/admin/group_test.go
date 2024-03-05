@@ -24,7 +24,7 @@ func getGroups(accessToken string, gtype, appId int, resObj any) (*httptest.Resp
 }
 
 func TestGroups(t *testing.T) {
-	resObj := new(token.GrantRes)
+	resObj := &token.GrantRes{}
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)
@@ -57,14 +57,14 @@ func tAddGroup(accessToken, name string, gtype, appId int, resObj any) (*httptes
 }
 
 func TestAddGroup(t *testing.T) {
-	resObj := new(token.GrantRes)
+	resObj := &token.GrantRes{}
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.NotEmpty(t, resObj.AccessToken)
 	assert.NotEmpty(t, resObj.RefreshToken)
 
-	resAddGroup := new(groupRes)
+	resAddGroup := &groupRes{}
 	w2, _ := tAddGroup(resObj.AccessToken, "cto", 1, 100000, resAddGroup)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Less(t, 100000, resAddGroup.Id)
@@ -85,7 +85,7 @@ func tUpdateGroup(accessToken string, id int, reqObj, resObj any) (*httptest.Res
 }
 
 func TestUpdateGroup(t *testing.T) {
-	resObj := new(token.GrantRes)
+	resObj := &token.GrantRes{}
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)
@@ -96,7 +96,7 @@ func TestUpdateGroup(t *testing.T) {
 		Name:         "cfo",
 		ActiveToggle: true,
 	}
-	updateRes := new(groupRes)
+	updateRes := &groupRes{}
 	w2, _ := tUpdateGroup(resObj.AccessToken, 100000, updateReq, updateRes)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Equal(t, 100000, updateRes.Id)

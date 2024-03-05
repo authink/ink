@@ -24,4 +24,4 @@ func (l *logImpl) Insert() string {
 	return fmt.Sprintf("INSERT INTO %s (detail) VALUES (:detail)", db.Log.Tname())
 }
 
-var Log log = new(logImpl)
+var Log log = &logImpl{}

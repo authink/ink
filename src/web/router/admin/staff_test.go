@@ -24,7 +24,7 @@ func getStaffs(accessToken string, resObj any) (*httptest.ResponseRecorder, erro
 }
 
 func TestStaffs(t *testing.T) {
-	resObj := new(token.GrantRes)
+	resObj := &token.GrantRes{}
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)
@@ -50,14 +50,14 @@ func tAddStaff(accessToken, email, phone string, resObj any) (*httptest.Response
 }
 
 func TestAddStaff(t *testing.T) {
-	resObj := new(token.GrantRes)
+	resObj := &token.GrantRes{}
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.NotEmpty(t, resObj.AccessToken)
 	assert.NotEmpty(t, resObj.RefreshToken)
 
-	resAddStaff := new(staffRes)
+	resAddStaff := &staffRes{}
 	w2, _ := tAddStaff(resObj.AccessToken, "example@huoyijie.cn", "18555201314", resAddStaff)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Equal(t, 100002, resAddStaff.Id)
@@ -77,7 +77,7 @@ func tUpdateStaff(accessToken string, id int, reqObj, resObj any) (*httptest.Res
 }
 
 func TestUpdateStaff(t *testing.T) {
-	resObj := new(token.GrantRes)
+	resObj := &token.GrantRes{}
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)
@@ -90,7 +90,7 @@ func TestUpdateStaff(t *testing.T) {
 		DepartureToggle: true,
 		ResetPassword:   true,
 	}
-	updateRes := new(staffRes)
+	updateRes := &staffRes{}
 	w2, _ := tUpdateStaff(resObj.AccessToken, 100001, updateReq, updateRes)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Equal(t, 100001, updateRes.Id)

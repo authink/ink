@@ -60,4 +60,4 @@ func (s *staffImpl) Update() string {
 	return fmt.Sprintf("UPDATE %s SET password = :password, phone = :phone, super = :super, active = :active, departure = :departure WHERE id = :id", db.Staff.Tname())
 }
 
-var Staff staff = new(staffImpl)
+var Staff staff = &staffImpl{}

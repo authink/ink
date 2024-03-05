@@ -44,7 +44,7 @@ type policyRes struct {
 //	@Failure		403	{object}	web.ClientError
 //	@Failure		500	{string}	empty
 func policies(c *web.Context) {
-	req := new(policyReq)
+	req := &policyReq{}
 	if err := c.ShouldBindQuery(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
@@ -91,7 +91,7 @@ type addPolicyReq struct {
 //	@Failure		403				{object}	web.ClientError
 //	@Failure		500				{string}	empty
 func addPolicy(c *web.Context) {
-	req := new(addPolicyReq)
+	req := &addPolicyReq{}
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
@@ -126,7 +126,7 @@ func addPolicy(c *web.Context) {
 //	@Failure		403	{object}	web.ClientError
 //	@Failure		500	{string}	empty
 func deletePolicy(c *web.Context) {
-	req := new(addPolicyReq)
+	req := &addPolicyReq{}
 	if err := c.ShouldBindQuery(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return

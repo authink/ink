@@ -54,4 +54,4 @@ func (g *groupImpl) Update() string {
 	return fmt.Sprintf("UPDATE %s SET name = :name, active = :active WHERE id = :id", db.Group.Tname())
 }
 
-var Group group = new(groupImpl)
+var Group group = &groupImpl{}

@@ -35,14 +35,14 @@ func (g *groupImpl) CountTx(tx *sqlx.Tx, args ...any) (c int, err error) {
 // Get implements group.
 // Subtle: this method shadows the method (*DB).Get of groupImpl.DB.
 func (g *groupImpl) Get(id int) (group *models.Group, err error) {
-	group = new(models.Group)
+	group = &models.Group{}
 	err = orm.Get(g.DB, group, sqls.Group.Get(), id)
 	return
 }
 
 // GetTx implements group.
 func (g *groupImpl) GetTx(tx *sqlx.Tx, id int) (group *models.Group, err error) {
-	group = new(models.Group)
+	group = &models.Group{}
 	err = orm.Get(tx, group, sqls.Group.GetForUpdate(), id)
 	return
 }

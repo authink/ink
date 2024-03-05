@@ -18,4 +18,4 @@ func (d *deptImpl) Insert() string {
 	return fmt.Sprintf("INSERT INTO %s (name, owner_id) VALUES (:name, :owner_id)", db.Dept.Tname())
 }
 
-var Dept dept = new(deptImpl)
+var Dept dept = &deptImpl{}

@@ -16,7 +16,7 @@ import (
 //	@Failure		400			{object}	web.ClientError
 //	@Failure		500			{string}	empty
 func revoke(c *web.Context) {
-	req := new(refreshReq)
+	req := &refreshReq{}
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return

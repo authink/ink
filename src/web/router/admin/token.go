@@ -45,7 +45,7 @@ type tokenRes struct {
 func tokens(c *web.Context) {
 	appCtx := c.AppContext()
 
-	req := new(web.PagingRequest)
+	req := &web.PagingRequest{}
 	if err := c.ShouldBindQuery(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
@@ -113,7 +113,7 @@ type delTokenReq struct {
 //	@Failure		403	{object}	web.ClientError
 //	@Failure		500	{string}	empty
 func deleteToken(c *web.Context) {
-	req := new(delTokenReq)
+	req := &delTokenReq{}
 	if err := c.ShouldBindUri(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return

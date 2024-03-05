@@ -38,7 +38,7 @@ type groupshipReq struct {
 //	@Failure		403	{object}	web.ClientError
 //	@Failure		500	{string}	empty
 func groupships(c *web.Context) {
-	req := new(groupshipReq)
+	req := &groupshipReq{}
 	if err := c.ShouldBindQuery(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
@@ -75,7 +75,7 @@ type addGroupshipReq struct {
 //	@Failure		403				{object}	web.ClientError
 //	@Failure		500				{string}	empty
 func addGroupship(c *web.Context) {
-	req := new(addGroupshipReq)
+	req := &addGroupshipReq{}
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
@@ -109,7 +109,7 @@ func addGroupship(c *web.Context) {
 //	@Failure		403	{object}	web.ClientError
 //	@Failure		500	{string}	empty
 func deleteGroupship(c *web.Context) {
-	req := new(addGroupshipReq)
+	req := &addGroupshipReq{}
 	if err := c.ShouldBindQuery(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return

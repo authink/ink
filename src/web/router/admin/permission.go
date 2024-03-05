@@ -40,7 +40,7 @@ type permissionRes struct {
 //	@Failure		403		{object}	web.ClientError
 //	@Failure		500		{string}	empty
 func permissions(c *web.Context) {
-	req := new(permissionReq)
+	req := &permissionReq{}
 	if err := c.ShouldBindQuery(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return

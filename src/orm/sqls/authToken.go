@@ -88,4 +88,4 @@ func (a *authTokenImpl) Pagination() (statement string) {
 	return sql.LimitAndOffset(statement)
 }
 
-var AuthToken authToken = new(authTokenImpl)
+var AuthToken authToken = &authTokenImpl{}

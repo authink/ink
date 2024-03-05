@@ -84,7 +84,7 @@ type addAppReq struct {
 //	@Failure		403			{object}	web.ClientError
 //	@Failure		500			{string}	empty
 func addApp(c *web.Context) {
-	req := new(addAppReq)
+	req := &addAppReq{}
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
@@ -131,14 +131,14 @@ type updateAppReq struct {
 //	@Failure		403				{object}	web.ClientError
 //	@Failure		500				{string}	empty
 func updateApp(c *web.Context) {
-	param := new(updateAppParam)
+	param := &updateAppParam{}
 
 	if err := c.ShouldBindUri(param); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
-	req := new(updateAppReq)
+	req := &updateAppReq{}
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterStructValidation(web.ValidationNotAllFieldsZero, req)

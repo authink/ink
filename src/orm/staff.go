@@ -35,7 +35,7 @@ func (s *staffImpl) CountTx(tx *sqlx.Tx, args ...any) (c int, err error) {
 
 // GetByEmail implements staff.
 func (s *staffImpl) GetByEmail(email string) (staff *models.Staff, err error) {
-	staff = new(models.Staff)
+	staff = &models.Staff{}
 	err = orm.Get(s.DB, staff, sqls.Staff.GetByEmail(), email)
 	return
 }
@@ -43,14 +43,14 @@ func (s *staffImpl) GetByEmail(email string) (staff *models.Staff, err error) {
 // Get implements staff.
 // Subtle: this method shadows the method (*DB).Get of staffImpl.DB.
 func (s *staffImpl) Get(id int) (staff *models.Staff, err error) {
-	staff = new(models.Staff)
+	staff = &models.Staff{}
 	err = orm.Get(s.DB, staff, sqls.Staff.Get(), id)
 	return
 }
 
 // GetTx implements staff.
 func (s *staffImpl) GetTx(tx *sqlx.Tx, id int) (staff *models.Staff, err error) {
-	staff = new(models.Staff)
+	staff = &models.Staff{}
 	err = orm.Get(tx, staff, sqls.Staff.GetForUpdate(), id)
 	return
 }

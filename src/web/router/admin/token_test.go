@@ -24,14 +24,14 @@ func getTokens(accessToken string, resObj any) (*httptest.ResponseRecorder, erro
 }
 
 func TestTokens(t *testing.T) {
-	resObj := new(token.GrantRes)
+	resObj := &token.GrantRes{}
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.NotEmpty(t, resObj.AccessToken)
 	assert.NotEmpty(t, resObj.RefreshToken)
 
-	resObj2 := new(token.GrantRes)
+	resObj2 := &token.GrantRes{}
 	w2, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj2)
 
 	assert.Equal(t, http.StatusOK, w2.Code)
@@ -56,7 +56,7 @@ func tDeleteToken(accessToken string, id int) (*httptest.ResponseRecorder, error
 }
 
 func TestDeleteToken(t *testing.T) {
-	resObj := new(token.GrantRes)
+	resObj := &token.GrantRes{}
 	w, _ := grantToken(100000, "123456", "admin@huoyijie.cn", "123456", resObj)
 
 	assert.Equal(t, http.StatusOK, w.Code)

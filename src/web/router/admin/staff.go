@@ -52,7 +52,7 @@ type staffRes struct {
 func staffs(c *web.Context) {
 	appCtx := c.AppContext()
 
-	req := new(web.PagingRequest)
+	req := &web.PagingRequest{}
 	if err := c.ShouldBindQuery(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
@@ -122,7 +122,7 @@ type addStaffReq struct {
 //	@Failure		403			{object}	web.ClientError
 //	@Failure		500			{string}	empty
 func addStaff(c *web.Context) {
-	req := new(addStaffReq)
+	req := &addStaffReq{}
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
@@ -173,14 +173,14 @@ type updateStaffReq struct {
 //	@Failure		403				{object}	web.ClientError
 //	@Failure		500				{string}	empty
 func updateStaff(c *web.Context) {
-	param := new(updateStaffParam)
+	param := &updateStaffParam{}
 
 	if err := c.ShouldBindUri(param); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
-	req := new(updateStaffReq)
+	req := &updateStaffReq{}
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterStructValidation(web.ValidationNotAllFieldsZero, req)

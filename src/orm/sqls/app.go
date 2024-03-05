@@ -102,4 +102,4 @@ func (a *appImpl) Update() (statement string) {
 	return sql.ReplaceAtWithColon(statement)
 }
 
-var App app = new(appImpl)
+var App app = &appImpl{}

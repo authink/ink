@@ -37,7 +37,7 @@ type addDeptReq struct {
 //	@Failure		403			{object}	web.ClientError
 //	@Failure		500			{string}	empty
 func addDept(c *web.Context) {
-	req := new(addDeptReq)
+	req := &addDeptReq{}
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
@@ -70,7 +70,7 @@ type addDeptLevelReq struct {
 //	@Failure		403				{object}	web.ClientError
 //	@Failure		500				{string}	empty
 func addDeptLevel(c *web.Context) {
-	req := new(addDeptLevelReq)
+	req := &addDeptLevelReq{}
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
@@ -106,7 +106,7 @@ type addDeptStaffReq struct {
 //	@Failure		403				{object}	web.ClientError
 //	@Failure		500				{string}	empty
 func addDeptStaff(c *web.Context) {
-	req := new(addDeptStaffReq)
+	req := &addDeptStaffReq{}
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
