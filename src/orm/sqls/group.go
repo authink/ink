@@ -1,8 +1,6 @@
 package sqls
 
 import (
-	"fmt"
-
 	"github.com/authink/ink.go/src/orm/db"
 	"github.com/authink/inkstone/orm/sql"
 	"github.com/huandu/go-sqlbuilder"
@@ -80,9 +78,40 @@ func (g *groupImpl) Insert() (statement string) {
 }
 
 // Pagination implements group.
-func (g *groupImpl) Pagination() string {
-	
-	return fmt.Sprintf("SELECT g.id, g.created_at, g.updated_at, g.name, g.type, g.app_id, a.name app_name, g.active FROM %s g, %s a WHERE g.app_id = a.id AND g.type = :type AND g.app_id = :app_id ORDER BY g.id DESC LIMIT :limit OFFSET :offset", db.Group.Tname(), db.App.Tname())
+func (g *groupImpl) Pagination() (statement string) {
+	tbnAlias1 := "g"
+	tbnAlias2 := "a"
+	sb := sqlbuilder.NewSelectBuilder()
+	statement, _ = sb.Select(
+		sql.Col(tbnAlias1, sql.Id),
+		sql.Col(tbnAlias1, sql.CreatedAt),
+		sql.Col(tbnAlias1, sql.UpdatedAt),
+		sql.Col(tbnAlias1, db.Group.Name),
+		sql.Col(tbnAlias1, db.Group.Type),
+		sql.Col(tbnAlias1, db.Group.AppId),
+		sql.Col(tbnAlias2, db.App.Name),
+		sql.Col(tbnAlias1, db.Group.Active),
+	).From(
+		sb.As(db.Group.Tname(), tbnAlias1),
+		sb.As(db.App.Tname(), tbnAlias2),
+	).Where(
+		sql.EQ(
+			sql.Col(tbnAlias1, db.Group.AppId),
+			sql.Col(tbnAlias2, sql.Id),
+		),
+		sb.EQ(
+			sql.Col(tbnAlias1, db.Group.Type),
+			sql.Named(db.Group.Type),
+		),
+		sb.EQ(
+			sql.Col(tbnAlias1, db.Group.AppId),
+			sql.Named(db.Group.AppId),
+		),
+	).OrderBy(
+		sql.Col(tbnAlias1, sql.Id),
+	).Desc().
+		Build()
+	return sql.LimitAndOffset(sql.ReplaceAtWithColon(statement))
 }
 
 // Update implements group.
