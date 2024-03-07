@@ -36,30 +36,37 @@ func (g *groupImpl) Count() (statement string) {
 
 // Get implements group.
 func (g *groupImpl) Get() (statement string) {
-	statement, _ = sqlbuilder.Select(
-		sql.Id,
-		db.Group.Name,
-		db.Group.Type,
-		db.Group.AppId,
-		db.Group.Active,
-	).From(db.Group.Tname()).Where(sql.EQ(sql.Id, "?")).Build()
-	return statement
+	sb := sqlbuilder.NewSelectBuilder()
+	statement, _ = sb.
+		Select(
+			sql.Id,
+			db.Group.Name,
+			db.Group.Type,
+			db.Group.AppId,
+			db.Group.Active,
+		).
+		From(db.Group.Tname()).
+		Where(sb.EQ(sql.Id, sql.Named(sql.Id))).
+		Build()
+	return sql.ReplaceAtWithColon(statement)
 }
 
 // GetForUpdate implements group.
 func (g *groupImpl) GetForUpdate() (statement string) {
-	statement, _ = sqlbuilder.Select(
-		sql.Id,
-		db.Group.Name,
-		db.Group.Type,
-		db.Group.AppId,
-		db.Group.Active,
-	).
+	sb := sqlbuilder.NewSelectBuilder()
+	statement, _ = sb.
+		Select(
+			sql.Id,
+			db.Group.Name,
+			db.Group.Type,
+			db.Group.AppId,
+			db.Group.Active,
+		).
 		From(db.Group.Tname()).
-		Where(sql.EQ(sql.Id, "?")).
+		Where(sb.EQ(sql.Id, sql.Named(sql.Id))).
 		ForUpdate().
 		Build()
-	return statement
+	return sql.ReplaceAtWithColon(statement)
 }
 
 // Insert implements group.

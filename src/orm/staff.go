@@ -15,42 +15,39 @@ type staff interface {
 	orm.Geter[models.Staff]
 	orm.Counter
 	orm.Pager[models.Staff]
-	GetByEmail(string) (*models.Staff, error)
+	GetByEmail(*models.Staff) error
 }
 
 type staffImpl app.AppContext
 
 // Count implements staff.
-func (s *staffImpl) Count(args ...any) (c int, err error) {
-	err = orm.Get(s.DB, &c, sqls.Staff.Count(), args...)
+func (s *staffImpl) Count(...model.Arg) (c int, err error) {
+	err = orm.Count(s.DB, sqls.Staff.Count(), &c, &model.Argument{})
 	return
 }
 
 // CountTx implements staff.
-func (s *staffImpl) CountTx(tx *sqlx.Tx, args ...any) (c int, err error) {
-	err = orm.Get(tx, &c, sqls.Staff.Count(), args...)
+func (s *staffImpl) CountTx(tx *sqlx.Tx, args ...model.Arg) (c int, err error) {
+	err = orm.Count(tx, sqls.Staff.Count(), &c, &model.Argument{})
 	return
 }
 
 // GetByEmail implements staff.
-func (s *staffImpl) GetByEmail(email string) (staff *models.Staff, err error) {
-	staff = &models.Staff{}
-	err = orm.Get(s.DB, staff, sqls.Staff.GetByEmail(), email)
+func (s *staffImpl) GetByEmail(staff *models.Staff) (err error) {
+	err = orm.Get(s.DB, sqls.Staff.GetByEmail(), staff)
 	return
 }
 
 // Get implements staff.
 // Subtle: this method shadows the method (*DB).Get of staffImpl.DB.
-func (s *staffImpl) Get(id int) (staff *models.Staff, err error) {
-	staff = &models.Staff{}
-	err = orm.Get(s.DB, staff, sqls.Staff.Get(), id)
+func (s *staffImpl) Get(staff *models.Staff) (err error) {
+	err = orm.Get(s.DB, sqls.Staff.Get(), staff)
 	return
 }
 
 // GetTx implements staff.
-func (s *staffImpl) GetTx(tx *sqlx.Tx, id int) (staff *models.Staff, err error) {
-	staff = &models.Staff{}
-	err = orm.Get(tx, staff, sqls.Staff.GetForUpdate(), id)
+func (s *staffImpl) GetTx(tx *sqlx.Tx, staff *models.Staff) (err error) {
+	err = orm.Get(tx, sqls.Staff.GetForUpdate(), staff)
 	return
 }
 
@@ -66,7 +63,7 @@ func (s *staffImpl) InsertTx(tx *sqlx.Tx, staff *models.Staff) error {
 
 // PaginationTx implements staff.
 func (s *staffImpl) PaginationTx(tx *sqlx.Tx, pager model.Pager) (staffs []models.Staff, err error) {
-	err = orm.Pagination(tx, sqls.Staff.Pagination(), &staffs, pager)
+	err = orm.Select(tx, sqls.Staff.Pagination(), &staffs, pager)
 	return
 }
 

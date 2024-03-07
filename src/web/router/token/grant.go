@@ -5,6 +5,7 @@ import (
 
 	"github.com/authink/ink.go/src/envs"
 	"github.com/authink/ink.go/src/orm"
+	"github.com/authink/ink.go/src/orm/models"
 	"github.com/authink/ink.go/src/web/errs"
 	"github.com/authink/ink.go/src/web/helper"
 	"github.com/authink/inkstone/util"
@@ -43,18 +44,23 @@ func grant(c *web.Context) {
 		return
 	}
 
-	appCtx := c.AppContext()
+	var (
+		appCtx = c.AppContext()
+		app    models.App
+	)
+	app.Id = uint32(req.AppId)
 
-	if app, err := orm.App(appCtx).Get(req.AppId); helper.CheckApp(c, err, app.Active, func() bool { return helper.CompareSecrets(app.Secret, req.AppSecret) }, http.StatusBadRequest) {
+	if err := orm.App(appCtx).Get(&app); helper.CheckApp(c, err, app.Active, func() bool { return helper.CompareSecrets(app.Secret, req.AppSecret) }, http.StatusBadRequest) {
 		switch app.Name {
 		case envs.AppNameAdmin():
-			staff, err := orm.Staff(appCtx).GetByEmail(req.Email)
+			var staff = models.Staff{Email: req.Email}
+			err = orm.Staff(appCtx).GetByEmail(&staff)
 
 			if ok := helper.CheckStaff(c, err, staff.Active, staff.Departure, func() bool { return util.CheckPassword(staff.Password, req.Password) == nil }, http.StatusBadRequest); !ok {
 				return
 			}
 
-			if res := generateAuthToken(c, app, staff); res != nil {
+			if res := generateAuthToken(c, &app, &staff); res != nil {
 				c.Response(res)
 			}
 

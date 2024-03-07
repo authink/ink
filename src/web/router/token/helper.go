@@ -54,8 +54,12 @@ func generateAuthToken(c *web.Context, app *models.App, staff *models.Staff) (re
 }
 
 func checkRefreshToken(c *web.Context, refreshToken string) (authToken *models.AuthToken, ok bool) {
-	appCtx := c.AppContext()
-	authToken, err := orm.AuthToken(appCtx).GetByRefreshToken(refreshToken)
+	var appCtx = c.AppContext()
+	authToken = &models.AuthToken{
+		RefreshToken: refreshToken,
+	}
+
+	err := orm.AuthToken(appCtx).GetByRefreshToken(authToken)
 	if err != nil {
 		if !errors.Is(err, sql.ErrNoRows) {
 			c.AbortWithServerError(err)
@@ -65,7 +69,7 @@ func checkRefreshToken(c *web.Context, refreshToken string) (authToken *models.A
 		return
 	}
 
-	if err = orm.AuthToken(appCtx).Delete(int(authToken.Id)); err != nil {
+	if err = orm.AuthToken(appCtx).Delete(authToken); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}

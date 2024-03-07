@@ -1,6 +1,8 @@
 package orm
 
 import (
+	"errors"
+
 	"github.com/authink/ink.go/src/orm/models"
 	"github.com/authink/ink.go/src/orm/sqls"
 	"github.com/authink/inkstone/app"
@@ -20,29 +22,33 @@ type group interface {
 type groupImpl app.AppContext
 
 // Count implements group.
-func (g *groupImpl) Count(args ...any) (c int, err error) {
+func (g *groupImpl) Count(args ...model.Arg) (c int, err error) {
+	if len(args) != 1 {
+		panic(errors.New("invalid num of args"))
+	}
 	err = orm.Count(g.DB, sqls.Group.Count(), &c, args[0])
 	return
 }
 
 // CountTx implements group.
-func (g *groupImpl) CountTx(tx *sqlx.Tx, args ...any) (c int, err error) {
+func (g *groupImpl) CountTx(tx *sqlx.Tx, args ...model.Arg) (c int, err error) {
+	if len(args) != 1 {
+		panic(errors.New("invalid num of args"))
+	}
 	err = orm.Count(tx, sqls.Group.Count(), &c, args[0])
 	return
 }
 
 // Get implements group.
 // Subtle: this method shadows the method (*DB).Get of groupImpl.DB.
-func (g *groupImpl) Get(id int) (group *models.Group, err error) {
-	group = &models.Group{}
-	err = orm.Get(g.DB, group, sqls.Group.Get(), id)
+func (g *groupImpl) Get(group *models.Group) (err error) {
+	err = orm.Get(g.DB, sqls.Group.Get(), group)
 	return
 }
 
 // GetTx implements group.
-func (g *groupImpl) GetTx(tx *sqlx.Tx, id int) (group *models.Group, err error) {
-	group = &models.Group{}
-	err = orm.Get(tx, group, sqls.Group.GetForUpdate(), id)
+func (g *groupImpl) GetTx(tx *sqlx.Tx, group *models.Group) (err error) {
+	err = orm.Get(tx, sqls.Group.GetForUpdate(), group)
 	return
 }
 
@@ -58,7 +64,7 @@ func (g *groupImpl) InsertTx(tx *sqlx.Tx, group *models.Group) error {
 
 // PaginationTx implements group.
 func (g *groupImpl) PaginationTx(tx *sqlx.Tx, pager model.Pager) (groups []models.GroupWithApp, err error) {
-	err = orm.Pagination(tx, sqls.Group.Pagination(), &groups, pager)
+	err = orm.Select(tx, sqls.Group.Pagination(), &groups, pager)
 	return
 }
 

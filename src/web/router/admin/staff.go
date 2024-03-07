@@ -193,12 +193,13 @@ func updateStaff(c *web.Context) {
 
 	var (
 		appCtx   = c.AppContext()
-		staff    *models.Staff
+		staff    models.Staff
 		password string
 	)
+	staff.Id = uint32(param.Id)
 
 	if err := appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
-		staff, err = orm.Staff(appCtx).GetTx(tx, param.Id)
+		err = orm.Staff(appCtx).GetTx(tx, &staff)
 		if err != nil {
 			return
 		}
@@ -219,7 +220,7 @@ func updateStaff(c *web.Context) {
 			staff.Reset(password)
 		}
 
-		return orm.Staff(appCtx).UpdateTx(tx, staff)
+		return orm.Staff(appCtx).UpdateTx(tx, &staff)
 	}); err != nil {
 		c.AbortWithServerError(err)
 		return

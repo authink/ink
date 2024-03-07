@@ -5,6 +5,7 @@ import (
 	"github.com/authink/ink.go/src/orm/sqls"
 	"github.com/authink/inkstone/app"
 	"github.com/authink/inkstone/orm"
+	"github.com/authink/inkstone/orm/model"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -16,8 +17,8 @@ type log interface {
 type logImpl app.AppContext
 
 // Find implements log.
-func (l *logImpl) Find(args ...any) (logs []models.Log, err error) {
-	err = orm.Select(l.DB, &logs, sqls.Log.Find(), args...)
+func (l *logImpl) Find(...model.Arg) (logs []models.Log, err error) {
+	err = orm.Select(l.DB, sqls.Log.Find(), &logs, &model.Argument{})
 	return
 }
 

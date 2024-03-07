@@ -32,16 +32,18 @@ func (a *authTokenImpl) Count() (statement string) {
 
 // Delete implements authToken.
 func (a *authTokenImpl) Delete() (statement string) {
-	statement, _ = sqlbuilder.
+	sb := sqlbuilder.NewDeleteBuilder()
+	statement, _ = sb.
 		DeleteFrom(db.AuthToken.Tname()).
-		Where(sql.EQ(sql.Id, "?")).
+		Where(sb.EQ(sql.Id, sql.Named(sql.Id))).
 		Build()
-	return statement
+	return sql.ReplaceAtWithColon(statement)
 }
 
 // GetByAccessToken implements authToken.
 func (a *authTokenImpl) GetByAccessToken() (statement string) {
-	statement, _ = sqlbuilder.
+	sb := sqlbuilder.NewSelectBuilder()
+	statement, _ = sb.
 		Select(
 			sql.Id,
 			sql.CreatedAt,
@@ -51,14 +53,15 @@ func (a *authTokenImpl) GetByAccessToken() (statement string) {
 			db.AuthToken.AccountId,
 		).
 		From(db.AuthToken.Tname()).
-		Where(sql.EQ(db.AuthToken.AccessToken, "?")).
+		Where(sb.EQ(db.AuthToken.AccessToken, sql.Named(db.AuthToken.AccessToken))).
 		Build()
-	return statement
+	return sql.ReplaceAtWithColon(statement)
 }
 
 // GetByRefreshToken implements authToken.
 func (a *authTokenImpl) GetByRefreshToken() (statement string) {
-	statement, _ = sqlbuilder.
+	sb := sqlbuilder.NewSelectBuilder()
+	statement, _ = sb.
 		Select(
 			sql.Id,
 			sql.CreatedAt,
@@ -68,9 +71,9 @@ func (a *authTokenImpl) GetByRefreshToken() (statement string) {
 			db.AuthToken.AccountId,
 		).
 		From(db.AuthToken.Tname()).
-		Where(sql.EQ(db.AuthToken.RefreshToken, "?")).
+		Where(sb.EQ(db.AuthToken.RefreshToken, sql.Named(db.AuthToken.RefreshToken))).
 		Build()
-	return statement
+	return sql.ReplaceAtWithColon(statement)
 }
 
 // Insert implements authToken.
@@ -96,7 +99,7 @@ func (a *authTokenImpl) Pagination() (statement string) {
 	tbnAlias1 := "at"
 	tbnAlias2 := "a"
 	sb := sqlbuilder.NewSelectBuilder()
-	statement, _ = sqlbuilder.
+	statement, _ = sb.
 		Select(
 			sql.Col(tbnAlias1, sql.Id),
 			sql.Col(tbnAlias1, sql.CreatedAt),

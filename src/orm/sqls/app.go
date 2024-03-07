@@ -35,7 +35,8 @@ func (a *appImpl) Find() (statement string) {
 
 // Get implements app.
 func (a *appImpl) Get() (statement string) {
-	statement, _ = sqlbuilder.
+	sb := sqlbuilder.NewSelectBuilder()
+	statement, _ = sb.
 		Select(
 			sql.Id,
 			db.App.Name,
@@ -43,14 +44,15 @@ func (a *appImpl) Get() (statement string) {
 			db.App.Active,
 		).
 		From(db.App.Tname()).
-		Where(sql.EQ(sql.Id, "?")).
+		Where(sb.EQ(sql.Id, sql.Named(sql.Id))).
 		Build()
-	return statement
+	return sql.ReplaceAtWithColon(statement)
 }
 
 // GetForUpdate implements app.
 func (a *appImpl) GetForUpdate() (statement string) {
-	statement, _ = sqlbuilder.
+	sb := sqlbuilder.NewSelectBuilder()
+	statement, _ = sb.
 		Select(
 			sql.Id,
 			db.App.Name,
@@ -58,10 +60,10 @@ func (a *appImpl) GetForUpdate() (statement string) {
 			db.App.Active,
 		).
 		From(db.App.Tname()).
-		Where(sql.EQ(sql.Id, "?")).
+		Where(sb.EQ(sql.Id, sql.Named(sql.Id))).
 		ForUpdate().
 		Build()
-	return statement
+	return sql.ReplaceAtWithColon(statement)
 }
 
 // Insert implements app.

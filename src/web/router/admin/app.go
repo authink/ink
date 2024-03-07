@@ -152,12 +152,13 @@ func updateApp(c *web.Context) {
 
 	var (
 		appCtx = c.AppContext()
-		app    *models.App
+		app    models.App
 		secret string
 	)
+	app.Id = uint32(param.Id)
 
 	if err := appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
-		app, err = orm.App(appCtx).GetTx(tx, param.Id)
+		err = orm.App(appCtx).GetTx(tx, &app)
 		if err != nil {
 			return
 		}
@@ -170,7 +171,7 @@ func updateApp(c *web.Context) {
 			app.Active = !app.Active
 		}
 
-		return orm.App(appCtx).UpdateTx(tx, app)
+		return orm.App(appCtx).UpdateTx(tx, &app)
 	}); err != nil {
 		c.AbortWithServerError(err)
 		return

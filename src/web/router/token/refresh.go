@@ -5,6 +5,7 @@ import (
 
 	"github.com/authink/ink.go/src/envs"
 	"github.com/authink/ink.go/src/orm"
+	"github.com/authink/ink.go/src/orm/models"
 	"github.com/authink/ink.go/src/web/errs"
 	"github.com/authink/ink.go/src/web/helper"
 	"github.com/authink/inkstone/web"
@@ -44,16 +45,21 @@ func refresh(c *web.Context) {
 		return
 	}
 
-	if app, err := orm.App(appCtx).Get(jwtClaims.AppId); helper.CheckApp(c, err, app.Active, func() bool { return true }, http.StatusBadRequest) {
+	var app models.App
+	app.Id = uint32(jwtClaims.AppId)
+
+	if err := orm.App(appCtx).Get(&app); helper.CheckApp(c, err, app.Active, func() bool { return true }, http.StatusBadRequest) {
 		switch app.Name {
 		case envs.AppNameAdmin():
-			staff, err := orm.Staff(appCtx).Get(jwtClaims.AccountId)
+			var staff models.Staff
+			staff.Id = uint32(jwtClaims.AccountId)
+			err = orm.Staff(appCtx).Get(&staff)
 
 			if ok := helper.CheckStaff(c, err, staff.Active, staff.Departure, func() bool { return true }, http.StatusBadRequest); !ok {
 				return
 			}
 
-			if res := generateAuthToken(c, app, staff); res != nil {
+			if res := generateAuthToken(c, &app, &staff); res != nil {
 				c.Response(res)
 			}
 

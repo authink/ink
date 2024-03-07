@@ -31,7 +31,8 @@ func (s *staffImpl) Count() (statement string) {
 
 // Get implements staff.
 func (s *staffImpl) Get() (statement string) {
-	statement, _ = sqlbuilder.
+	sb := sqlbuilder.NewSelectBuilder()
+	statement, _ = sb.
 		Select(
 			sql.Id,
 			db.Staff.Email,
@@ -42,14 +43,15 @@ func (s *staffImpl) Get() (statement string) {
 			db.Staff.Phone,
 		).
 		From(db.Staff.Tname()).
-		Where(sql.EQ(sql.Id, "?")).
+		Where(sb.EQ(sql.Id, sql.Named(sql.Id))).
 		Build()
-	return statement
+	return sql.ReplaceAtWithColon(statement)
 }
 
 // GetByEmail implements staff.
 func (s *staffImpl) GetByEmail() (statement string) {
-	statement, _ = sqlbuilder.
+	sb := sqlbuilder.NewSelectBuilder()
+	statement, _ = sb.
 		Select(
 			sql.Id,
 			db.Staff.Email,
@@ -60,14 +62,15 @@ func (s *staffImpl) GetByEmail() (statement string) {
 			db.Staff.Phone,
 		).
 		From(db.Staff.Tname()).
-		Where(sql.EQ(db.Staff.Email, "?")).
+		Where(sb.EQ(db.Staff.Email, sql.Named(db.Staff.Email))).
 		Build()
-	return statement
+	return sql.ReplaceAtWithColon(statement)
 }
 
 // GetForUpdate implements staff.
 func (s *staffImpl) GetForUpdate() (statement string) {
-	statement, _ = sqlbuilder.
+	sb := sqlbuilder.NewSelectBuilder()
+	statement, _ = sb.
 		Select(
 			sql.Id,
 			db.Staff.Email,
@@ -78,10 +81,10 @@ func (s *staffImpl) GetForUpdate() (statement string) {
 			db.Staff.Phone,
 		).
 		From(db.Staff.Tname()).
-		Where(sql.EQ(sql.Id, "?")).
+		Where(sb.EQ(sql.Id, sql.Named(sql.Id))).
 		ForUpdate().
 		Build()
-	return statement
+	return sql.ReplaceAtWithColon(statement)
 }
 
 // Insert implements staff.

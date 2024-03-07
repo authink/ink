@@ -7,6 +7,7 @@ import (
 
 	"github.com/authink/ink.go/src/envs"
 	"github.com/authink/ink.go/src/orm"
+	"github.com/authink/ink.go/src/orm/models"
 	"github.com/authink/ink.go/src/web/errs"
 	"github.com/authink/ink.go/src/web/helper"
 	"github.com/authink/inkstone/jwtx"
@@ -36,27 +37,34 @@ func Authn(c *web.Context) {
 		return
 	}
 
-	if _, err = orm.AuthToken(appCtx).GetByAccessToken(claims.ID); err != nil {
+	if err = orm.AuthToken(appCtx).GetByAccessToken(&models.AuthToken{
+		AccessToken: claims.ID,
+	}); err != nil {
 		c.AbortWithUnauthorized(errs.ERR_REVOKED_ACCESS_TOKEN)
 		return
 	}
 
-	app, err := orm.App(appCtx).Get(claims.AppId)
+	var app models.App
+	app.Id = uint32(claims.AppId)
+
+	err = orm.App(appCtx).Get(&app)
 	if !helper.CheckApp(c, err, app.Active, func() bool { return true }, http.StatusUnauthorized) {
 		return
 	}
-	c.Set("app", app)
+	c.Set("app", &app)
 
 	switch app.Name {
 	case envs.AppNameAdmin():
-		staff, err := orm.Staff(appCtx).Get(claims.AccountId)
+		var staff models.Staff
+		staff.Id = uint32(claims.AccountId)
 
+		err = orm.Staff(appCtx).Get(&staff)
 		if ok := helper.CheckStaff(c, err, staff.Active, staff.Departure, func() bool { return true }, http.StatusUnauthorized); !ok {
 			return
 		}
 
 		staff.Password = ""
-		c.Set("account", staff)
+		c.Set("account", &staff)
 
 	default:
 		c.AbortWithUnauthorized(errs.ERR_UNSUPPORTED_APP)

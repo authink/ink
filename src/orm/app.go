@@ -5,6 +5,7 @@ import (
 	"github.com/authink/ink.go/src/orm/sqls"
 	"github.com/authink/inkstone/app"
 	"github.com/authink/inkstone/orm"
+	"github.com/authink/inkstone/orm/model"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -18,23 +19,21 @@ type iapp interface {
 type appImpl app.AppContext
 
 // Find implements iapp.
-func (a *appImpl) Find(args ...any) (apps []models.App, err error) {
-	err = orm.Select(a.DB, &apps, sqls.App.Find(), args...)
+func (a *appImpl) Find(...model.Arg) (apps []models.App, err error) {
+	err = orm.Select(a.DB, sqls.App.Find(), &apps, &model.Argument{})
 	return
 }
 
 // Get implements iapp.
 // Subtle: this method shadows the method (*DB).Get of appImpl.DB.
-func (a *appImpl) Get(id int) (app *models.App, err error) {
-	app = &models.App{}
-	err = orm.Get(a.DB, app, sqls.App.Get(), id)
+func (a *appImpl) Get(app *models.App) (err error) {
+	err = orm.Get(a.DB, sqls.App.Get(), app)
 	return
 }
 
 // GetTx implements iapp.
-func (a *appImpl) GetTx(tx *sqlx.Tx, id int) (app *models.App, err error) {
-	app = &models.App{}
-	err = orm.Get(tx, app, sqls.App.GetForUpdate(), id)
+func (a *appImpl) GetTx(tx *sqlx.Tx, app *models.App) (err error) {
+	err = orm.Get(tx, sqls.App.GetForUpdate(), app)
 	return
 }
 

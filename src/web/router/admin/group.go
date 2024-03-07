@@ -203,11 +203,12 @@ func updateGroup(c *web.Context) {
 
 	var (
 		appCtx = c.AppContext()
-		group  *models.Group
+		group  models.Group
 	)
+	group.Id = uint32(param.Id)
 
 	if err := appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
-		group, err = orm.Group(appCtx).GetTx(tx, param.Id)
+		err = orm.Group(appCtx).GetTx(tx, &group)
 		if err != nil {
 			return
 		}
@@ -221,7 +222,7 @@ func updateGroup(c *web.Context) {
 			group.Active = !group.Active
 		}
 
-		return orm.Group(appCtx).UpdateTx(tx, group)
+		return orm.Group(appCtx).UpdateTx(tx, &group)
 	}); err != nil {
 		c.AbortWithServerError(err)
 		return

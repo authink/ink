@@ -119,7 +119,9 @@ func deleteToken(c *web.Context) {
 		return
 	}
 
-	if err := orm.AuthToken(c.AppContext()).Delete(req.Id); err != nil {
+	var authToken models.AuthToken
+	authToken.Id = uint32(req.Id)
+	if err := orm.AuthToken(c.AppContext()).Delete(&authToken); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}

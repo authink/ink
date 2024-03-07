@@ -3,6 +3,7 @@ package admin
 import (
 	"github.com/authink/ink.go/src/authz"
 	"github.com/authink/ink.go/src/orm"
+	"github.com/authink/ink.go/src/orm/models"
 	"github.com/authink/ink.go/src/web/errs"
 	"github.com/authink/ink.go/src/web/middleware"
 	"github.com/authink/inkstone/web"
@@ -46,7 +47,10 @@ func permissions(c *web.Context) {
 		return
 	}
 
-	app, err := orm.App(c.AppContext()).Get(req.AppId)
+	var app models.App
+	app.Id = uint32(req.AppId)
+
+	err := orm.App(c.AppContext()).Get(&app)
 	if err != nil {
 		c.AbortWithServerError(err)
 	}
