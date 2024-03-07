@@ -1,15 +1,13 @@
 package sqls
 
 import (
-	"fmt"
-
 	"github.com/authink/ink.go/src/orm/db"
 	"github.com/authink/inkstone/orm/sql"
+	"github.com/huandu/go-sqlbuilder"
 )
 
 type staff interface {
 	sql.Inserter
-	sql.Saver
 	sql.Updater
 	sql.Geter
 	sql.GeterForUpdate
@@ -21,43 +19,123 @@ type staff interface {
 type staffImpl struct{}
 
 // Count implements staff.
-func (s *staffImpl) Count() string {
-	return fmt.Sprintf("SELECT COUNT(id) c FROM %s", db.Staff.Tname())
+func (s *staffImpl) Count() (statement string) {
+	tbnAlias := "s"
+	sb := sqlbuilder.NewSelectBuilder()
+	statement, _ = sb.
+		Select(sql.Count(tbnAlias)).
+		From(sb.As(db.Staff.Tname(), tbnAlias)).
+		Build()
+	return statement
 }
 
 // Get implements staff.
-func (s *staffImpl) Get() string {
-	return fmt.Sprintf("SELECT id, email, password, active, departure, super, phone FROM %s WHERE id = ?", db.Staff.Tname())
+func (s *staffImpl) Get() (statement string) {
+	statement, _ = sqlbuilder.
+		Select(
+			sql.Id,
+			db.Staff.Email,
+			db.Staff.Password,
+			db.Staff.Active,
+			db.Staff.Departure,
+			db.Staff.Super,
+			db.Staff.Phone,
+		).
+		From(db.Staff.Tname()).
+		Where(sql.EQ(sql.Id, "?")).
+		Build()
+	return statement
 }
 
 // GetByEmail implements staff.
-func (s *staffImpl) GetByEmail() string {
-	return fmt.Sprintf("SELECT id, email, password, active, departure, super, phone FROM %s WHERE email = ?", db.Staff.Tname())
+func (s *staffImpl) GetByEmail() (statement string) {
+	statement, _ = sqlbuilder.
+		Select(
+			sql.Id,
+			db.Staff.Email,
+			db.Staff.Password,
+			db.Staff.Active,
+			db.Staff.Departure,
+			db.Staff.Super,
+			db.Staff.Phone,
+		).
+		From(db.Staff.Tname()).
+		Where(sql.EQ(db.Staff.Email, "?")).
+		Build()
+	return statement
 }
 
 // GetForUpdate implements staff.
-func (s *staffImpl) GetForUpdate() string {
-	return fmt.Sprintf("SELECT id, email, phone, super, active, departure FROM %s WHERE id = ? FOR UPDATE", db.Staff.Tname())
+func (s *staffImpl) GetForUpdate() (statement string) {
+	statement, _ = sqlbuilder.
+		Select(
+			sql.Id,
+			db.Staff.Email,
+			db.Staff.Password,
+			db.Staff.Active,
+			db.Staff.Departure,
+			db.Staff.Super,
+			db.Staff.Phone,
+		).
+		From(db.Staff.Tname()).
+		Where(sql.EQ(sql.Id, "?")).
+		ForUpdate().
+		Build()
+	return statement
 }
 
 // Insert implements staff.
-func (s *staffImpl) Insert() string {
-	return fmt.Sprintf("INSERT INTO %s (email, password, phone, super) VALUES (:email, :password, :phone, :super)", db.Staff.Tname())
+func (s *staffImpl) Insert() (statement string) {
+	statement, _ = sqlbuilder.
+		InsertInto(db.Staff.Tname()).
+		Cols(
+			db.Staff.Email,
+			db.Staff.Password,
+			db.Staff.Phone,
+			db.Staff.Super,
+		).
+		Values(
+			sql.Named(db.Staff.Email),
+			sql.Named(db.Staff.Password),
+			sql.Named(db.Staff.Phone),
+			sql.Named(db.Staff.Super),
+		).Build()
+	return sql.ReplaceAtWithColon(statement)
 }
 
 // Pagination implements staff.
-func (s *staffImpl) Pagination() string {
-	return fmt.Sprintf("SELECT id, created_at, updated_at, email, phone, super, active, departure FROM %s ORDER BY id DESC LIMIT :limit OFFSET :offset", db.Staff.Tname())
-}
-
-// Save implements staff.
-func (s *staffImpl) Save() string {
-	return fmt.Sprintf("INSERT INTO %s (email, password, phone, super) VALUES (:email, :password, :phone, :super) ON DUPLICATE KEY UPDATE password = :password, phone = :phone, super = :super, active = :active, departure = :departure", db.Staff.Tname())
+func (s *staffImpl) Pagination() (statement string) {
+	statement, _ = sqlbuilder.Select(
+		sql.Id,
+		sql.CreatedAt,
+		sql.UpdatedAt,
+		db.Staff.Email,
+		db.Staff.Phone,
+		db.Staff.Super,
+		db.Staff.Active,
+		db.Staff.Departure,
+	).From(db.Staff.Tname()).
+		OrderBy(sql.Id).
+		Desc().
+		Build()
+	return sql.LimitAndOffset(statement)
 }
 
 // Update implements staff.
-func (s *staffImpl) Update() string {
-	return fmt.Sprintf("UPDATE %s SET password = :password, phone = :phone, super = :super, active = :active, departure = :departure WHERE id = :id", db.Staff.Tname())
+func (s *staffImpl) Update() (statement string) {
+	sb := sqlbuilder.NewUpdateBuilder()
+	statement, _ = sb.
+		Update(db.Staff.Tname()).
+		Set(
+			sb.Assign(db.Staff.Password, sql.Named(db.Staff.Password)),
+			sb.Assign(db.Staff.Phone, sql.Named(db.Staff.Phone)),
+			sb.Assign(db.Staff.Super, sql.Named(db.Staff.Super)),
+			sb.Assign(db.Staff.Active, sql.Named(db.Staff.Active)),
+			sb.Assign(db.Staff.Departure, sql.Named(db.Staff.Departure)),
+		).
+		Where(sb.EQ(sql.Id, sql.Named(sql.Id))).
+		Build()
+	return sql.ReplaceAtWithColon(statement)
 }
 
 var Staff staff = &staffImpl{}

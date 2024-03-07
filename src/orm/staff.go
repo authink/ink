@@ -11,7 +11,6 @@ import (
 
 type staff interface {
 	orm.Inserter[models.Staff]
-	orm.Saver[models.Staff]
 	orm.Updater[models.Staff]
 	orm.Geter[models.Staff]
 	orm.Counter
@@ -69,16 +68,6 @@ func (s *staffImpl) InsertTx(tx *sqlx.Tx, staff *models.Staff) error {
 func (s *staffImpl) PaginationTx(tx *sqlx.Tx, pager model.Pager) (staffs []models.Staff, err error) {
 	err = orm.Pagination(tx, sqls.Staff.Pagination(), &staffs, pager)
 	return
-}
-
-// Save implements staff.
-func (s *staffImpl) Save(staff *models.Staff) error {
-	return orm.NamedSave(s.DB, sqls.Staff.Save(), staff)
-}
-
-// SaveTx implements staff.
-func (s *staffImpl) SaveTx(tx *sqlx.Tx, staff *models.Staff) error {
-	return orm.NamedSave(tx, sqls.Staff.Save(), staff)
 }
 
 // Update implements staff.
