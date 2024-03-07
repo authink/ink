@@ -12,7 +12,6 @@ import (
 type group interface {
 	orm.Inserter[models.Group]
 	orm.Updater[models.Group]
-	orm.Saver[models.Group]
 	orm.Geter[models.Group]
 	orm.Counter
 	orm.Pager[models.GroupWithApp]
@@ -61,16 +60,6 @@ func (g *groupImpl) InsertTx(tx *sqlx.Tx, group *models.Group) error {
 func (g *groupImpl) PaginationTx(tx *sqlx.Tx, pager model.Pager) (groups []models.GroupWithApp, err error) {
 	err = orm.Pagination(tx, sqls.Group.Pagination(), &groups, pager)
 	return
-}
-
-// Save implements group.
-func (g *groupImpl) Save(group *models.Group) error {
-	return orm.NamedSave(g.DB, sqls.Group.Save(), group)
-}
-
-// SaveTx implements group.
-func (g *groupImpl) SaveTx(tx *sqlx.Tx, group *models.Group) error {
-	return orm.NamedSave(tx, sqls.Group.Save(), group)
 }
 
 // Update implements group.
