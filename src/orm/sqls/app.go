@@ -16,10 +16,10 @@ func (a *App) Find() string {
 			sql.Id,
 			sql.CreatedAt,
 			sql.UpdatedAt,
-			sbd.Field(db.App.Name),
-			sbd.Field(db.App.Active),
+			db.App.Name,
+			db.App.Active,
 		).
-		From(sbd.Table(db.App.Tname())).
+		From(db.App.Tname()).
 		OrderBy(sql.Id).
 		Asc().
 		String()
@@ -29,11 +29,11 @@ func (a *App) Get() string {
 	return sbd.NewBuilder().
 		Select(
 			sql.Id,
-			sbd.Field(db.App.Name),
-			sbd.Field(db.App.Secret),
-			sbd.Field(db.App.Active),
+			db.App.Name,
+			db.App.Secret,
+			db.App.Active,
 		).
-		From(sbd.Table(db.App.Tname())).
+		From(db.App.Tname()).
 		Where(sbd.Equal{Left: sql.Id}).
 		String()
 }
@@ -42,11 +42,11 @@ func (a *App) GetForUpdate() string {
 	return sbd.NewBuilder().
 		Select(
 			sql.Id,
-			sbd.Field(db.App.Name),
-			sbd.Field(db.App.Secret),
-			sbd.Field(db.App.Active),
+			db.App.Name,
+			db.App.Secret,
+			db.App.Active,
 		).
-		From(sbd.Table(db.App.Tname())).
+		From(db.App.Tname()).
 		Where(sbd.Equal{Left: sql.Id}).
 		ForUpdate().
 		String()
@@ -54,20 +54,20 @@ func (a *App) GetForUpdate() string {
 
 func (a *App) Insert() string {
 	return sbd.NewBuilder().
-		InsertInto(sbd.Table(db.App.Tname())).
+		InsertInto(db.App.Tname()).
 		Columns(
-			sbd.Field(db.App.Name),
-			sbd.Field(db.App.Secret),
+			db.App.Name,
+			db.App.Secret,
 		).
 		String()
 }
 
 func (a *App) Update() string {
 	return sbd.NewBuilder().
-		Update(sbd.Table(db.App.Tname())).
+		Update(db.App.Tname()).
 		Set(
-			sbd.Field(db.App.Active),
-			sbd.Field(db.App.Secret),
+			db.App.Active,
+			db.App.Secret,
 		).
 		Where(sbd.Equal{Left: sql.Id}).
 		String()

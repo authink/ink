@@ -4,18 +4,19 @@ package db
 import (
 	"github.com/authink/ink.go/src/orm/models"
 	"github.com/authink/orm/db"
+	sbd "github.com/authink/sqlbuilder"
 )
 
 type app struct {
-	Name string
+	Name sbd.Field
 
-	Secret string
+	Secret sbd.Field
 
-	Active string
+	Active sbd.Field
 }
 
 // Tname implements db.Table.
-func (*app) Tname() string {
+func (*app) Tname() sbd.Table {
 	return "s_apps"
 }
 

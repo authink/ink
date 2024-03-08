@@ -12,8 +12,8 @@ type Staff struct {
 
 func (s *Staff) Count() string {
 	return sbd.NewBuilder().
-		Select(sbd.Field(sql.Id).Count()).
-		From(sbd.Table(db.Staff.Tname())).
+		Select(sql.Id.Count()).
+		From(db.Staff.Tname()).
 		String()
 }
 
@@ -21,14 +21,14 @@ func (s *Staff) Get() string {
 	return sbd.NewBuilder().
 		Select(
 			sql.Id,
-			sbd.Field(db.Staff.Email),
-			sbd.Field(db.Staff.Password),
-			sbd.Field(db.Staff.Active),
-			sbd.Field(db.Staff.Departure),
-			sbd.Field(db.Staff.Super),
-			sbd.Field(db.Staff.Phone),
+			db.Staff.Email,
+			db.Staff.Password,
+			db.Staff.Active,
+			db.Staff.Departure,
+			db.Staff.Super,
+			db.Staff.Phone,
 		).
-		From(sbd.Table(db.Staff.Tname())).
+		From(db.Staff.Tname()).
 		Where(sbd.Equal{Left: sql.Id}).
 		String()
 }
@@ -37,14 +37,14 @@ func (s *Staff) GetForUpdate() string {
 	return sbd.NewBuilder().
 		Select(
 			sql.Id,
-			sbd.Field(db.Staff.Email),
-			sbd.Field(db.Staff.Password),
-			sbd.Field(db.Staff.Active),
-			sbd.Field(db.Staff.Departure),
-			sbd.Field(db.Staff.Super),
-			sbd.Field(db.Staff.Phone),
+			db.Staff.Email,
+			db.Staff.Password,
+			db.Staff.Active,
+			db.Staff.Departure,
+			db.Staff.Super,
+			db.Staff.Phone,
 		).
-		From(sbd.Table(db.Staff.Tname())).
+		From(db.Staff.Tname()).
 		Where(sbd.Equal{Left: sql.Id}).
 		ForUpdate().
 		String()
@@ -52,12 +52,12 @@ func (s *Staff) GetForUpdate() string {
 
 func (s *Staff) Insert() string {
 	return sbd.NewBuilder().
-		InsertInto(sbd.Table(db.Staff.Tname())).
+		InsertInto(db.Staff.Tname()).
 		Columns(
-			sbd.Field(db.Staff.Email),
-			sbd.Field(db.Staff.Password),
-			sbd.Field(db.Staff.Phone),
-			sbd.Field(db.Staff.Super),
+			db.Staff.Email,
+			db.Staff.Password,
+			db.Staff.Phone,
+			db.Staff.Super,
 		).
 		String()
 }
@@ -68,13 +68,13 @@ func (s *Staff) Pagination() string {
 			sql.Id,
 			sql.CreatedAt,
 			sql.UpdatedAt,
-			sbd.Field(db.Staff.Email),
-			sbd.Field(db.Staff.Phone),
-			sbd.Field(db.Staff.Super),
-			sbd.Field(db.Staff.Active),
-			sbd.Field(db.Staff.Departure),
+			db.Staff.Email,
+			db.Staff.Phone,
+			db.Staff.Super,
+			db.Staff.Active,
+			db.Staff.Departure,
 		).
-		From(sbd.Table(db.Staff.Tname())).
+		From(db.Staff.Tname()).
 		OrderBy(sql.Id).
 		Desc().
 		Limit().
@@ -83,13 +83,13 @@ func (s *Staff) Pagination() string {
 
 func (s *Staff) Update() string {
 	return sbd.NewBuilder().
-		Update(sbd.Table(db.Staff.Tname())).
+		Update(db.Staff.Tname()).
 		Set(
-			sbd.Field(db.Staff.Password),
-			sbd.Field(db.Staff.Phone),
-			sbd.Field(db.Staff.Super),
-			sbd.Field(db.Staff.Active),
-			sbd.Field(db.Staff.Departure),
+			db.Staff.Password,
+			db.Staff.Phone,
+			db.Staff.Super,
+			db.Staff.Active,
+			db.Staff.Departure,
 		).
 		Where(sbd.Equal{Left: sql.Id}).
 		String()
@@ -99,14 +99,14 @@ func (s *Staff) GetByEmail() string {
 	return sbd.NewBuilder().
 		Select(
 			sql.Id,
-			sbd.Field(db.Staff.Email),
-			sbd.Field(db.Staff.Password),
-			sbd.Field(db.Staff.Active),
-			sbd.Field(db.Staff.Departure),
-			sbd.Field(db.Staff.Super),
-			sbd.Field(db.Staff.Phone),
+			db.Staff.Email,
+			db.Staff.Password,
+			db.Staff.Active,
+			db.Staff.Departure,
+			db.Staff.Super,
+			db.Staff.Phone,
 		).
-		From(sbd.Table(db.Staff.Tname())).
-		Where(sbd.Equal{Left: sbd.Field(db.Staff.Email)}).
+		From(db.Staff.Tname()).
+		Where(sbd.Equal{Left: db.Staff.Email}).
 		String()
 }

@@ -4,16 +4,17 @@ package db
 import (
 	"github.com/authink/ink.go/src/orm/models"
 	"github.com/authink/orm/db"
+	sbd "github.com/authink/sqlbuilder"
 )
 
 type deptLevel struct {
-	DeptId string
+	DeptId sbd.Field
 
-	SubDeptId string
+	SubDeptId sbd.Field
 }
 
 // Tname implements db.Table.
-func (*deptLevel) Tname() string {
+func (*deptLevel) Tname() sbd.Table {
 	return "s_dept_leves"
 }
 

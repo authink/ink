@@ -4,14 +4,15 @@ package db
 import (
 	"github.com/authink/ink.go/src/orm/models"
 	"github.com/authink/orm/db"
+	sbd "github.com/authink/sqlbuilder"
 )
 
 type log struct {
-	Detail string
+	Detail sbd.Field
 }
 
 // Tname implements db.Table.
-func (*log) Tname() string {
+func (*log) Tname() sbd.Table {
 	return "s_logs"
 }
 

@@ -4,20 +4,21 @@ package db
 import (
 	"github.com/authink/ink.go/src/orm/models"
 	"github.com/authink/orm/db"
+	sbd "github.com/authink/sqlbuilder"
 )
 
 type group struct {
-	Name string
+	Name sbd.Field
 
-	Type string
+	Type sbd.Field
 
-	AppId string
+	AppId sbd.Field
 
-	Active string
+	Active sbd.Field
 }
 
 // Tname implements db.Table.
-func (*group) Tname() string {
+func (*group) Tname() sbd.Table {
 	return "s_groups"
 }
 

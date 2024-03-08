@@ -4,24 +4,25 @@ package db
 import (
 	"github.com/authink/ink.go/src/orm/models"
 	"github.com/authink/orm/db"
+	sbd "github.com/authink/sqlbuilder"
 )
 
 type staff struct {
-	Email string
+	Email sbd.Field
 
-	Password string
+	Password sbd.Field
 
-	Phone string
+	Phone sbd.Field
 
-	Super string
+	Super sbd.Field
 
-	Active string
+	Active sbd.Field
 
-	Departure string
+	Departure sbd.Field
 }
 
 // Tname implements db.Table.
-func (*staff) Tname() string {
+func (*staff) Tname() sbd.Table {
 	return "s_staffs"
 }
 

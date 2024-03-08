@@ -12,52 +12,52 @@ type AuthToken struct {
 
 func (a *AuthToken) Count() string {
 	return sbd.NewBuilder().
-		Select(sbd.Field(sql.Id).Count().As("c")).
-		From(sbd.Table(db.AuthToken.Tname())).
+		Select(sql.Id.Count()).
+		From(db.AuthToken.Tname()).
 		String()
 }
 
 func (a *AuthToken) Delete() string {
 	return sbd.NewBuilder().
-		DeleteFrom(sbd.Table(db.AuthToken.Tname())).
+		DeleteFrom(db.AuthToken.Tname()).
 		Where(sbd.Equal{Left: sql.Id}).
 		String()
 }
 
 func (a *AuthToken) Insert() string {
 	return sbd.NewBuilder().
-		InsertInto(sbd.Table(db.AuthToken.Tname())).
+		InsertInto(db.AuthToken.Tname()).
 		Columns(
-			sbd.Field(db.AuthToken.AccessToken),
-			sbd.Field(db.AuthToken.RefreshToken),
-			sbd.Field(db.AuthToken.AppId),
-			sbd.Field(db.AuthToken.AccountId),
+			db.AuthToken.AccessToken,
+			db.AuthToken.RefreshToken,
+			db.AuthToken.AppId,
+			db.AuthToken.AccountId,
 		).
 		String()
 }
 
 func (a *AuthToken) Pagination() string {
-	aat := "at"
-	aa := "a"
+	aat := sbd.Table("at")
+	aa := sbd.Table("a")
 	return sbd.NewBuilder().
 		Select(
-			sbd.Field(sql.Id).Of(aat),
-			sbd.Field(sql.CreatedAt).Of(aat),
-			sbd.Field(db.AuthToken.AccessToken).Of(aat),
-			sbd.Field(db.AuthToken.RefreshToken).Of(aat),
-			sbd.Field(db.AuthToken.AppId).Of(aat),
-			sbd.Field(db.App.Name).Of(aa).As(db.AuthTokenWithApp.AppName),
-			sbd.Field(db.AuthToken.AccountId).Of(aat),
+			sql.Id.Of(aat),
+			sql.CreatedAt.Of(aat),
+			db.AuthToken.AccessToken.Of(aat),
+			db.AuthToken.RefreshToken.Of(aat),
+			db.AuthToken.AppId.Of(aat),
+			db.App.Name.Of(aa).As(db.AuthTokenWithApp.AppName),
+			db.AuthToken.AccountId.Of(aat),
 		).
 		From(
-			sbd.Table(db.AuthToken.Tname()).As(aat),
-			sbd.Table(db.App.Tname()).As(aa),
+			db.AuthToken.Tname().As(aat),
+			db.App.Tname().As(aa),
 		).
 		Where(sbd.Equal{
-			Left:  sbd.Field(db.AuthToken.AppId).Of(aat),
-			Right: sbd.Field(sql.Id).Of(aa),
+			Left:  db.AuthToken.AppId.Of(aat),
+			Right: sql.Id.Of(aa),
 		}).
-		OrderBy(sbd.Field(sql.Id).Of(aat)).
+		OrderBy(sql.Id.Of(aat)).
 		Desc().
 		Limit().
 		String()
@@ -68,13 +68,13 @@ func (a *AuthToken) GetByAccessToken() string {
 		Select(
 			sql.Id,
 			sql.CreatedAt,
-			sbd.Field(db.AuthToken.AccessToken),
-			sbd.Field(db.AuthToken.RefreshToken),
-			sbd.Field(db.AuthToken.AppId),
-			sbd.Field(db.AuthToken.AccountId),
+			db.AuthToken.AccessToken,
+			db.AuthToken.RefreshToken,
+			db.AuthToken.AppId,
+			db.AuthToken.AccountId,
 		).
-		From(sbd.Table(db.AuthToken.Tname())).
-		Where(sbd.Equal{Left: sbd.Field(db.AuthToken.AccessToken)}).
+		From(db.AuthToken.Tname()).
+		Where(sbd.Equal{Left: db.AuthToken.AccessToken}).
 		String()
 }
 
@@ -83,12 +83,12 @@ func (a *AuthToken) GetByRefreshToken() string {
 		Select(
 			sql.Id,
 			sql.CreatedAt,
-			sbd.Field(db.AuthToken.AccessToken),
-			sbd.Field(db.AuthToken.RefreshToken),
-			sbd.Field(db.AuthToken.AppId),
-			sbd.Field(db.AuthToken.AccountId),
+			db.AuthToken.AccessToken,
+			db.AuthToken.RefreshToken,
+			db.AuthToken.AppId,
+			db.AuthToken.AccountId,
 		).
-		From(sbd.Table(db.AuthToken.Tname())).
-		Where(sbd.Equal{Left: sbd.Field(db.AuthToken.RefreshToken)}).
+		From(db.AuthToken.Tname()).
+		Where(sbd.Equal{Left: db.AuthToken.RefreshToken}).
 		String()
 }

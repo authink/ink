@@ -12,10 +12,10 @@ type Group struct {
 
 func (g *Group) Count() string {
 	return sbd.NewBuilder().
-		Select(sbd.Field(sql.Id).Count()).
-		From(sbd.Table(db.Group.Tname())).
-		Where(sbd.Equal{Left: sbd.Field(db.Group.AppId)}).
-		And(sbd.Equal{Left: sbd.Field(db.Group.Type)}).
+		Select(sql.Id.Count()).
+		From(db.Group.Tname()).
+		Where(sbd.Equal{Left: db.Group.AppId}).
+		And(sbd.Equal{Left: db.Group.Type}).
 		String()
 }
 
@@ -23,12 +23,12 @@ func (g *Group) Get() string {
 	return sbd.NewBuilder().
 		Select(
 			sql.Id,
-			sbd.Field(db.Group.Name),
-			sbd.Field(db.Group.Type),
-			sbd.Field(db.Group.AppId),
-			sbd.Field(db.Group.Active),
+			db.Group.Name,
+			db.Group.Type,
+			db.Group.AppId,
+			db.Group.Active,
 		).
-		From(sbd.Table(db.Group.Tname())).
+		From(db.Group.Tname()).
 		Where(sbd.Equal{Left: sql.Id}).
 		String()
 }
@@ -37,12 +37,12 @@ func (g *Group) GetForUpdate() string {
 	return sbd.NewBuilder().
 		Select(
 			sql.Id,
-			sbd.Field(db.Group.Name),
-			sbd.Field(db.Group.Type),
-			sbd.Field(db.Group.AppId),
-			sbd.Field(db.Group.Active),
+			db.Group.Name,
+			db.Group.Type,
+			db.Group.AppId,
+			db.Group.Active,
 		).
-		From(sbd.Table(db.Group.Tname())).
+		From(db.Group.Tname()).
 		Where(sbd.Equal{Left: sql.Id}).
 		ForUpdate().
 		String()
@@ -50,49 +50,46 @@ func (g *Group) GetForUpdate() string {
 
 func (g *Group) Insert() string {
 	return sbd.NewBuilder().
-		InsertInto(sbd.Table(db.Group.Tname())).
+		InsertInto(db.Group.Tname()).
 		Columns(
-			sbd.Field(db.Group.Name),
-			sbd.Field(db.Group.Type),
-			sbd.Field(db.Group.AppId),
+			db.Group.Name,
+			db.Group.Type,
+			db.Group.AppId,
 		).
 		String()
 }
 
 func (g *Group) Pagination() string {
-	ag := "g"
-	aa := "a"
-	fId := sbd.Field(sql.Id)
-	fAppId := sbd.Field(db.Group.AppId)
-	fType := sbd.Field(db.Group.Type)
+	ag := sbd.Table("g")
+	aa := sbd.Table("a")
 	return sbd.NewBuilder().
 		Select(
-			fId.Of(ag),
-			sbd.Field(sql.CreatedAt).Of(ag),
-			sbd.Field(sql.UpdatedAt).Of(ag),
-			sbd.Field(db.Group.Name).Of(ag),
-			fType.Of(ag),
-			fAppId.Of(ag),
-			sbd.Field(db.App.Name).Of(aa).As(db.GroupWithApp.AppName),
-			sbd.Field(db.Group.Active).Of(ag),
+			sql.Id.Of(ag),
+			sql.CreatedAt.Of(ag),
+			sql.UpdatedAt.Of(ag),
+			db.Group.Name.Of(ag),
+			db.Group.Type.Of(ag),
+			db.Group.AppId.Of(ag),
+			db.App.Name.Of(aa).As(db.GroupWithApp.AppName),
+			db.Group.Active.Of(ag),
 		).
 		From(
-			sbd.Table(db.Group.Tname()).As(ag),
-			sbd.Table(db.App.Tname()).As(aa),
+			db.Group.Tname().As(ag),
+			db.App.Tname().As(aa),
 		).
 		Where(sbd.Equal{
-			Left:  fAppId.Of(ag),
-			Right: fId.Of(aa),
+			Left:  db.Group.AppId.Of(ag),
+			Right: sql.Id.Of(aa),
 		}).
 		And(sbd.Equal{
-			Left:  fAppId.Of(ag),
-			Right: fAppId.Named(),
+			Left:  db.Group.AppId.Of(ag),
+			Right: db.Group.AppId.Named(),
 		}).
 		And(sbd.Equal{
-			Left:  fType.Of(ag),
-			Right: fType.Named(),
+			Left:  db.Group.Type.Of(ag),
+			Right: db.Group.Type.Named(),
 		}).
-		OrderBy(fId.Of(ag)).
+		OrderBy(sql.Id.Of(ag)).
 		Desc().
 		Limit().
 		String()
@@ -100,10 +97,10 @@ func (g *Group) Pagination() string {
 
 func (g *Group) Update() string {
 	return sbd.NewBuilder().
-		Update(sbd.Table(db.Group.Tname())).
+		Update(db.Group.Tname()).
 		Set(
-			sbd.Field(db.Group.Name),
-			sbd.Field(db.Group.Active),
+			db.Group.Name,
+			db.Group.Active,
 		).
 		Where(sbd.Equal{Left: sql.Id}).
 		String()

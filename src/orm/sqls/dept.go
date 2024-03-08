@@ -12,10 +12,10 @@ type Dept struct {
 
 func (d *Dept) Insert() string {
 	return sbd.NewBuilder().
-		InsertInto(sbd.Table(db.Department.Tname())).
+		InsertInto(db.Department.Tname()).
 		Columns(
-			sbd.Field(db.Department.Name),
-			sbd.Field(db.Department.OwnerId),
+			db.Department.Name,
+			db.Department.OwnerId,
 		).
 		String()
 }

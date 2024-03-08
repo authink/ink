@@ -4,20 +4,21 @@ package db
 import (
 	"github.com/authink/ink.go/src/orm/models"
 	"github.com/authink/orm/db"
+	sbd "github.com/authink/sqlbuilder"
 )
 
 type authToken struct {
-	AccessToken string
+	AccessToken sbd.Field
 
-	RefreshToken string
+	RefreshToken sbd.Field
 
-	AppId string
+	AppId sbd.Field
 
-	AccountId string
+	AccountId sbd.Field
 }
 
 // Tname implements db.Table.
-func (*authToken) Tname() string {
+func (*authToken) Tname() sbd.Table {
 	return "s_auth_tokens"
 }
 

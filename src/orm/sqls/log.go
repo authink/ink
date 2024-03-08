@@ -15,9 +15,9 @@ func (l *Log) Find() string {
 		Select(
 			sql.Id,
 			sql.CreatedAt,
-			sbd.Field(db.Log.Detail),
+			db.Log.Detail,
 		).
-		From(sbd.Table(db.Log.Tname())).
+		From(db.Log.Tname()).
 		OrderBy(sql.Id).
 		Desc().
 		String()
@@ -25,7 +25,7 @@ func (l *Log) Find() string {
 
 func (l *Log) Insert() string {
 	return sbd.NewBuilder().
-		InsertInto(sbd.Table(db.Log.Tname())).
-		Columns(sbd.Field(db.Log.Detail)).
+		InsertInto(db.Log.Tname()).
+		Columns(db.Log.Detail).
 		String()
 }

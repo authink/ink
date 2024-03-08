@@ -12,10 +12,10 @@ type DeptLevel struct {
 
 func (d *DeptLevel) Insert() string {
 	return sbd.NewBuilder().
-		InsertInto(sbd.Table(db.DeptLevel.Tname())).
+		InsertInto(db.DeptLevel.Tname()).
 		Columns(
-			sbd.Field(db.DeptLevel.DeptId),
-			sbd.Field(db.DeptLevel.SubDeptId),
+			db.DeptLevel.DeptId,
+			db.DeptLevel.SubDeptId,
 		).
 		String()
 }

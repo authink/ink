@@ -4,12 +4,13 @@ package db
 import (
 	"github.com/authink/ink.go/src/orm/models"
 	"github.com/authink/orm/db"
+	sbd "github.com/authink/sqlbuilder"
 )
 
 type groupWithApp struct {
 	group
 
-	AppName string
+	AppName sbd.Field
 }
 
 var GroupWithApp groupWithApp
