@@ -3,7 +3,7 @@ package sqls
 import (
 	"github.com/authink/ink.go/src/orm/db"
 	"github.com/authink/inkstone/orm/sql"
-	"github.com/huandu/go-sqlbuilder"
+	sbd "github.com/authink/sqlbuilder"
 )
 
 type group interface {
@@ -18,123 +18,107 @@ type group interface {
 type groupImpl struct{}
 
 // Count implements group.
-func (g *groupImpl) Count() (statement string) {
-	tbnAlias := "g"
-	sb := sqlbuilder.NewSelectBuilder()
-	statement, _ = sb.
-		Select(
-			sql.Count(tbnAlias),
-		).
-		From(sb.As(db.Group.Tname(), tbnAlias)).
-		Where(
-			sb.EQ(db.Group.Type, sql.Named(db.Group.Type)),
-			sb.EQ(db.Group.AppId, sql.Named(db.Group.AppId)),
-		).
-		Build()
-	return sql.ReplaceAtWithColon(statement)
+func (g *groupImpl) Count() string {
+	return sbd.NewBuilder().
+		Select(sbd.Field(sql.Id).Count()).
+		From(sbd.Table(db.Group.Tname())).
+		Where(sbd.Equal{Left: sbd.Field(db.Group.AppId)}).
+		And(sbd.Equal{Left: sbd.Field(db.Group.Type)}).
+		String()
 }
 
 // Get implements group.
-func (g *groupImpl) Get() (statement string) {
-	sb := sqlbuilder.NewSelectBuilder()
-	statement, _ = sb.
+func (g *groupImpl) Get() string {
+	return sbd.NewBuilder().
 		Select(
 			sql.Id,
-			db.Group.Name,
-			db.Group.Type,
-			db.Group.AppId,
-			db.Group.Active,
+			sbd.Field(db.Group.Name),
+			sbd.Field(db.Group.Type),
+			sbd.Field(db.Group.AppId),
+			sbd.Field(db.Group.Active),
 		).
-		From(db.Group.Tname()).
-		Where(sb.EQ(sql.Id, sql.Named(sql.Id))).
-		Build()
-	return sql.ReplaceAtWithColon(statement)
+		From(sbd.Table(db.Group.Tname())).
+		Where(sbd.Equal{Left: sql.Id}).
+		String()
 }
 
 // GetForUpdate implements group.
-func (g *groupImpl) GetForUpdate() (statement string) {
-	sb := sqlbuilder.NewSelectBuilder()
-	statement, _ = sb.
+func (g *groupImpl) GetForUpdate() string {
+	return sbd.NewBuilder().
 		Select(
 			sql.Id,
-			db.Group.Name,
-			db.Group.Type,
-			db.Group.AppId,
-			db.Group.Active,
+			sbd.Field(db.Group.Name),
+			sbd.Field(db.Group.Type),
+			sbd.Field(db.Group.AppId),
+			sbd.Field(db.Group.Active),
 		).
-		From(db.Group.Tname()).
-		Where(sb.EQ(sql.Id, sql.Named(sql.Id))).
+		From(sbd.Table(db.Group.Tname())).
+		Where(sbd.Equal{Left: sql.Id}).
 		ForUpdate().
-		Build()
-	return sql.ReplaceAtWithColon(statement)
+		String()
 }
 
 // Insert implements group.
-func (g *groupImpl) Insert() (statement string) {
-	statement, _ = sqlbuilder.InsertInto(db.Group.Tname()).
-		Cols(
-			db.Group.Name,
-			db.Group.Type,
-			db.Group.AppId,
-		).Values(
-		sql.Named(db.Group.Name),
-		sql.Named(db.Group.Type),
-		sql.Named(db.Group.AppId),
-	).Build()
-	return sql.ReplaceAtWithColon(statement)
+func (g *groupImpl) Insert() string {
+	return sbd.NewBuilder().
+		InsertInto(sbd.Table(db.Group.Tname())).
+		Columns(
+			sbd.Field(db.Group.Name),
+			sbd.Field(db.Group.Type),
+			sbd.Field(db.Group.AppId),
+		).
+		String()
 }
 
 // Pagination implements group.
-func (g *groupImpl) Pagination() (statement string) {
-	tbnAlias1 := "g"
-	tbnAlias2 := "a"
-	sb := sqlbuilder.NewSelectBuilder()
-	statement, _ = sb.Select(
-		sql.Col(tbnAlias1, sql.Id),
-		sql.Col(tbnAlias1, sql.CreatedAt),
-		sql.Col(tbnAlias1, sql.UpdatedAt),
-		sql.Col(tbnAlias1, db.Group.Name),
-		sql.Col(tbnAlias1, db.Group.Type),
-		sql.Col(tbnAlias1, db.Group.AppId),
-		sql.Col(tbnAlias2, db.App.Name),
-		sql.Col(tbnAlias1, db.Group.Active),
-	).From(
-		sb.As(db.Group.Tname(), tbnAlias1),
-		sb.As(db.App.Tname(), tbnAlias2),
-	).Where(
-		sql.EQ(
-			sql.Col(tbnAlias1, db.Group.AppId),
-			sql.Col(tbnAlias2, sql.Id),
-		),
-		sb.EQ(
-			sql.Col(tbnAlias1, db.Group.Type),
-			sql.Named(db.Group.Type),
-		),
-		sb.EQ(
-			sql.Col(tbnAlias1, db.Group.AppId),
-			sql.Named(db.Group.AppId),
-		),
-	).OrderBy(
-		sql.Col(tbnAlias1, sql.Id),
-	).Desc().
-		Build()
-	return sql.LimitAndOffset(sql.ReplaceAtWithColon(statement))
+func (g *groupImpl) Pagination() string {
+	ag := "g"
+	aa := "a"
+	fId := sbd.Field(sql.Id)
+	fAppId := sbd.Field(db.Group.AppId)
+	fType := sbd.Field(db.Group.Type)
+	return sbd.NewBuilder().
+		Select(
+			fId.Of(ag),
+			sbd.Field(sql.CreatedAt).Of(ag),
+			sbd.Field(sql.UpdatedAt).Of(ag),
+			sbd.Field(db.Group.Name).Of(ag),
+			fType.Of(ag),
+			fAppId.Of(ag),
+			sbd.Field(db.App.Name).Of(aa),
+			sbd.Field(db.Group.Active).Of(ag),
+		).
+		From(
+			sbd.Table(db.Group.Tname()).As(ag),
+			sbd.Table(db.App.Tname()).As(aa),
+		).
+		Where(sbd.Equal{
+			Left:  fAppId.Of(ag),
+			Right: fId.Of(aa),
+		}).
+		And(sbd.Equal{
+			Left:  fAppId.Of(ag),
+			Right: fAppId.Named(),
+		}).
+		And(sbd.Equal{
+			Left:  fType.Of(ag),
+			Right: fType.Named(),
+		}).
+		OrderBy(fId.Of(ag)).
+		Desc().
+		String()
 }
 
 // Update implements group.
-func (g *groupImpl) Update() (statement string) {
-	sb := sqlbuilder.NewUpdateBuilder()
-	statement, _ = sb.Update(db.Group.Tname()).Set(
-		sb.Assign(
-			db.Group.Name,
-			sql.Named(db.Group.Name),
-		),
-		sb.Assign(
-			db.Group.Active,
-			sql.Named(db.Group.Active),
-		),
-	).Where(sb.EQ(sql.Id, sql.Named(sql.Id))).Build()
-	return sql.ReplaceAtWithColon(statement)
+func (g *groupImpl) Update() string {
+	return sbd.NewBuilder().
+		Update(sbd.Table(db.Group.Tname())).
+		Set(
+			sbd.Field(db.Group.Name),
+			sbd.Field(db.Group.Active),
+		).
+		Where(sbd.Equal{Left: sql.Id}).
+		String()
 }
 
 var Group group = &groupImpl{}
