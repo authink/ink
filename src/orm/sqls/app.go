@@ -4,7 +4,6 @@ import (
 	"github.com/authink/ink.go/src/orm/db"
 	"github.com/authink/inkstone/orm/sql"
 	sbd "github.com/authink/sqlbuilder"
-	"github.com/huandu/go-sqlbuilder"
 )
 
 type app interface {
@@ -19,8 +18,7 @@ type appImpl struct{}
 
 // Find implements app.
 func (a *appImpl) Find() string {
-	return sbd.
-		NewBuilder().
+	return sbd.NewBuilder().
 		Select(
 			sql.Id,
 			sql.CreatedAt,
@@ -64,41 +62,26 @@ func (a *appImpl) GetForUpdate() string {
 }
 
 // Insert implements app.
-func (a *appImpl) Insert() (statement string) {
-	statement, _ = sqlbuilder.
-		InsertInto(db.App.Tname()).
-		Cols(
-			db.App.Name,
-			db.App.Secret,
+func (a *appImpl) Insert() string {
+	return sbd.NewBuilder().
+		InsertInto(sbd.Table(db.App.Tname())).
+		Columns(
+			sbd.Field(db.App.Name),
+			sbd.Field(db.App.Secret),
 		).
-		Values(
-			sql.Named(db.App.Name),
-			sql.Named(db.App.Secret),
-		).
-		Build()
-	return sql.ReplaceAtWithColon(statement)
+		String()
 }
 
 // Update implements app.
-func (a *appImpl) Update() (statement string) {
-	sb := sqlbuilder.NewUpdateBuilder()
-	statement, _ = sb.
-		Update(db.App.Tname()).
+func (a *appImpl) Update() string {
+	return sbd.NewBuilder().
+		Update(sbd.Table(db.App.Tname())).
 		Set(
-			sb.Assign(
-				db.App.Active,
-				sql.Named(db.App.Active),
-			),
-			sb.Assign(
-				db.App.Secret,
-				sql.Named(db.App.Secret),
-			),
+			sbd.Field(db.App.Active),
+			sbd.Field(db.App.Secret),
 		).
-		Where(
-			sb.EQ(sql.Id, sql.Named(sql.Id)),
-		).
-		Build()
-	return sql.ReplaceAtWithColon(statement)
+		Where(sbd.Equal{Left: sql.Id}).
+		String()
 }
 
 var App app = &appImpl{}
