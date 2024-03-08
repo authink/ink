@@ -3,7 +3,7 @@ package sqls
 import (
 	"github.com/authink/ink.go/src/orm/db"
 	"github.com/authink/inkstone/orm/sql"
-	"github.com/huandu/go-sqlbuilder"
+	sbd "github.com/authink/sqlbuilder"
 )
 
 type dept interface {
@@ -13,12 +13,14 @@ type dept interface {
 type deptImpl struct{}
 
 // Insert implements dept.
-func (d *deptImpl) Insert() (statement string) {
-	statement, _ = sqlbuilder.InsertInto(db.Department.Tname()).Cols(db.Department.Name, db.Department.OwnerId).Values(
-		sql.Named(db.Department.Name),
-		sql.Named(db.Department.OwnerId),
-	).Build()
-	return sql.ReplaceAtWithColon(statement)
+func (d *deptImpl) Insert() string {
+	return sbd.NewBuilder().
+		InsertInto(sbd.Table(db.Department.Tname())).
+		Columns(
+			sbd.Field(db.Department.Name),
+			sbd.Field(db.Department.OwnerId),
+		).
+		String()
 }
 
 var Dept dept = &deptImpl{}

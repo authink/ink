@@ -3,7 +3,7 @@ package sqls
 import (
 	"github.com/authink/ink.go/src/orm/db"
 	"github.com/authink/inkstone/orm/sql"
-	"github.com/huandu/go-sqlbuilder"
+	sbd "github.com/authink/sqlbuilder"
 )
 
 type deptLevel interface {
@@ -13,14 +13,14 @@ type deptLevel interface {
 type deptLevelImpl struct{}
 
 // Insert implements deptLevel.
-func (d *deptLevelImpl) Insert() (statement string) {
-	statement, _ = sqlbuilder.
-		InsertInto(db.DeptLevel.Tname()).
-		Cols(db.DeptLevel.DeptId, db.DeptLevel.SubDeptId).Values(
-		sql.Named(db.DeptLevel.DeptId),
-		sql.Named(db.DeptLevel.SubDeptId),
-	).Build()
-	return sql.ReplaceAtWithColon(statement)
+func (d *deptLevelImpl) Insert() string {
+	return sbd.NewBuilder().
+		InsertInto(sbd.Table(db.DeptLevel.Tname())).
+		Columns(
+			sbd.Field(db.DeptLevel.DeptId),
+			sbd.Field(db.DeptLevel.SubDeptId),
+		).
+		String()
 }
 
 var DeptLevel deptLevel = &deptLevelImpl{}
