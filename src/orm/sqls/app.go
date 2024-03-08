@@ -3,6 +3,7 @@ package sqls
 import (
 	"github.com/authink/ink.go/src/orm/db"
 	"github.com/authink/inkstone/orm/sql"
+	sbd "github.com/authink/sqlbuilder"
 	"github.com/huandu/go-sqlbuilder"
 )
 
@@ -17,53 +18,49 @@ type app interface {
 type appImpl struct{}
 
 // Find implements app.
-func (a *appImpl) Find() (statement string) {
-	statement, _ = sqlbuilder.
+func (a *appImpl) Find() string {
+	return sbd.
+		NewBuilder().
 		Select(
 			sql.Id,
 			sql.CreatedAt,
 			sql.UpdatedAt,
-			db.App.Name,
-			db.App.Active,
+			sbd.Field(db.App.Name),
+			sbd.Field(db.App.Active),
 		).
-		From(db.App.Tname()).
+		From(sbd.Table(db.App.Tname())).
 		OrderBy(sql.Id).
 		Asc().
-		Build()
-	return statement
+		String()
 }
 
 // Get implements app.
-func (a *appImpl) Get() (statement string) {
-	sb := sqlbuilder.NewSelectBuilder()
-	statement, _ = sb.
+func (a *appImpl) Get() string {
+	return sbd.NewBuilder().
 		Select(
 			sql.Id,
-			db.App.Name,
-			db.App.Secret,
-			db.App.Active,
+			sbd.Field(db.App.Name),
+			sbd.Field(db.App.Secret),
+			sbd.Field(db.App.Active),
 		).
-		From(db.App.Tname()).
-		Where(sb.EQ(sql.Id, sql.Named(sql.Id))).
-		Build()
-	return sql.ReplaceAtWithColon(statement)
+		From(sbd.Table(db.App.Tname())).
+		Where(sbd.Equal{Left: sql.Id}).
+		String()
 }
 
 // GetForUpdate implements app.
-func (a *appImpl) GetForUpdate() (statement string) {
-	sb := sqlbuilder.NewSelectBuilder()
-	statement, _ = sb.
+func (a *appImpl) GetForUpdate() string {
+	return sbd.NewBuilder().
 		Select(
 			sql.Id,
-			db.App.Name,
-			db.App.Secret,
-			db.App.Active,
+			sbd.Field(db.App.Name),
+			sbd.Field(db.App.Secret),
+			sbd.Field(db.App.Active),
 		).
-		From(db.App.Tname()).
-		Where(sb.EQ(sql.Id, sql.Named(sql.Id))).
+		From(sbd.Table(db.App.Tname())).
+		Where(sbd.Equal{Left: sql.Id}).
 		ForUpdate().
-		Build()
-	return sql.ReplaceAtWithColon(statement)
+		String()
 }
 
 // Insert implements app.

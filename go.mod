@@ -4,6 +4,7 @@ go 1.21.4
 
 require (
 	github.com/authink/inkstone v0.2.1
+	github.com/authink/sqlbuilder v0.0.1
 	github.com/casbin/casbin/v2 v2.82.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-playground/validator/v10 v10.14.0
@@ -30,6 +31,7 @@ require (
 	github.com/cosmtrek/air v1.49.0 // indirect
 	github.com/creack/pty v1.1.18 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/elliotchance/pie/v2 v2.8.0 // indirect
 	github.com/fatih/color v1.14.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
@@ -75,6 +77,7 @@ require (
 	go.uber.org/atomic v1.10.0 // indirect
 	golang.org/x/arch v0.3.0 // indirect
 	golang.org/x/crypto v0.17.0 // indirect
+	golang.org/x/exp v0.0.0-20230315142452-642cacee5cc0 // indirect
 	golang.org/x/net v0.18.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
@@ -86,3 +89,5 @@ require (
 )
 
 replace github.com/authink/inkstone => ../inkstone
+
+replace github.com/authink/sqlbuilder => ../sqlbuilder

@@ -2,16 +2,16 @@
 V := 0.1.4
 ARGS :=
 
-gen:
-	go run ./src gen
-
 tidy:
 	go mod tidy
-tidy: gen
+
+gen:
+	go run ./src gen
+gen: tidy
 
 fmt:
 	go fmt ./src/...
-fmt: tidy
+fmt: gen
 
 swag:
 	go run ./src swag
@@ -31,7 +31,7 @@ run: build
 
 frun:
 	APP_ENV=dev ./bin/ink run
-frun: tidy
+frun: gen
 
 package:
 	git tag v$(V)
