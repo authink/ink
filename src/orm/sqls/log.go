@@ -3,7 +3,7 @@ package sqls
 import (
 	"github.com/authink/ink.go/src/orm/db"
 	"github.com/authink/inkstone/orm/sql"
-	"github.com/huandu/go-sqlbuilder"
+	sbd "github.com/authink/sqlbuilder"
 )
 
 type log interface {
@@ -14,29 +14,25 @@ type log interface {
 type logImpl struct{}
 
 // Find implements log.
-func (l *logImpl) Find() (statement string) {
-	statement, _ = sqlbuilder.
+func (l *logImpl) Find() string {
+	return sbd.NewBuilder().
 		Select(
 			sql.Id,
 			sql.CreatedAt,
-			db.Log.Detail,
+			sbd.Field(db.Log.Detail),
 		).
-		From(db.Log.Tname()).
+		From(sbd.Table(db.Log.Tname())).
 		OrderBy(sql.Id).
 		Desc().
-		Build()
-	return statement
+		String()
 }
 
 // Insert implements log.
-func (l *logImpl) Insert() (statement string) {
-	statement, _ = sqlbuilder.
-		InsertInto(db.Log.Tname()).
-		Cols(db.Log.Detail).
-		Values(sql.Named(db.Log.Detail)).
-		Build()
-
-	return sql.ReplaceAtWithColon(statement)
+func (l *logImpl) Insert() string {
+	return sbd.NewBuilder().
+		InsertInto(sbd.Table(db.Log.Tname())).
+		Columns(sbd.Field(db.Log.Detail)).
+		String()
 }
 
 var Log log = &logImpl{}
