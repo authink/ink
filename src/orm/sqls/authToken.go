@@ -3,7 +3,7 @@ package sqls
 import (
 	"github.com/authink/ink.go/src/orm/db"
 	"github.com/authink/inkstone/orm/sql"
-	"github.com/huandu/go-sqlbuilder"
+	sbd "github.com/authink/sqlbuilder"
 )
 
 type authToken interface {
@@ -18,112 +18,92 @@ type authToken interface {
 type authTokenImpl struct{}
 
 // Count implements authToken.
-func (a *authTokenImpl) Count() (statement string) {
-	tbnAlias := "at"
-	sb := sqlbuilder.NewSelectBuilder()
-	statement, _ = sb.
-		Select(
-			sql.Count(tbnAlias),
-		).
-		From(sb.As(db.AuthToken.Tname(), tbnAlias)).
-		Build()
-	return statement
+func (a *authTokenImpl) Count() string {
+	return sbd.NewBuilder().
+		Select(sbd.Field(sql.Id).Count().As("c")).
+		From(sbd.Table(db.AuthToken.Tname())).
+		String()
 }
 
 // Delete implements authToken.
-func (a *authTokenImpl) Delete() (statement string) {
-	sb := sqlbuilder.NewDeleteBuilder()
-	statement, _ = sb.
-		DeleteFrom(db.AuthToken.Tname()).
-		Where(sb.EQ(sql.Id, sql.Named(sql.Id))).
-		Build()
-	return sql.ReplaceAtWithColon(statement)
+func (a *authTokenImpl) Delete() string {
+	return sbd.NewBuilder().
+		DeleteFrom(sbd.Table(db.AuthToken.Tname())).
+		Where(sbd.Equal{Left: sql.Id}).
+		String()
 }
 
 // GetByAccessToken implements authToken.
-func (a *authTokenImpl) GetByAccessToken() (statement string) {
-	sb := sqlbuilder.NewSelectBuilder()
-	statement, _ = sb.
+func (a *authTokenImpl) GetByAccessToken() string {
+	return sbd.NewBuilder().
 		Select(
 			sql.Id,
 			sql.CreatedAt,
-			db.AuthToken.AccessToken,
-			db.AuthToken.RefreshToken,
-			db.AuthToken.AppId,
-			db.AuthToken.AccountId,
+			sbd.Field(db.AuthToken.AccessToken),
+			sbd.Field(db.AuthToken.RefreshToken),
+			sbd.Field(db.AuthToken.AppId),
+			sbd.Field(db.AuthToken.AccountId),
 		).
-		From(db.AuthToken.Tname()).
-		Where(sb.EQ(db.AuthToken.AccessToken, sql.Named(db.AuthToken.AccessToken))).
-		Build()
-	return sql.ReplaceAtWithColon(statement)
+		From(sbd.Table(db.AuthToken.Tname())).
+		Where(sbd.Equal{Left: sbd.Field(db.AuthToken.AccessToken)}).
+		String()
 }
 
 // GetByRefreshToken implements authToken.
-func (a *authTokenImpl) GetByRefreshToken() (statement string) {
-	sb := sqlbuilder.NewSelectBuilder()
-	statement, _ = sb.
+func (a *authTokenImpl) GetByRefreshToken() string {
+	return sbd.NewBuilder().
 		Select(
 			sql.Id,
 			sql.CreatedAt,
-			db.AuthToken.AccessToken,
-			db.AuthToken.RefreshToken,
-			db.AuthToken.AppId,
-			db.AuthToken.AccountId,
+			sbd.Field(db.AuthToken.AccessToken),
+			sbd.Field(db.AuthToken.RefreshToken),
+			sbd.Field(db.AuthToken.AppId),
+			sbd.Field(db.AuthToken.AccountId),
 		).
-		From(db.AuthToken.Tname()).
-		Where(sb.EQ(db.AuthToken.RefreshToken, sql.Named(db.AuthToken.RefreshToken))).
-		Build()
-	return sql.ReplaceAtWithColon(statement)
+		From(sbd.Table(db.AuthToken.Tname())).
+		Where(sbd.Equal{Left: sbd.Field(db.AuthToken.RefreshToken)}).
+		String()
 }
 
 // Insert implements authToken.
-func (a *authTokenImpl) Insert() (statement string) {
-	statement, _ = sqlbuilder.
-		InsertInto(db.AuthToken.Tname()).
-		Cols(
-			db.AuthToken.AccessToken,
-			db.AuthToken.RefreshToken,
-			db.AuthToken.AppId,
-			db.AuthToken.AccountId,
-		).Values(
-		sql.Named(db.AuthToken.AccessToken),
-		sql.Named(db.AuthToken.RefreshToken),
-		sql.Named(db.AuthToken.AppId),
-		sql.Named(db.AuthToken.AccountId),
-	).Build()
-	return sql.ReplaceAtWithColon(statement)
+func (a *authTokenImpl) Insert() string {
+	return sbd.NewBuilder().
+		InsertInto(sbd.Table(db.AuthToken.Tname())).
+		Columns(
+			sbd.Field(db.AuthToken.AccessToken),
+			sbd.Field(db.AuthToken.RefreshToken),
+			sbd.Field(db.AuthToken.AppId),
+			sbd.Field(db.AuthToken.AccountId),
+		).
+		String()
 }
 
 // Pagination implements authToken.
-func (a *authTokenImpl) Pagination() (statement string) {
-	tbnAlias1 := "at"
-	tbnAlias2 := "a"
-	sb := sqlbuilder.NewSelectBuilder()
-	statement, _ = sb.
+func (a *authTokenImpl) Pagination() string {
+	aat := "at"
+	aa := "a"
+	return sbd.NewBuilder().
 		Select(
-			sql.Col(tbnAlias1, sql.Id),
-			sql.Col(tbnAlias1, sql.CreatedAt),
-			sql.Col(tbnAlias1, db.AuthToken.AccessToken),
-			sql.Col(tbnAlias1, db.AuthToken.RefreshToken),
-			sql.Col(tbnAlias1, db.AuthToken.AppId),
-			sb.As(
-				sql.Col(tbnAlias2, db.App.Name),
-				db.AuthTokenWithApp.AppName,
-			),
-			sql.Col(tbnAlias1, db.AuthToken.AccountId),
+			sbd.Field(sql.Id).Of(aat),
+			sbd.Field(sql.CreatedAt).Of(aat),
+			sbd.Field(db.AuthToken.AccessToken).Of(aat),
+			sbd.Field(db.AuthToken.RefreshToken).Of(aat),
+			sbd.Field(db.AuthToken.AppId).Of(aat),
+			sbd.Field(db.App.Name).Of(aa).As(db.AuthTokenWithApp.AppName),
+			sbd.Field(db.AuthToken.AccountId).Of(aat),
 		).
 		From(
-			sb.As(db.AuthToken.Tname(), tbnAlias1),
-			sb.As(db.App.Tname(), tbnAlias2),
+			sbd.Table(db.AuthToken.Tname()).As(aat),
+			sbd.Table(db.App.Tname()).As(aa),
 		).
-		Where(sql.EQ(
-			sql.Col(tbnAlias1, db.AuthToken.AppId),
-			sql.Col(tbnAlias2, sql.Id),
-		)).
-		OrderBy(sql.Col(tbnAlias1, sql.Id)).
+		Where(sbd.Equal{
+			Left:  sbd.Field(db.AuthToken.AppId).Of(aat),
+			Right: sbd.Field(sql.Id).Of(aa),
+		}).
+		OrderBy(sbd.Field(sql.Id).Of(aat)).
 		Desc().
-		Build()
-	return sql.LimitAndOffset(statement)
+		Limit().
+		String()
 }
 
 var AuthToken authToken = &authTokenImpl{}
