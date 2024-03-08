@@ -6,67 +6,25 @@ import (
 	sbd "github.com/authink/sqlbuilder"
 )
 
-type authToken interface {
-	sql.Inserter
-	sql.Deleter
-	sql.Counter
-	sql.Pager
-	GetByAccessToken() string
-	GetByRefreshToken() string
+type AuthToken struct {
+	sql.SQLBase
 }
 
-type authTokenImpl struct{}
-
-// Count implements authToken.
-func (a *authTokenImpl) Count() string {
+func (a *AuthToken) Count() string {
 	return sbd.NewBuilder().
 		Select(sbd.Field(sql.Id).Count().As("c")).
 		From(sbd.Table(db.AuthToken.Tname())).
 		String()
 }
 
-// Delete implements authToken.
-func (a *authTokenImpl) Delete() string {
+func (a *AuthToken) Delete() string {
 	return sbd.NewBuilder().
 		DeleteFrom(sbd.Table(db.AuthToken.Tname())).
 		Where(sbd.Equal{Left: sql.Id}).
 		String()
 }
 
-// GetByAccessToken implements authToken.
-func (a *authTokenImpl) GetByAccessToken() string {
-	return sbd.NewBuilder().
-		Select(
-			sql.Id,
-			sql.CreatedAt,
-			sbd.Field(db.AuthToken.AccessToken),
-			sbd.Field(db.AuthToken.RefreshToken),
-			sbd.Field(db.AuthToken.AppId),
-			sbd.Field(db.AuthToken.AccountId),
-		).
-		From(sbd.Table(db.AuthToken.Tname())).
-		Where(sbd.Equal{Left: sbd.Field(db.AuthToken.AccessToken)}).
-		String()
-}
-
-// GetByRefreshToken implements authToken.
-func (a *authTokenImpl) GetByRefreshToken() string {
-	return sbd.NewBuilder().
-		Select(
-			sql.Id,
-			sql.CreatedAt,
-			sbd.Field(db.AuthToken.AccessToken),
-			sbd.Field(db.AuthToken.RefreshToken),
-			sbd.Field(db.AuthToken.AppId),
-			sbd.Field(db.AuthToken.AccountId),
-		).
-		From(sbd.Table(db.AuthToken.Tname())).
-		Where(sbd.Equal{Left: sbd.Field(db.AuthToken.RefreshToken)}).
-		String()
-}
-
-// Insert implements authToken.
-func (a *authTokenImpl) Insert() string {
+func (a *AuthToken) Insert() string {
 	return sbd.NewBuilder().
 		InsertInto(sbd.Table(db.AuthToken.Tname())).
 		Columns(
@@ -78,8 +36,7 @@ func (a *authTokenImpl) Insert() string {
 		String()
 }
 
-// Pagination implements authToken.
-func (a *authTokenImpl) Pagination() string {
+func (a *AuthToken) Pagination() string {
 	aat := "at"
 	aa := "a"
 	return sbd.NewBuilder().
@@ -106,4 +63,32 @@ func (a *authTokenImpl) Pagination() string {
 		String()
 }
 
-var AuthToken authToken = &authTokenImpl{}
+func (a *AuthToken) GetByAccessToken() string {
+	return sbd.NewBuilder().
+		Select(
+			sql.Id,
+			sql.CreatedAt,
+			sbd.Field(db.AuthToken.AccessToken),
+			sbd.Field(db.AuthToken.RefreshToken),
+			sbd.Field(db.AuthToken.AppId),
+			sbd.Field(db.AuthToken.AccountId),
+		).
+		From(sbd.Table(db.AuthToken.Tname())).
+		Where(sbd.Equal{Left: sbd.Field(db.AuthToken.AccessToken)}).
+		String()
+}
+
+func (a *AuthToken) GetByRefreshToken() string {
+	return sbd.NewBuilder().
+		Select(
+			sql.Id,
+			sql.CreatedAt,
+			sbd.Field(db.AuthToken.AccessToken),
+			sbd.Field(db.AuthToken.RefreshToken),
+			sbd.Field(db.AuthToken.AppId),
+			sbd.Field(db.AuthToken.AccountId),
+		).
+		From(sbd.Table(db.AuthToken.Tname())).
+		Where(sbd.Equal{Left: sbd.Field(db.AuthToken.RefreshToken)}).
+		String()
+}

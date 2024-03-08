@@ -6,14 +6,11 @@ import (
 	sbd "github.com/authink/sqlbuilder"
 )
 
-type deptStaff interface {
-	sql.Inserter
+type DeptStaff struct {
+	sql.SQLBase
 }
 
-type deptStaffImpl struct{}
-
-// Insert implements deptStaff.
-func (d *deptStaffImpl) Insert() string {
+func (d *DeptStaff) Insert() string {
 	return sbd.NewBuilder().
 		InsertInto(sbd.Table(db.DeptStaff.Tname())).
 		Columns(
@@ -22,5 +19,3 @@ func (d *deptStaffImpl) Insert() string {
 		).
 		String()
 }
-
-var DeptStaff deptStaff = &deptStaffImpl{}

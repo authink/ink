@@ -6,14 +6,11 @@ import (
 	sbd "github.com/authink/sqlbuilder"
 )
 
-type deptLevel interface {
-	sql.Inserter
+type DeptLevel struct {
+	sql.SQLBase
 }
 
-type deptLevelImpl struct{}
-
-// Insert implements deptLevel.
-func (d *deptLevelImpl) Insert() string {
+func (d *DeptLevel) Insert() string {
 	return sbd.NewBuilder().
 		InsertInto(sbd.Table(db.DeptLevel.Tname())).
 		Columns(
@@ -22,5 +19,3 @@ func (d *deptLevelImpl) Insert() string {
 		).
 		String()
 }
-
-var DeptLevel deptLevel = &deptLevelImpl{}

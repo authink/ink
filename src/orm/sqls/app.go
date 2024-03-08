@@ -6,18 +6,11 @@ import (
 	sbd "github.com/authink/sqlbuilder"
 )
 
-type app interface {
-	sql.Inserter
-	sql.Updater
-	sql.Geter
-	sql.GeterForUpdate
-	sql.Finder
+type App struct {
+	sql.SQLBase
 }
 
-type appImpl struct{}
-
-// Find implements app.
-func (a *appImpl) Find() string {
+func (a *App) Find() string {
 	return sbd.NewBuilder().
 		Select(
 			sql.Id,
@@ -32,8 +25,7 @@ func (a *appImpl) Find() string {
 		String()
 }
 
-// Get implements app.
-func (a *appImpl) Get() string {
+func (a *App) Get() string {
 	return sbd.NewBuilder().
 		Select(
 			sql.Id,
@@ -46,8 +38,7 @@ func (a *appImpl) Get() string {
 		String()
 }
 
-// GetForUpdate implements app.
-func (a *appImpl) GetForUpdate() string {
+func (a *App) GetForUpdate() string {
 	return sbd.NewBuilder().
 		Select(
 			sql.Id,
@@ -61,8 +52,7 @@ func (a *appImpl) GetForUpdate() string {
 		String()
 }
 
-// Insert implements app.
-func (a *appImpl) Insert() string {
+func (a *App) Insert() string {
 	return sbd.NewBuilder().
 		InsertInto(sbd.Table(db.App.Tname())).
 		Columns(
@@ -72,8 +62,7 @@ func (a *appImpl) Insert() string {
 		String()
 }
 
-// Update implements app.
-func (a *appImpl) Update() string {
+func (a *App) Update() string {
 	return sbd.NewBuilder().
 		Update(sbd.Table(db.App.Tname())).
 		Set(
@@ -83,5 +72,3 @@ func (a *appImpl) Update() string {
 		Where(sbd.Equal{Left: sql.Id}).
 		String()
 }
-
-var App app = &appImpl{}

@@ -51,7 +51,7 @@ func apps(c *web.Context) {
 
 	var res = []appRes{}
 	for i := range apps {
-		app := &apps[i]
+		app := apps[i]
 		res = append(res, appRes{
 			Response: web.Response{
 				Id:        int(app.Id),

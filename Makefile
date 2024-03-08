@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := build
-V := 0.1.6
+V := 0.1.7
 ARGS :=
 
 tidy:

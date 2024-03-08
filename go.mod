@@ -4,7 +4,7 @@ go 1.21.4
 
 require (
 	github.com/authink/inkstone v0.2.4
-	github.com/authink/orm v0.0.1
+	github.com/authink/orm v0.0.2
 	github.com/authink/sqlbuilder v0.0.2
 	github.com/casbin/casbin/v2 v2.82.0
 	github.com/gin-gonic/gin v1.9.1

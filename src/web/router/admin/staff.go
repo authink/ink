@@ -59,7 +59,7 @@ func staffs(c *web.Context) {
 	}
 
 	var total int
-	var staffs []models.Staff
+	var staffs []*models.Staff
 
 	if err := appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
 		if total, err = orm.Staff(appCtx).CountTx(tx); err != nil {
@@ -80,7 +80,7 @@ func staffs(c *web.Context) {
 
 	var res = []staffRes{}
 	for i := range staffs {
-		staff := &staffs[i]
+		staff := staffs[i]
 		res = append(res, staffRes{
 			Response: web.Response{
 				Id:        int(staff.Id),

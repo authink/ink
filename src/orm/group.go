@@ -1,8 +1,6 @@
 package orm
 
 import (
-	"errors"
-
 	"github.com/authink/ink.go/src/orm/models"
 	"github.com/authink/ink.go/src/orm/sqls"
 	"github.com/authink/inkstone/app"
@@ -11,75 +9,20 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type group interface {
-	orm.Inserter[models.Group]
-	orm.Updater[models.Group]
-	orm.Geter[models.Group]
-	orm.Counter
-	orm.Pager[models.GroupWithApp]
+type group struct {
+	*orm.ORMBase[*models.Group, *sqls.Group]
 }
 
-type groupImpl app.AppContext
+func (g *group) PaginationTx(tx *sqlx.Tx, pager model.Pager) (groups []models.GroupWithApp, err error) {
+	err = orm.Select(tx, g.Stmt.Pagination(), &groups, pager)
+	return
+}
 
-// Count implements group.
-func (g *groupImpl) Count(args ...model.Arg) (c int, err error) {
-	if len(args) != 1 {
-		panic(errors.New("invalid num of args"))
+func Group(appCtx *app.AppContext) *group {
+	return &group{
+		&orm.ORMBase[*models.Group, *sqls.Group]{
+			Executor: appCtx.DB,
+			Stmt:     &sqls.Group{},
+		},
 	}
-	err = orm.Count(g.DB, sqls.Group.Count(), &c, args[0])
-	return
-}
-
-// CountTx implements group.
-func (g *groupImpl) CountTx(tx *sqlx.Tx, args ...model.Arg) (c int, err error) {
-	if len(args) != 1 {
-		panic(errors.New("invalid num of args"))
-	}
-	err = orm.Count(tx, sqls.Group.Count(), &c, args[0])
-	return
-}
-
-// Get implements group.
-// Subtle: this method shadows the method (*DB).Get of groupImpl.DB.
-func (g *groupImpl) Get(group *models.Group) (err error) {
-	err = orm.Get(g.DB, sqls.Group.Get(), group)
-	return
-}
-
-// GetTx implements group.
-func (g *groupImpl) GetTx(tx *sqlx.Tx, group *models.Group) (err error) {
-	err = orm.Get(tx, sqls.Group.GetForUpdate(), group)
-	return
-}
-
-// Insert implements group.
-func (g *groupImpl) Insert(group *models.Group) error {
-	return orm.NamedInsert(g.DB, sqls.Group.Insert(), group)
-}
-
-// InsertTx implements group.
-func (g *groupImpl) InsertTx(tx *sqlx.Tx, group *models.Group) error {
-	return orm.NamedInsert(tx, sqls.Group.Insert(), group)
-}
-
-// PaginationTx implements group.
-func (g *groupImpl) PaginationTx(tx *sqlx.Tx, pager model.Pager) (groups []models.GroupWithApp, err error) {
-	err = orm.Select(tx, sqls.Group.Pagination(), &groups, pager)
-	return
-}
-
-// Update implements group.
-func (g *groupImpl) Update(group *models.Group) error {
-	return orm.NamedUpdate(g.DB, sqls.Group.Update(), group)
-}
-
-// UpdateTx implements group.
-func (g *groupImpl) UpdateTx(tx *sqlx.Tx, group *models.Group) error {
-	return orm.NamedUpdate(tx, sqls.Group.Update(), group)
-}
-
-var _ group = (*groupImpl)(nil)
-
-func Group(appCtx *app.AppContext) group {
-	return (*groupImpl)(appCtx)
 }

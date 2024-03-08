@@ -6,15 +6,11 @@ import (
 	sbd "github.com/authink/sqlbuilder"
 )
 
-type log interface {
-	sql.Inserter
-	sql.Finder
+type Log struct {
+	sql.SQLBase
 }
 
-type logImpl struct{}
-
-// Find implements log.
-func (l *logImpl) Find() string {
+func (l *Log) Find() string {
 	return sbd.NewBuilder().
 		Select(
 			sql.Id,
@@ -27,12 +23,9 @@ func (l *logImpl) Find() string {
 		String()
 }
 
-// Insert implements log.
-func (l *logImpl) Insert() string {
+func (l *Log) Insert() string {
 	return sbd.NewBuilder().
 		InsertInto(sbd.Table(db.Log.Tname())).
 		Columns(sbd.Field(db.Log.Detail)).
 		String()
 }
-
-var Log log = &logImpl{}

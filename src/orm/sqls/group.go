@@ -6,19 +6,11 @@ import (
 	sbd "github.com/authink/sqlbuilder"
 )
 
-type group interface {
-	sql.Inserter
-	sql.Updater
-	sql.Geter
-	sql.GeterForUpdate
-	sql.Counter
-	sql.Pager
+type Group struct {
+	sql.SQLBase
 }
 
-type groupImpl struct{}
-
-// Count implements group.
-func (g *groupImpl) Count() string {
+func (g *Group) Count() string {
 	return sbd.NewBuilder().
 		Select(sbd.Field(sql.Id).Count()).
 		From(sbd.Table(db.Group.Tname())).
@@ -27,8 +19,7 @@ func (g *groupImpl) Count() string {
 		String()
 }
 
-// Get implements group.
-func (g *groupImpl) Get() string {
+func (g *Group) Get() string {
 	return sbd.NewBuilder().
 		Select(
 			sql.Id,
@@ -42,8 +33,7 @@ func (g *groupImpl) Get() string {
 		String()
 }
 
-// GetForUpdate implements group.
-func (g *groupImpl) GetForUpdate() string {
+func (g *Group) GetForUpdate() string {
 	return sbd.NewBuilder().
 		Select(
 			sql.Id,
@@ -58,8 +48,7 @@ func (g *groupImpl) GetForUpdate() string {
 		String()
 }
 
-// Insert implements group.
-func (g *groupImpl) Insert() string {
+func (g *Group) Insert() string {
 	return sbd.NewBuilder().
 		InsertInto(sbd.Table(db.Group.Tname())).
 		Columns(
@@ -70,8 +59,7 @@ func (g *groupImpl) Insert() string {
 		String()
 }
 
-// Pagination implements group.
-func (g *groupImpl) Pagination() string {
+func (g *Group) Pagination() string {
 	ag := "g"
 	aa := "a"
 	fId := sbd.Field(sql.Id)
@@ -85,7 +73,7 @@ func (g *groupImpl) Pagination() string {
 			sbd.Field(db.Group.Name).Of(ag),
 			fType.Of(ag),
 			fAppId.Of(ag),
-			sbd.Field(db.App.Name).Of(aa),
+			sbd.Field(db.App.Name).Of(aa).As(db.GroupWithApp.AppName),
 			sbd.Field(db.Group.Active).Of(ag),
 		).
 		From(
@@ -106,11 +94,11 @@ func (g *groupImpl) Pagination() string {
 		}).
 		OrderBy(fId.Of(ag)).
 		Desc().
+		Limit().
 		String()
 }
 
-// Update implements group.
-func (g *groupImpl) Update() string {
+func (g *Group) Update() string {
 	return sbd.NewBuilder().
 		Update(sbd.Table(db.Group.Tname())).
 		Set(
@@ -120,5 +108,3 @@ func (g *groupImpl) Update() string {
 		Where(sbd.Equal{Left: sql.Id}).
 		String()
 }
-
-var Group group = &groupImpl{}
