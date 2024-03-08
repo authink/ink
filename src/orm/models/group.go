@@ -1,6 +1,6 @@
 package models
 
-import "github.com/authink/inkstone/orm/model"
+import "github.com/authink/orm/model"
 
 // @model
 // @db s_groups

@@ -4,7 +4,7 @@ import (
 	"github.com/authink/ink.go/src/orm/models"
 	"github.com/authink/ink.go/src/orm/sqls"
 	"github.com/authink/inkstone/app"
-	"github.com/authink/inkstone/orm"
+	"github.com/authink/orm"
 	"github.com/jmoiron/sqlx"
 )
 

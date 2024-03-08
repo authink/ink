@@ -6,8 +6,8 @@ import (
 	"github.com/authink/ink.go/src/orm/models"
 	"github.com/authink/ink.go/src/web/errs"
 	"github.com/authink/ink.go/src/web/middleware"
-	"github.com/authink/inkstone/orm/model"
 	"github.com/authink/inkstone/web"
+	"github.com/authink/orm/model"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 )

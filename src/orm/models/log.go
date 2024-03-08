@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/authink/inkstone/orm/model"
+	"github.com/authink/orm/model"
 	"github.com/gin-gonic/gin"
 )
 
