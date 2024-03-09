@@ -1,4 +1,4 @@
-# ink.go
+# ink
 
 ## Usage
 
@@ -46,7 +46,7 @@ Flags:
 
 ```bash
 $ cd {work dir}
-$ git clone git@github.com:authink/ink.go.git
+$ git clone git@github.com:authink/ink.git
 $ git clone git@github.com:authink/ink.schema.git
 ```
 
@@ -98,7 +98,7 @@ $ make swag
 
 ```go
 // MainAPI 文件增加 import
-_ "github.com/authink/ink.go/src/docs"
+_ "github.com/authink/ink/src/docs"
 ```
 
 启动 Ink server

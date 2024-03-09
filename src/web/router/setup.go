@@ -1,10 +1,10 @@
 package router
 
 import (
-	_ "github.com/authink/ink.go/src/docs"
-	"github.com/authink/ink.go/src/envs"
-	"github.com/authink/ink.go/src/web/router/admin"
-	"github.com/authink/ink.go/src/web/router/token"
+	_ "github.com/authink/ink/src/docs"
+	"github.com/authink/ink/src/envs"
+	"github.com/authink/ink/src/web/router/admin"
+	"github.com/authink/ink/src/web/router/token"
 	"github.com/gin-gonic/gin"
 )
 

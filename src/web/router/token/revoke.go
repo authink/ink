@@ -1,7 +1,7 @@
 package token
 
 import (
-	"github.com/authink/ink.go/src/web/errs"
+	"github.com/authink/ink/src/web/errs"
 	"github.com/authink/inkstone/web"
 )
 

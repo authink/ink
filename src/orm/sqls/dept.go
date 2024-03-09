@@ -1,7 +1,7 @@
 package sqls
 
 import (
-	"github.com/authink/ink.go/src/orm/db"
+	"github.com/authink/ink/src/orm/db"
 	"github.com/authink/orm/sql"
 	sbd "github.com/authink/sqlbuilder"
 )

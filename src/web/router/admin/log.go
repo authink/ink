@@ -1,10 +1,10 @@
 package admin
 
 import (
-	"github.com/authink/ink.go/src/authz"
-	"github.com/authink/ink.go/src/orm"
-	"github.com/authink/ink.go/src/orm/models"
-	"github.com/authink/ink.go/src/web/middleware"
+	"github.com/authink/ink/src/authz"
+	"github.com/authink/ink/src/orm"
+	"github.com/authink/ink/src/orm/models"
+	"github.com/authink/ink/src/web/middleware"
 	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
 )

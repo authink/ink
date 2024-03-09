@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/authink/ink.go/src/authz"
-	"github.com/authink/ink.go/src/migrate"
-	"github.com/authink/ink.go/src/web/i18n"
+	"github.com/authink/ink/src/authz"
+	"github.com/authink/ink/src/migrate"
+	"github.com/authink/ink/src/web/i18n"
 	"github.com/authink/inkstone/app"
 	"github.com/authink/inkstone/test"
 	"github.com/gin-gonic/gin"

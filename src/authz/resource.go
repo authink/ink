@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/authink/ink.go/src/envs"
+	"github.com/authink/ink/src/envs"
 )
 
 type Obj struct {

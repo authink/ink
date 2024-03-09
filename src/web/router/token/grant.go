@@ -3,11 +3,11 @@ package token
 import (
 	"net/http"
 
-	"github.com/authink/ink.go/src/envs"
-	"github.com/authink/ink.go/src/orm"
-	"github.com/authink/ink.go/src/orm/models"
-	"github.com/authink/ink.go/src/web/errs"
-	"github.com/authink/ink.go/src/web/helper"
+	"github.com/authink/ink/src/envs"
+	"github.com/authink/ink/src/orm"
+	"github.com/authink/ink/src/orm/models"
+	"github.com/authink/ink/src/web/errs"
+	"github.com/authink/ink/src/web/helper"
 	"github.com/authink/inkstone/util"
 	"github.com/authink/inkstone/web"
 )

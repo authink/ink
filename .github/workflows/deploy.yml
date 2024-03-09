@@ -23,7 +23,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Checkout ink.go repository
+      - name: Checkout ink repository
         uses: actions/checkout@v3
 
       - name: Setup Go environment
@@ -42,4 +42,4 @@ jobs:
           REMOTE_HOST: ${{secrets.REMOTE_HOST}}
           REMOTE_USER: ${{secrets.REMOTE_USER}}
           SOURCE: ${{secrets.SOURCE}}
-          SCRIPT_AFTER: sudo systemctl restart ink.go
+          SCRIPT_AFTER: sudo systemctl restart ink

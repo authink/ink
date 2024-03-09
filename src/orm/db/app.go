@@ -2,7 +2,7 @@
 package db
 
 import (
-	"github.com/authink/ink.go/src/orm/models"
+	"github.com/authink/ink/src/orm/models"
 	"github.com/authink/orm/db"
 	sbd "github.com/authink/sqlbuilder"
 )

@@ -1,4 +1,4 @@
-module github.com/authink/ink.go
+module github.com/authink/ink
 
 go 1.21.4
 

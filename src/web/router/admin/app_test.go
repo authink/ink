@@ -6,8 +6,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/authink/ink.go/src/envs"
-	"github.com/authink/ink.go/src/web/router/token"
+	"github.com/authink/ink/src/envs"
+	"github.com/authink/ink/src/web/router/token"
 	"github.com/authink/inkstone/test"
 	"github.com/stretchr/testify/assert"
 )

@@ -1,7 +1,7 @@
 package admin
 
 import (
-	"github.com/authink/ink.go/src/web/middleware"
+	"github.com/authink/ink/src/web/middleware"
 	"github.com/authink/inkstone/web"
 	"github.com/gin-gonic/gin"
 )

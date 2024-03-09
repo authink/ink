@@ -1,8 +1,8 @@
 package orm
 
 import (
-	"github.com/authink/ink.go/src/orm/models"
-	"github.com/authink/ink.go/src/orm/sqls"
+	"github.com/authink/ink/src/orm/models"
+	"github.com/authink/ink/src/orm/sqls"
 	"github.com/authink/inkstone/app"
 	"github.com/authink/orm"
 )
