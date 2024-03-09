@@ -6,7 +6,7 @@ tidy:
 	go mod tidy
 
 gen:
-	go run ./src gen
+	go run ./src gen -m github.com/authink/ink/src/orm/models
 gen: tidy
 
 fmt:
