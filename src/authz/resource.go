@@ -112,7 +112,7 @@ var (
 )
 
 func ObjList() []Obj {
-	return []Obj{Apps, Staffs, Tokens, Groups, Groupships, Permissons, Policies}
+	return []Obj{Apps, Staffs, Tokens, Groups, Groupships, Permissons, Policies, Departments, Logs}
 }
 
 func GetObj(appName, name string) *Obj {
