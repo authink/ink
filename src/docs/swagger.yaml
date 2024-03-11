@@ -1291,7 +1291,7 @@ paths:
     post:
       description: Generate token
       parameters:
-      - description: language
+      - description: locale(en, zh-CN)
         in: query
         name: locale
         type: string
