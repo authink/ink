@@ -1413,7 +1413,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "language",
-                        "name": "lang",
+                        "name": "locale",
                         "in": "query"
                     },
                     {

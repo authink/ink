@@ -1293,7 +1293,7 @@ paths:
       parameters:
       - description: language
         in: query
-        name: lang
+        name: locale
         type: string
       - description: request body
         in: body

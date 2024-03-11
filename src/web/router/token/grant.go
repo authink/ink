@@ -32,7 +32,7 @@ type GrantRes struct {
 //	@Description	Generate token
 //	@Tags			token
 //	@Router			/token/grant [post]
-//	@Param			lang		query		string		false	"language"
+//	@Param			locale		query		string		false	"locale(en, zh-CN)"
 //	@Param			grantReq	body		GrantReq	true	"request body"
 //	@Success		200			{object}	GrantRes
 //	@Failure		400			{object}	web.ClientError
