@@ -10,8 +10,8 @@ import (
 	"github.com/authink/ink/src/orm/models"
 	"github.com/authink/ink/src/web/errs"
 	"github.com/authink/ink/src/web/helper"
-	"github.com/authink/inkstone/jwtx"
-	"github.com/authink/inkstone/web"
+	"github.com/authink/stone/jwtx"
+	"github.com/authink/stone/web"
 	"github.com/golang-jwt/jwt/v5"
 )
 

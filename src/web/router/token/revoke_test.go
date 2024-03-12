@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/authink/inkstone/test"
+	"github.com/authink/stone/test"
 	"github.com/stretchr/testify/assert"
 )
 

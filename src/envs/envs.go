@@ -1,6 +1,6 @@
 package envs
 
-import "github.com/authink/inkstone/env"
+import "github.com/authink/stone/env"
 
 func AppNameAdmin() string {
 	appNameAdmin := "admin.dev"

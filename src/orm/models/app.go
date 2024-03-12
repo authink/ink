@@ -1,8 +1,8 @@
 package models
 
 import (
-	"github.com/authink/inkstone/util"
 	"github.com/authink/orm/model"
+	"github.com/authink/stone/util"
 )
 
 // @model

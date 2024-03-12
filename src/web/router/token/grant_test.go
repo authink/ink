@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/authink/ink/src/web/errs"
-	"github.com/authink/inkstone/test"
-	"github.com/authink/inkstone/web"
+	"github.com/authink/stone/test"
+	"github.com/authink/stone/web"
 	"github.com/stretchr/testify/assert"
 )
 

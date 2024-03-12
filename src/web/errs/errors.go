@@ -1,6 +1,6 @@
 package errs
 
-import "github.com/authink/inkstone/web"
+import "github.com/authink/stone/web"
 
 var (
 	ERR_BAD_REQUEST error = &web.ClientError{

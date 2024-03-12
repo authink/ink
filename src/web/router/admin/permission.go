@@ -6,7 +6,7 @@ import (
 	"github.com/authink/ink/src/orm/models"
 	"github.com/authink/ink/src/web/errs"
 	"github.com/authink/ink/src/web/middleware"
-	"github.com/authink/inkstone/web"
+	"github.com/authink/stone/web"
 	"github.com/gin-gonic/gin"
 )
 

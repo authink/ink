@@ -8,9 +8,9 @@ import (
 	"github.com/authink/ink/src/orm"
 	"github.com/authink/ink/src/orm/models"
 	"github.com/authink/ink/src/web/errs"
-	"github.com/authink/inkstone/jwtx"
-	"github.com/authink/inkstone/util"
-	"github.com/authink/inkstone/web"
+	"github.com/authink/stone/jwtx"
+	"github.com/authink/stone/util"
+	"github.com/authink/stone/web"
 )
 
 func generateAuthToken(c *web.Context, app *models.App, staff *models.Staff) (res *GrantRes) {

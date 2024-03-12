@@ -2,7 +2,7 @@ package token
 
 import (
 	"github.com/authink/ink/src/web/errs"
-	"github.com/authink/inkstone/web"
+	"github.com/authink/stone/web"
 )
 
 // revoke godoc

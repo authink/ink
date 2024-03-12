@@ -1,7 +1,7 @@
 package token
 
 import (
-	"github.com/authink/inkstone/web"
+	"github.com/authink/stone/web"
 	"github.com/gin-gonic/gin"
 )
 

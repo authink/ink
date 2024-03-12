@@ -3,10 +3,10 @@ package authz
 import (
 	_ "embed"
 
-	"github.com/authink/inkstone/app"
+	"github.com/authink/stone/app"
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
-	"github.com/memwey/casbin-sqlx-adapter"
+	sqlxadapter "github.com/memwey/casbin-sqlx-adapter"
 )
 
 var (

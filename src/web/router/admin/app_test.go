@@ -8,7 +8,7 @@ import (
 
 	"github.com/authink/ink/src/envs"
 	"github.com/authink/ink/src/web/router/token"
-	"github.com/authink/inkstone/test"
+	"github.com/authink/stone/test"
 	"github.com/stretchr/testify/assert"
 )
 

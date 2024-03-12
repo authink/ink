@@ -3,9 +3,9 @@ module github.com/authink/ink
 go 1.21.4
 
 require (
-	github.com/authink/inkstone v0.2.4
-	github.com/authink/orm v0.0.2
-	github.com/authink/sqlbuilder v0.0.2
+	github.com/authink/orm v0.0.4
+	github.com/authink/sqlbuilder v0.0.4
+	github.com/authink/stone v0.2.5
 	github.com/casbin/casbin/v2 v2.82.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-playground/validator/v10 v10.14.0
@@ -87,7 +87,7 @@ require (
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
 
-replace github.com/authink/inkstone => ../inkstone
+replace github.com/authink/stone => ../stone
 
 replace github.com/authink/sqlbuilder => ../sqlbuilder
 

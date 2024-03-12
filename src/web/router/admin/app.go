@@ -7,7 +7,7 @@ import (
 	"github.com/authink/ink/src/utils"
 	"github.com/authink/ink/src/web/errs"
 	"github.com/authink/ink/src/web/middleware"
-	"github.com/authink/inkstone/web"
+	"github.com/authink/stone/web"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"

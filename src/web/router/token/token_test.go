@@ -7,8 +7,8 @@ import (
 	"github.com/authink/ink/src/authz"
 	"github.com/authink/ink/src/migrate"
 	"github.com/authink/ink/src/web/i18n"
-	"github.com/authink/inkstone/app"
-	"github.com/authink/inkstone/test"
+	"github.com/authink/stone/app"
+	"github.com/authink/stone/test"
 	"github.com/gin-gonic/gin"
 )
 
