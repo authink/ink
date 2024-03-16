@@ -50,16 +50,19 @@ func Authz(obj authz.Obj) gin.HandlerFunc {
 			}
 
 			c.Next()
-			if statusCode := c.Writer.Status(); statusCode == http.StatusOK {
-				orm.Log(c.AppContext()).Insert(models.NewLog(&models.LogDetail{
-					AppId:     int(app.Id),
-					StaffId:   int(staff.Id),
-					Resource:  obj.Resource(),
-					Action:    act,
-					PathVars:  c.Params,
-					QueryVars: c.Request.URL.Query(),
-				}))
-			}
+
+			go func() {
+				if statusCode := c.Writer.Status(); statusCode == http.StatusOK {
+					orm.Log(c.AppContext()).Insert(models.NewLog(&models.LogDetail{
+						AppId:     int(app.Id),
+						StaffId:   int(staff.Id),
+						Resource:  obj.Resource(),
+						Action:    act,
+						PathVars:  c.Params,
+						QueryVars: c.Request.URL.Query(),
+					}))
+				}
+			}()
 
 		default:
 			c.AbortWithForbidden(errs.ERR_UNSUPPORTED_APP)
