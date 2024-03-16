@@ -255,6 +255,7 @@ definitions:
         example: true
         type: boolean
       id:
+        example: 100001
         minimum: 100000
         type: integer
       resetSecret:

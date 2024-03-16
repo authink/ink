@@ -1888,7 +1888,8 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "integer",
-                    "minimum": 100000
+                    "minimum": 100000,
+                    "example": 100001
                 },
                 "resetSecret": {
                     "type": "boolean",
