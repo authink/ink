@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -69,11 +68,11 @@ func TestAddApp(t *testing.T) {
 	assert.NotEmpty(t, resAddApp.Secret)
 }
 
-func tUpdateApp(accessToken string, id int, reqObj, resObj any) (*httptest.ResponseRecorder, error) {
+func tUpdateApp(accessToken string, reqObj, resObj any) (*httptest.ResponseRecorder, error) {
 	return test.Fetch(
 		ctx,
 		http.MethodPut,
-		fmt.Sprintf("admin/apps/%d", id),
+		"admin/apps",
 		reqObj,
 		resObj,
 		accessToken,
@@ -89,10 +88,11 @@ func TestResetApp(t *testing.T) {
 	assert.NotEmpty(t, resObj.RefreshToken)
 
 	resetAppReq := &updateAppReq{
+		Id:          100001,
 		ResetSecret: true,
 	}
 	resetAppRes := &appRes{}
-	w2, _ := tUpdateApp(resObj.AccessToken, 100001, resetAppReq, resetAppRes)
+	w2, _ := tUpdateApp(resObj.AccessToken, resetAppReq, resetAppRes)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Equal(t, 100001, resetAppRes.Id)
 	assert.Equal(t, "devtools", resetAppRes.Name)
@@ -108,10 +108,11 @@ func TestToggleApp(t *testing.T) {
 	assert.NotEmpty(t, resObj.RefreshToken)
 
 	resetAppReq := &updateAppReq{
+		Id:           100001,
 		ActiveToggle: true,
 	}
 	toggleAppRes := &appRes{}
-	w2, _ := tUpdateApp(resObj.AccessToken, 100001, resetAppReq, toggleAppRes)
+	w2, _ := tUpdateApp(resObj.AccessToken, resetAppReq, toggleAppRes)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Equal(t, 100001, toggleAppRes.Id)
 	assert.Equal(t, "devtools", toggleAppRes.Name)

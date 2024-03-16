@@ -72,25 +72,25 @@ const docTemplate = `{
                     }
                 }
             },
-            "post": {
+            "put": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Add a app",
+                "description": "Update a app",
                 "tags": [
                     "admin_app"
                 ],
-                "summary": "Add a app",
+                "summary": "Update a app",
                 "parameters": [
                     {
                         "description": "request body",
-                        "name": "addAppReq",
+                        "name": "updateAppReq",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/admin.addAppReq"
+                            "$ref": "#/definitions/admin.updateAppReq"
                         }
                     }
                 ],
@@ -126,35 +126,26 @@ const docTemplate = `{
                         }
                     }
                 }
-            }
-        },
-        "/admin/apps/{id}": {
-            "put": {
+            },
+            "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Update a app",
+                "description": "Add a app",
                 "tags": [
                     "admin_app"
                 ],
-                "summary": "Update a app",
+                "summary": "Add a app",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "app id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
                         "description": "request body",
-                        "name": "updateAppReq",
+                        "name": "addAppReq",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/admin.updateAppReq"
+                            "$ref": "#/definitions/admin.addAppReq"
                         }
                     }
                 ],
@@ -1887,10 +1878,17 @@ const docTemplate = `{
         },
         "admin.updateAppReq": {
             "type": "object",
+            "required": [
+                "id"
+            ],
             "properties": {
                 "activeToggle": {
                     "type": "boolean",
                     "example": true
+                },
+                "id": {
+                    "type": "integer",
+                    "minimum": 100000
                 },
                 "resetSecret": {
                     "type": "boolean",

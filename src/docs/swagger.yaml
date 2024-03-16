@@ -254,9 +254,14 @@ definitions:
       activeToggle:
         example: true
         type: boolean
+      id:
+        minimum: 100000
+        type: integer
       resetSecret:
         example: false
         type: boolean
+    required:
+    - id
     type: object
   admin.updateGroupReq:
     properties:
@@ -469,15 +474,9 @@ paths:
       summary: Add a app
       tags:
       - admin_app
-  /admin/apps/{id}:
     put:
       description: Update a app
       parameters:
-      - description: app id
-        in: path
-        name: id
-        required: true
-        type: integer
       - description: request body
         in: body
         name: updateAppReq

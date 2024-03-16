@@ -19,7 +19,7 @@ func setupAppGroup(gAdmin *gin.RouterGroup) {
 	gApps.Use(middleware.Authz(authz.Apps))
 	gApps.GET("", web.HandlerAdapter(apps))
 	gApps.POST("", web.HandlerAdapter(addApp))
-	gApps.PUT(":id", web.HandlerAdapter(updateApp))
+	gApps.PUT("", web.HandlerAdapter(updateApp))
 }
 
 type appRes struct {
@@ -107,11 +107,8 @@ func addApp(c *web.Context) {
 	})
 }
 
-type updateAppParam struct {
-	Id int `uri:"id" binding:"required,min=100000"`
-}
-
 type updateAppReq struct {
+	Id           int  `json:"id" binding:"required,min=100000" example:"100001"`
 	ResetSecret  bool `json:"resetSecret" example:"false"`
 	ActiveToggle bool `json:"activeToggle" example:"true"`
 }
@@ -121,9 +118,8 @@ type updateAppReq struct {
 //	@Summary		Update a app
 //	@Description	Update a app
 //	@Tags			admin_app
-//	@Router			/admin/apps/{id}	[put]
+//	@Router			/admin/apps	[put]
 //	@Security		ApiKeyAuth
-//	@Param			id				path		int				true	"app id"
 //	@Param			updateAppReq	body		updateAppReq	true	"request body"
 //	@Success		200				{object}	appRes
 //	@Failure		400				{object}	web.ClientError
@@ -131,13 +127,6 @@ type updateAppReq struct {
 //	@Failure		403				{object}	web.ClientError
 //	@Failure		500				{string}	empty
 func updateApp(c *web.Context) {
-	param := &updateAppParam{}
-
-	if err := c.ShouldBindUri(param); err != nil {
-		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
-		return
-	}
-
 	req := &updateAppReq{}
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
@@ -145,7 +134,7 @@ func updateApp(c *web.Context) {
 	}
 
 	var currentApp = c.MustGet("app").(*models.App)
-	if err := c.ShouldBindJSON(req); err != nil || (req.ActiveToggle && param.Id == int(currentApp.Id)) {
+	if err := c.ShouldBindJSON(req); err != nil || (req.ActiveToggle && req.Id == int(currentApp.Id)) {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
@@ -155,7 +144,7 @@ func updateApp(c *web.Context) {
 		app    models.App
 		secret string
 	)
-	app.Id = uint32(param.Id)
+	app.Id = uint32(req.Id)
 
 	if err := appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
 		err = orm.App(appCtx).GetTx(tx, &app)
