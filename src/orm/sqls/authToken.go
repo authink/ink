@@ -92,3 +92,11 @@ func (a *AuthToken) GetByRefreshToken() string {
 		Where(sbd.Equal{Left: db.AuthToken.RefreshToken}).
 		String()
 }
+
+func (a *AuthToken) DeleteBy() string {
+	return sbd.NewBuilder().
+		DeleteFrom(db.AuthToken.Tname()).
+		Where(sbd.Equal{Left: db.AuthToken.AppId}).
+		And(sbd.Equal{Left: db.AuthToken.AccountId}).
+		String()
+}

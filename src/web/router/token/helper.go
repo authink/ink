@@ -11,6 +11,7 @@ import (
 	"github.com/authink/stone/jwtx"
 	"github.com/authink/stone/util"
 	"github.com/authink/stone/web"
+	"github.com/jmoiron/sqlx"
 )
 
 func generateAuthToken(c *web.Context, app *models.App, staff *models.Staff) (res *GrantRes) {
@@ -39,7 +40,14 @@ func generateAuthToken(c *web.Context, app *models.App, staff *models.Staff) (re
 
 	authToken := models.NewAuthToken(jwtClaims.ID, refreshToken, app.Id, staff.Id)
 
-	if err = orm.AuthToken(appCtx).Insert(authToken); err != nil {
+	if err := appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
+		if err = orm.AuthToken(appCtx).DeleteByTx(tx, authToken); err != nil {
+			return
+		}
+
+		err = orm.AuthToken(appCtx).InsertTx(tx, authToken)
+		return
+	}); err != nil {
 		c.AbortWithServerError(err)
 		return
 	}

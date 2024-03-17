@@ -26,6 +26,10 @@ func (a *authToken) PaginationTx(tx *sqlx.Tx, pager model.Pager) (tokens []model
 	return
 }
 
+func (a *authToken) DeleteByTx(tx *sqlx.Tx, token *models.AuthToken) error {
+	return orm.Delete(tx, a.Stmt.DeleteBy(), token)
+}
+
 func AuthToken(appCtx *app.AppContext) *authToken {
 	return &authToken{
 		&orm.ORMBase[*models.AuthToken, *sqls.AuthToken]{
