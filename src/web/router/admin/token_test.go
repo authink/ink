@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -48,8 +47,8 @@ func tDeleteToken(accessToken string, id int) (*httptest.ResponseRecorder, error
 	return test.Fetch(
 		ctx,
 		http.MethodDelete,
-		fmt.Sprintf("admin/tokens/%d", id),
-		nil,
+		"admin/tokens",
+		&delTokenReq{id},
 		nil,
 		accessToken,
 	)
@@ -64,5 +63,5 @@ func TestDeleteToken(t *testing.T) {
 	assert.NotEmpty(t, resObj.RefreshToken)
 
 	w2, _ := tDeleteToken(resObj.AccessToken, 100000)
-	assert.Equal(t, http.StatusOK, w2.Code)
+	assert.Equal(t, http.StatusNoContent, w2.Code)
 }

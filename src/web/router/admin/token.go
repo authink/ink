@@ -16,7 +16,7 @@ func setupTokenGroup(gAdmin *gin.RouterGroup) {
 	gTokens := gAdmin.Group(authz.Tokens.Name)
 	gTokens.Use(middleware.Authz(authz.Tokens))
 	gTokens.GET("", web.HandlerAdapter(tokens))
-	gTokens.DELETE(":id", web.HandlerAdapter(deleteToken))
+	gTokens.DELETE("", web.HandlerAdapter(deleteToken))
 }
 
 type tokenRes struct {
@@ -96,7 +96,7 @@ func tokens(c *web.Context) {
 }
 
 type delTokenReq struct {
-	Id int `uri:"id" binding:"required,min=100000"`
+	Id int `json:"id" binding:"required,min=100000" example:"100001"`
 }
 
 // deleteToken godoc
@@ -104,9 +104,8 @@ type delTokenReq struct {
 //	@Summary		Delete a token
 //	@Description	Delete a token
 //	@Tags			admin_token
-//	@Router			/admin/tokens/{id}	[delete]
+//	@Router			/admin/tokens	[delete]
 //	@Security		ApiKeyAuth
-//	@Param			id	path		int	true	"token id"
 //	@Success		200	{string}	empty
 //	@Failure		400	{object}	web.ClientError
 //	@Failure		401	{object}	web.ClientError
@@ -114,7 +113,7 @@ type delTokenReq struct {
 //	@Failure		500	{string}	empty
 func deleteToken(c *web.Context) {
 	req := &delTokenReq{}
-	if err := c.ShouldBindUri(req); err != nil {
+	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}

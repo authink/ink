@@ -34,5 +34,5 @@ func TestRevoke(t *testing.T) {
 	assert.NotEmpty(t, resObj.RefreshToken)
 
 	w2, _ := revokeToken(resObj.AccessToken, resObj.RefreshToken)
-	assert.Equal(t, http.StatusOK, w2.Code)
+	assert.Equal(t, http.StatusNoContent, w2.Code)
 }

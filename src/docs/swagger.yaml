@@ -1214,6 +1214,34 @@ paths:
       tags:
       - admin_staff
   /admin/tokens:
+    delete:
+      description: Delete a token
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.ClientError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/web.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/web.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a token
+      tags:
+      - admin_token
     get:
       description: Show tokens
       parameters:
@@ -1250,41 +1278,6 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Show tokens
-      tags:
-      - admin_token
-  /admin/tokens/{id}:
-    delete:
-      description: Delete a token
-      parameters:
-      - description: token id
-        in: path
-        name: id
-        required: true
-        type: integer
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/web.ClientError'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/web.ClientError'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/web.ClientError'
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: Delete a token
       tags:
       - admin_token
   /token/grant:

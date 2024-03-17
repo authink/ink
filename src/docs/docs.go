@@ -1336,9 +1336,7 @@ const docTemplate = `{
                         }
                     }
                 }
-            }
-        },
-        "/admin/tokens/{id}": {
+            },
             "delete": {
                 "security": [
                     {
@@ -1350,15 +1348,6 @@ const docTemplate = `{
                     "admin_token"
                 ],
                 "summary": "Delete a token",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "token id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
