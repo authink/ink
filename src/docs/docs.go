@@ -1736,6 +1736,10 @@ const docTemplate = `{
                 "appId": {
                     "type": "integer"
                 },
+                "body": {
+                    "type": "object",
+                    "additionalProperties": {}
+                },
                 "createdAt": {
                     "type": "string"
                 },

@@ -10,12 +10,13 @@ import (
 )
 
 type LogDetail struct {
-	AppId     int        `json:"appId,omitempty"`
-	StaffId   int        `json:"staffId,omitempty"`
-	Resource  string     `json:"resource,omitempty"`
-	Action    string     `json:"action,omitempty"`
-	PathVars  gin.Params `json:"pathVars,omitempty"`
-	QueryVars url.Values `json:"queryVars,omitempty"`
+	AppId     int            `json:"appId,omitempty"`
+	StaffId   int            `json:"staffId,omitempty"`
+	Resource  string         `json:"resource,omitempty"`
+	Action    string         `json:"action,omitempty"`
+	PathVars  gin.Params     `json:"pathVars,omitempty"`
+	QueryVars url.Values     `json:"queryVars,omitempty"`
+	Body      map[string]any `json:"body,omitempty"`
 }
 
 func (ld *LogDetail) String() string {
@@ -25,6 +26,8 @@ func (ld *LogDetail) String() string {
 	}
 	return string(bytes)
 }
+
+var _ fmt.Stringer = (*LogDetail)(nil)
 
 // @model
 // @db s_logs

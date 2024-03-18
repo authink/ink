@@ -170,6 +170,9 @@ definitions:
         type: string
       appId:
         type: integer
+      body:
+        additionalProperties: {}
+        type: object
       createdAt:
         type: string
       id:
