@@ -12,7 +12,10 @@ import (
 
 func setupGroupshipGroup(gAdmin *gin.RouterGroup) {
 	gGroupships := gAdmin.Group(authz.Groupships.Name)
-	gGroupships.Use(middleware.Authz(authz.Groupships))
+	gGroupships.Use(
+		middleware.Authz(authz.Groupships),
+		middleware.Log(authz.Groupships),
+	)
 	gGroupships.GET("", web.HandlerAdapter(groupships))
 	gGroupships.POST("", web.HandlerAdapter(addGroupship))
 	gGroupships.DELETE("", web.HandlerAdapter(deleteGroupship))

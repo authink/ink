@@ -13,7 +13,10 @@ import (
 
 func setupPolicyGroup(gAdmin *gin.RouterGroup) {
 	gPolicies := gAdmin.Group(authz.Policies.Name)
-	gPolicies.Use(middleware.Authz(authz.Policies))
+	gPolicies.Use(
+		middleware.Authz(authz.Policies),
+		middleware.Log(authz.Policies),
+	)
 	gPolicies.GET("", web.HandlerAdapter(policies))
 	gPolicies.POST("", web.HandlerAdapter(addPolicy))
 	gPolicies.DELETE("", web.HandlerAdapter(deletePolicy))

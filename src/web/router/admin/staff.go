@@ -19,7 +19,10 @@ import (
 
 func setupStaffGroup(gAdmin *gin.RouterGroup) {
 	gStaffs := gAdmin.Group(authz.Staffs.Name)
-	gStaffs.Use(middleware.Authz(authz.Staffs))
+	gStaffs.Use(
+		middleware.Authz(authz.Staffs),
+		middleware.Log(authz.Staffs),
+	)
 	gStaffs.GET("", web.HandlerAdapter(staffs))
 	gStaffs.POST("", web.HandlerAdapter(addStaff))
 	gStaffs.PUT("", web.HandlerAdapter(updateStaff))

@@ -16,7 +16,10 @@ import (
 
 func setupAppGroup(gAdmin *gin.RouterGroup) {
 	gApps := gAdmin.Group(authz.Apps.Name)
-	gApps.Use(middleware.Authz(authz.Apps))
+	gApps.Use(
+		middleware.Authz(authz.Apps),
+		middleware.Log(authz.Apps),
+	)
 	gApps.GET("", web.HandlerAdapter(apps))
 	gApps.POST("", web.HandlerAdapter(addApp))
 	gApps.PUT("", web.HandlerAdapter(updateApp))

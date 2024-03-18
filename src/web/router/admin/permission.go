@@ -12,7 +12,10 @@ import (
 
 func setupPermissionGroup(gAdmin *gin.RouterGroup) {
 	gPerms := gAdmin.Group(authz.Permissons.Name)
-	gPerms.Use(middleware.Authz(authz.Permissons))
+	gPerms.Use(
+		middleware.Authz(authz.Permissons),
+		middleware.Log(authz.Permissons),
+	)
 	gPerms.GET("", web.HandlerAdapter(permissions))
 }
 

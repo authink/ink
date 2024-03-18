@@ -18,7 +18,10 @@ import (
 
 func setupGroupGroup(gAdmin *gin.RouterGroup) {
 	gGroups := gAdmin.Group(authz.Groups.Name)
-	gGroups.Use(middleware.Authz(authz.Groups))
+	gGroups.Use(
+		middleware.Authz(authz.Groups),
+		middleware.Log(authz.Groups),
+	)
 	gGroups.GET("", web.HandlerAdapter(groups))
 	gGroups.POST("", web.HandlerAdapter(addGroup))
 	gGroups.PUT(":id", web.HandlerAdapter(updateGroup))

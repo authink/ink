@@ -12,7 +12,10 @@ import (
 
 func setupDeptGroup(gAdmin *gin.RouterGroup) {
 	gDepts := gAdmin.Group(authz.Departments.Name)
-	gDepts.Use(middleware.Authz(authz.Departments))
+	gDepts.Use(
+		middleware.Authz(authz.Departments),
+		middleware.Log(authz.Departments),
+	)
 	gDepts.POST("", web.HandlerAdapter(addDept))
 	gDepts.POST("levels", web.HandlerAdapter(addDeptLevel))
 	gDepts.POST("staffs", web.HandlerAdapter(addDeptStaff))

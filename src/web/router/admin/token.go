@@ -14,7 +14,10 @@ import (
 
 func setupTokenGroup(gAdmin *gin.RouterGroup) {
 	gTokens := gAdmin.Group(authz.Tokens.Name)
-	gTokens.Use(middleware.Authz(authz.Tokens))
+	gTokens.Use(
+		middleware.Authz(authz.Tokens),
+		middleware.Log(authz.Tokens),
+	)
 	gTokens.GET("", web.HandlerAdapter(tokens))
 	gTokens.DELETE("", web.HandlerAdapter(deleteToken))
 }
