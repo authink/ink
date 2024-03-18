@@ -105,7 +105,7 @@ func staffs(c *web.Context) {
 
 type addStaffReq struct {
 	Email string `json:"email" binding:"required,inkEmail" example:"example@huoyijie.cn"`
-	Phone string `json:"phone" binding:"required,min=11,max=11" example:"18555201314"`
+	Phone string `json:"phone" binding:"required,inkPhone" example:"18555201314"`
 }
 
 // addStaff godoc

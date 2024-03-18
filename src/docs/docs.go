@@ -1672,8 +1672,6 @@ const docTemplate = `{
                 },
                 "phone": {
                     "type": "string",
-                    "maxLength": 11,
-                    "minLength": 11,
                     "example": "18555201314"
                 }
             }

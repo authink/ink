@@ -120,8 +120,6 @@ definitions:
         type: string
       phone:
         example: "18555201314"
-        maxLength: 11
-        minLength: 11
         type: string
     required:
     - email
