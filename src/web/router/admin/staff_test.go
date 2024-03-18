@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -65,11 +64,11 @@ func TestAddStaff(t *testing.T) {
 	assert.NotEmpty(t, resAddStaff.Password)
 }
 
-func tUpdateStaff(accessToken string, id int, reqObj, resObj any) (*httptest.ResponseRecorder, error) {
+func tUpdateStaff(accessToken string, reqObj, resObj any) (*httptest.ResponseRecorder, error) {
 	return test.Fetch(
 		ctx,
 		http.MethodPut,
-		fmt.Sprintf("admin/staffs/%d", id),
+		"admin/staffs",
 		reqObj,
 		resObj,
 		accessToken,
@@ -85,13 +84,14 @@ func TestUpdateStaff(t *testing.T) {
 	assert.NotEmpty(t, resObj.RefreshToken)
 
 	updateReq := &updateStaffReq{
+		Id:              100001,
 		Phone:           "12112112112",
 		ActiveToggle:    true,
 		DepartureToggle: true,
 		ResetPassword:   true,
 	}
 	updateRes := &staffRes{}
-	w2, _ := tUpdateStaff(resObj.AccessToken, 100001, updateReq, updateRes)
+	w2, _ := tUpdateStaff(resObj.AccessToken, updateReq, updateRes)
 	assert.Equal(t, http.StatusOK, w2.Code)
 	assert.Equal(t, 100001, updateRes.Id)
 	assert.Equal(t, "12112112112", updateRes.Phone)

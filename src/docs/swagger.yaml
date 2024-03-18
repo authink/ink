@@ -280,6 +280,10 @@ definitions:
       departureToggle:
         example: false
         type: boolean
+      id:
+        example: 100000
+        minimum: 100000
+        type: integer
       phone:
         example: "18555201314"
         maxLength: 11
@@ -288,6 +292,8 @@ definitions:
       resetPassword:
         example: false
         type: boolean
+    required:
+    - id
     type: object
   gin.Param:
     properties:
@@ -1170,15 +1176,9 @@ paths:
       summary: Add a staff
       tags:
       - admin_staff
-  /admin/staffs/{id}:
     put:
       description: Update a staff
       parameters:
-      - description: staff id
-        in: path
-        name: id
-        required: true
-        type: integer
       - description: request body
         in: body
         name: updateStaffReq

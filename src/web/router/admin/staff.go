@@ -22,7 +22,7 @@ func setupStaffGroup(gAdmin *gin.RouterGroup) {
 	gStaffs.Use(middleware.Authz(authz.Staffs))
 	gStaffs.GET("", web.HandlerAdapter(staffs))
 	gStaffs.POST("", web.HandlerAdapter(addStaff))
-	gStaffs.PUT(":id", web.HandlerAdapter(updateStaff))
+	gStaffs.PUT("", web.HandlerAdapter(updateStaff))
 }
 
 type staffRes struct {
@@ -147,11 +147,8 @@ func addStaff(c *web.Context) {
 	})
 }
 
-type updateStaffParam struct {
-	Id int `uri:"id" binding:"required,min=100000"`
-}
-
 type updateStaffReq struct {
+	Id              int    `json:"id" binding:"required,min=100000" example:"100000"`
 	Phone           string `json:"phone" binding:"omitempty,min=11,max=11" example:"18555201314"`
 	ActiveToggle    bool   `json:"activeToggle" example:"true"`
 	DepartureToggle bool   `json:"departureToggle" example:"false"`
@@ -163,9 +160,8 @@ type updateStaffReq struct {
 //	@Summary		Update a staff
 //	@Description	Update a staff
 //	@Tags			admin_staff
-//	@Router			/admin/staffs/{id}	[put]
+//	@Router			/admin/staffs	[put]
 //	@Security		ApiKeyAuth
-//	@Param			id				path		int				true	"staff id"
 //	@Param			updateStaffReq	body		updateStaffReq	true	"request body"
 //	@Success		200				{object}	staffRes
 //	@Failure		400				{object}	web.ClientError
@@ -173,13 +169,6 @@ type updateStaffReq struct {
 //	@Failure		403				{object}	web.ClientError
 //	@Failure		500				{string}	empty
 func updateStaff(c *web.Context) {
-	param := &updateStaffParam{}
-
-	if err := c.ShouldBindUri(param); err != nil {
-		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
-		return
-	}
-
 	req := &updateStaffReq{}
 
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
@@ -196,7 +185,7 @@ func updateStaff(c *web.Context) {
 		staff    models.Staff
 		password string
 	)
-	staff.Id = uint32(param.Id)
+	staff.Id = uint32(req.Id)
 
 	if err := appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
 		err = orm.Staff(appCtx).GetTx(tx, &staff)

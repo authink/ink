@@ -1157,25 +1157,25 @@ const docTemplate = `{
                     }
                 }
             },
-            "post": {
+            "put": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Add a staff",
+                "description": "Update a staff",
                 "tags": [
                     "admin_staff"
                 ],
-                "summary": "Add a staff",
+                "summary": "Update a staff",
                 "parameters": [
                     {
                         "description": "request body",
-                        "name": "addStaffReq",
+                        "name": "updateStaffReq",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/admin.addStaffReq"
+                            "$ref": "#/definitions/admin.updateStaffReq"
                         }
                     }
                 ],
@@ -1211,35 +1211,26 @@ const docTemplate = `{
                         }
                     }
                 }
-            }
-        },
-        "/admin/staffs/{id}": {
-            "put": {
+            },
+            "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Update a staff",
+                "description": "Add a staff",
                 "tags": [
                     "admin_staff"
                 ],
-                "summary": "Update a staff",
+                "summary": "Add a staff",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "staff id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
                         "description": "request body",
-                        "name": "updateStaffReq",
+                        "name": "addStaffReq",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/admin.updateStaffReq"
+                            "$ref": "#/definitions/admin.addStaffReq"
                         }
                     }
                 ],
@@ -1900,6 +1891,9 @@ const docTemplate = `{
         },
         "admin.updateStaffReq": {
             "type": "object",
+            "required": [
+                "id"
+            ],
             "properties": {
                 "activeToggle": {
                     "type": "boolean",
@@ -1908,6 +1902,11 @@ const docTemplate = `{
                 "departureToggle": {
                     "type": "boolean",
                     "example": false
+                },
+                "id": {
+                    "type": "integer",
+                    "minimum": 100000,
+                    "example": 100000
                 },
                 "phone": {
                     "type": "string",
