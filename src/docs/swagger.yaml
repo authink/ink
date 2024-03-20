@@ -210,6 +210,13 @@ definitions:
       obj:
         type: string
     type: object
+  admin.selectStaffRes:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+    type: object
   admin.staffRes:
     properties:
       active:
@@ -1212,6 +1219,37 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Update a staff
+      tags:
+      - admin_staff
+  /admin/staffs/select:
+    get:
+      description: Select staffs
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/admin.selectStaffRes'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.ClientError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/web.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/web.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Select staffs
       tags:
       - admin_staff
   /admin/tokens:

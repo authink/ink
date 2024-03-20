@@ -26,6 +26,7 @@ func setupStaffGroup(gAdmin *gin.RouterGroup) {
 	gStaffs.GET("", web.HandlerAdapter(staffs))
 	gStaffs.POST("", web.HandlerAdapter(addStaff))
 	gStaffs.PUT("", web.HandlerAdapter(updateStaff))
+	gStaffs.GET("select", web.HandlerAdapter(selectStaffs))
 }
 
 type staffRes struct {
@@ -53,16 +54,17 @@ type staffRes struct {
 //	@Failure		403		{object}	web.ClientError
 //	@Failure		500		{string}	empty
 func staffs(c *web.Context) {
-	appCtx := c.AppContext()
-
 	req := &web.PagingRequest{}
 	if err := c.ShouldBindQuery(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)
 		return
 	}
 
-	var total int
-	var staffs []*models.Staff
+	var (
+		appCtx = c.AppContext()
+		total  int
+		staffs []*models.Staff
+	)
 
 	if err := appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
 		if total, err = orm.Staff(appCtx).CountTx(tx); err != nil {
@@ -228,4 +230,39 @@ func updateStaff(c *web.Context) {
 		Active:    staff.Active,
 		Departure: staff.Departure,
 	})
+}
+
+type selectStaffRes struct {
+	Id    int    `json:"id,omitempty"`
+	Email string `json:"email,omitempty"`
+}
+
+// selectStaffs godoc
+//
+//	@Summary		Select staffs
+//	@Description	Select staffs
+//	@Tags			admin_staff
+//	@Router			/admin/staffs/select	[get]
+//	@Security		ApiKeyAuth
+//	@Success		200	{object}	[]selectStaffRes
+//	@Failure		400	{object}	web.ClientError
+//	@Failure		401	{object}	web.ClientError
+//	@Failure		403	{object}	web.ClientError
+//	@Failure		500	{string}	empty
+func selectStaffs(c *web.Context) {
+	staffs, err := orm.Staff(c.AppContext()).SelectStaffs()
+	if err != nil {
+		c.AbortWithServerError(err)
+		return
+	}
+
+	var res []selectStaffRes
+	for i := range staffs {
+		res = append(res, selectStaffRes{
+			Id:    int(staffs[i].Id),
+			Email: staffs[i].Email,
+		})
+	}
+
+	c.Response(res)
 }

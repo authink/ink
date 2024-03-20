@@ -110,3 +110,14 @@ func (s *Staff) GetByEmail() string {
 		Where(sbd.Equal{Left: db.Staff.Email}).
 		String()
 }
+
+func (s *Staff) SelectStaffs() string {
+	return sbd.NewBuilder().
+		Select(sql.Id,
+			db.Staff.Email,
+		).
+		From(db.Staff.Tname()).
+		Where(&sbd.True{Left: db.Staff.Active}).
+		And(&sbd.False{Left: db.Staff.Departure}).
+		String()
+}
