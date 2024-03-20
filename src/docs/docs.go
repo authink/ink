@@ -243,25 +243,66 @@ const docTemplate = `{
             }
         },
         "/admin/departments": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Show depts",
+                "tags": [
+                    "admin_department"
+                ],
+                "summary": "Show depts",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/admin.deptRes"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/web.ClientError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/web.ClientError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Add a department",
+                "description": "Save a department",
                 "tags": [
                     "admin_department"
                 ],
-                "summary": "Add a department",
+                "summary": "Save a department",
                 "parameters": [
                     {
                         "description": "request body",
-                        "name": "addDeptReq",
+                        "name": "saveDeptReq",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/admin.addDeptReq"
+                            "$ref": "#/definitions/admin.saveDeptReq"
                         }
                     }
                 ],
@@ -384,6 +425,61 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/web.ClientError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/web.ClientError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/web.ClientError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/departments/{name}/unique": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Check if unique name",
+                "tags": [
+                    "admin_department"
+                ],
+                "summary": "Check if unique name",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "dept name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "boolean"
                         }
                     },
                     "400": {
@@ -1582,25 +1678,6 @@ const docTemplate = `{
                 }
             }
         },
-        "admin.addDeptReq": {
-            "type": "object",
-            "required": [
-                "name",
-                "owerId"
-            ],
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "minLength": 6,
-                    "example": "A company"
-                },
-                "owerId": {
-                    "type": "integer",
-                    "minimum": 100000,
-                    "example": 100000
-                }
-            }
-        },
         "admin.addDeptStaffReq": {
             "type": "object",
             "required": [
@@ -1747,6 +1824,26 @@ const docTemplate = `{
                 }
             }
         },
+        "admin.deptRes": {
+            "type": "object",
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "ownerId": {
+                    "type": "integer"
+                },
+                "ownerName": {
+                    "type": "string"
+                }
+            }
+        },
         "admin.groupRes": {
             "type": "object",
             "properties": {
@@ -1843,6 +1940,29 @@ const docTemplate = `{
                 },
                 "obj": {
                     "type": "string"
+                }
+            }
+        },
+        "admin.saveDeptReq": {
+            "type": "object",
+            "required": [
+                "name",
+                "ownerId"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 100000
+                },
+                "name": {
+                    "type": "string",
+                    "minLength": 2,
+                    "example": "New Department"
+                },
+                "ownerId": {
+                    "type": "integer",
+                    "minimum": 100000,
+                    "example": 100000
                 }
             }
         },

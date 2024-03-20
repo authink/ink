@@ -1,6 +1,8 @@
 package models
 
-import "github.com/authink/orm/model"
+import (
+	"github.com/authink/orm/model"
+)
 
 // @model
 // @db s_departments
@@ -20,6 +22,13 @@ func NewDept(name string, ownerId int) *Department {
 }
 
 // @model
+// @embed Department
+type DepartmentWithOwner struct {
+	Department
+	OwnerEmail string `db:"owner_email"`
+}
+
+// @model
 // @db s_dept_leves
 type DeptLevel struct {
 	model.Record
@@ -33,4 +42,9 @@ type DeptStaff struct {
 	model.Record
 	DeptId  uint32 `db:"dept_id"`
 	StaffId uint32 `db:"staff_id"`
+}
+
+type CheckUnique struct {
+	model.Argument
+	Name string
 }

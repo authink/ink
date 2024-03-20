@@ -256,7 +256,7 @@ func selectStaffs(c *web.Context) {
 		return
 	}
 
-	var res []selectStaffRes
+	var res = []selectStaffRes{}
 	for i := range staffs {
 		res = append(res, selectStaffRes{
 			Id:    int(staffs[i].Id),

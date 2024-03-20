@@ -25,20 +25,6 @@ definitions:
     - deptId
     - subDeptId
     type: object
-  admin.addDeptReq:
-    properties:
-      name:
-        example: A company
-        minLength: 6
-        type: string
-      owerId:
-        example: 100000
-        minimum: 100000
-        type: integer
-    required:
-    - name
-    - owerId
-    type: object
   admin.addDeptStaffReq:
     properties:
       deptId:
@@ -145,6 +131,19 @@ definitions:
       count:
         type: integer
     type: object
+  admin.deptRes:
+    properties:
+      active:
+        type: boolean
+      id:
+        type: integer
+      name:
+        type: string
+      ownerId:
+        type: integer
+      ownerName:
+        type: string
+    type: object
   admin.groupRes:
     properties:
       active:
@@ -209,6 +208,23 @@ definitions:
         type: string
       obj:
         type: string
+    type: object
+  admin.saveDeptReq:
+    properties:
+      id:
+        example: 100000
+        type: integer
+      name:
+        example: New Department
+        minLength: 2
+        type: string
+      ownerId:
+        example: 100000
+        minimum: 100000
+        type: integer
+    required:
+    - name
+    - ownerId
     type: object
   admin.selectStaffRes:
     properties:
@@ -563,15 +579,41 @@ paths:
       tags:
       - dashboard
   /admin/departments:
+    get:
+      description: Show depts
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/admin.deptRes'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/web.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/web.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Show depts
+      tags:
+      - admin_department
     post:
-      description: Add a department
+      description: Save a department
       parameters:
       - description: request body
         in: body
-        name: addDeptReq
+        name: saveDeptReq
         required: true
         schema:
-          $ref: '#/definitions/admin.addDeptReq'
+          $ref: '#/definitions/admin.saveDeptReq'
       responses:
         "200":
           description: OK
@@ -595,7 +637,42 @@ paths:
             type: string
       security:
       - ApiKeyAuth: []
-      summary: Add a department
+      summary: Save a department
+      tags:
+      - admin_department
+  /admin/departments/{name}/unique:
+    get:
+      description: Check if unique name
+      parameters:
+      - description: dept name
+        in: path
+        name: name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: boolean
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.ClientError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/web.ClientError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/web.ClientError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Check if unique name
       tags:
       - admin_department
   /admin/departments/levels:

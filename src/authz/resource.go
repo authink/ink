@@ -97,7 +97,7 @@ var (
 		Acts: []string{
 			http.MethodGet,
 			http.MethodPost,
-			http.MethodPut,
+			http.MethodDelete,
 		},
 		AppName: envs.AppNameAdmin(),
 	}
