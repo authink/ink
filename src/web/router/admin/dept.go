@@ -115,7 +115,7 @@ type saveDeptReq struct {
 //	@Router			/admin/departments	[post]
 //	@Security		ApiKeyAuth
 //	@Param			saveDeptReq	body		saveDeptReq	true	"request body"
-//	@Success		200			{string}	empty
+//	@Success		200			{int}		int
 //	@Failure		400			{object}	web.ClientError
 //	@Failure		401			{object}	web.ClientError
 //	@Failure		403			{object}	web.ClientError
@@ -145,7 +145,7 @@ func saveDept(c *web.Context) {
 		return
 	}
 
-	c.Empty()
+	c.Response(dept.Id)
 }
 
 type addDeptLevelReq struct {
