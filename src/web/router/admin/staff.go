@@ -12,8 +12,6 @@ import (
 	"github.com/authink/orm/model"
 	"github.com/authink/stone/web"
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
-	"github.com/go-playground/validator/v10"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -175,10 +173,6 @@ type updateStaffReq struct {
 //	@Failure		500				{string}	empty
 func updateStaff(c *web.Context) {
 	req := &updateStaffReq{}
-
-	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-		v.RegisterStructValidation(web.ValidationNotAllFieldsZero, req)
-	}
 
 	if err := c.ShouldBindJSON(req); err != nil {
 		c.AbortWithClientError(errs.ERR_BAD_REQUEST)

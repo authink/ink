@@ -10,6 +10,7 @@ import (
 	"github.com/authink/ink/src/web/middleware"
 	"github.com/authink/stone/web"
 	"github.com/gin-gonic/gin"
+	"github.com/jmoiron/sqlx"
 )
 
 func setupDeptGroup(gAdmin *gin.RouterGroup) {
@@ -102,9 +103,10 @@ func unique(c *web.Context) {
 }
 
 type saveDeptReq struct {
-	Id      uint32 `json:"id" example:"100000"`
-	Name    string `json:"name" binding:"required,min=2" example:"New Department"`
-	OwnerId int    `json:"ownerId" binding:"required,min=100000" example:"100000"`
+	Id       uint32 `json:"id" example:"100000"`
+	Name     string `json:"name" binding:"required,min=2" example:"New Department"`
+	OwnerId  int    `json:"ownerId" binding:"required,min=100000" example:"100000"`
+	ParentId int    `json:"parentId" binding:"required,min=100000" example:"100000"`
 }
 
 // saveDept godoc
@@ -133,11 +135,24 @@ func saveDept(c *web.Context) {
 		OwnerId: uint32(req.OwnerId),
 	}
 	dept.Id = req.Id
+	appCtx := c.AppContext()
 
 	if dept.Id == 0 {
-		err = orm.Dept(c.AppContext()).Insert(dept)
+		err = appCtx.Transaction(func(tx *sqlx.Tx) (err error) {
+			if err = orm.Dept(appCtx).InsertTx(tx, dept); err != nil {
+				return
+			}
+
+			if req.ParentId > 0 {
+				err = orm.DeptLevel(appCtx).InsertTx(tx, &models.DeptLevel{
+					DeptId:    uint32(req.ParentId),
+					SubDeptId: dept.Id,
+				})
+			}
+			return
+		})
 	} else {
-		err = orm.Dept(c.AppContext()).Update(dept)
+		err = orm.Dept(appCtx).Update(dept)
 	}
 
 	if err != nil {

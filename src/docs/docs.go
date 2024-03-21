@@ -1947,7 +1947,8 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "name",
-                "ownerId"
+                "ownerId",
+                "parentId"
             ],
             "properties": {
                 "id": {
@@ -1960,6 +1961,11 @@ const docTemplate = `{
                     "example": "New Department"
                 },
                 "ownerId": {
+                    "type": "integer",
+                    "minimum": 100000,
+                    "example": 100000
+                },
+                "parentId": {
                     "type": "integer",
                     "minimum": 100000,
                     "example": 100000

@@ -222,9 +222,14 @@ definitions:
         example: 100000
         minimum: 100000
         type: integer
+      parentId:
+        example: 100000
+        minimum: 100000
+        type: integer
     required:
     - name
     - ownerId
+    - parentId
     type: object
   admin.selectStaffRes:
     properties:
