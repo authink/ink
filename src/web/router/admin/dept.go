@@ -27,11 +27,12 @@ func setupDeptGroup(gAdmin *gin.RouterGroup) {
 }
 
 type deptRes struct {
-	Id        int    `json:"id,omitempty"`
-	Name      string `json:"name"`
-	Active    bool   `json:"active"`
-	OwnerId   int    `json:"ownerId"`
-	OwnerName string `json:"ownerName"`
+	Id        int        `json:"id"`
+	Name      string     `json:"name"`
+	Active    bool       `json:"active"`
+	OwnerId   int        `json:"ownerId"`
+	OwnerName string     `json:"ownerName"`
+	Children  []*deptRes `json:"children,omitempty"`
 }
 
 // depts godoc
@@ -52,18 +53,33 @@ func depts(c *web.Context) {
 		return
 	}
 
-	var res = []deptRes{}
+	deptLevels, err := orm.DeptLevel(c.AppContext()).Find()
+	if err != nil {
+		c.AbortWithServerError(err)
+		return
+	}
+
+	var deptsMap = map[uint32]*deptRes{}
 	for _, v := range depts {
-		res = append(res, deptRes{
+		deptsMap[v.Id] = &deptRes{
 			Id:        int(v.Id),
 			Name:      v.Name,
 			Active:    v.Active,
 			OwnerId:   int(v.OwnerId),
 			OwnerName: strings.Split(v.OwnerEmail, "@")[0],
-		})
+		}
 	}
 
-	c.Response(res)
+	var rootDepts = []*deptRes{}
+	for _, v := range deptLevels {
+		if v.DeptId == 0 {
+			rootDepts = append(rootDepts, deptsMap[v.SubDeptId])
+		} else {
+			deptsMap[v.DeptId].Children = append(deptsMap[v.DeptId].Children, deptsMap[v.SubDeptId])
+		}
+	}
+
+	c.Response(rootDepts)
 }
 
 type uniqueReq struct {
@@ -106,7 +122,7 @@ type saveDeptReq struct {
 	Id       uint32 `json:"id" example:"100000"`
 	Name     string `json:"name" binding:"required,min=2" example:"New Department"`
 	OwnerId  int    `json:"ownerId" binding:"required,min=100000" example:"100000"`
-	ParentId int    `json:"parentId" binding:"required,min=100000" example:"100000"`
+	ParentId uint32 `json:"parentId" example:"100000"`
 }
 
 // saveDept godoc
@@ -143,12 +159,10 @@ func saveDept(c *web.Context) {
 				return
 			}
 
-			if req.ParentId > 0 {
-				err = orm.DeptLevel(appCtx).InsertTx(tx, &models.DeptLevel{
-					DeptId:    uint32(req.ParentId),
-					SubDeptId: dept.Id,
-				})
-			}
+			err = orm.DeptLevel(appCtx).InsertTx(tx, &models.DeptLevel{
+				DeptId:    req.ParentId,
+				SubDeptId: dept.Id,
+			})
 			return
 		})
 	} else {

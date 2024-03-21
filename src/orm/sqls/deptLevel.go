@@ -19,3 +19,14 @@ func (d *DeptLevel) Insert() string {
 		).
 		String()
 }
+
+func (d *DeptLevel) Find() string {
+	return sbd.NewBuilder().
+		Select(
+			sql.Id,
+			db.DeptLevel.DeptId,
+			db.DeptLevel.SubDeptId,
+		).
+		From(db.DeptLevel.Tname()).
+		String()
+}

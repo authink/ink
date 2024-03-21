@@ -135,6 +135,10 @@ definitions:
     properties:
       active:
         type: boolean
+      children:
+        items:
+          $ref: '#/definitions/admin.deptRes'
+        type: array
       id:
         type: integer
       name:
@@ -224,12 +228,10 @@ definitions:
         type: integer
       parentId:
         example: 100000
-        minimum: 100000
         type: integer
     required:
     - name
     - ownerId
-    - parentId
     type: object
   admin.selectStaffRes:
     properties:

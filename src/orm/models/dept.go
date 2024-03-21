@@ -29,7 +29,7 @@ type DepartmentWithOwner struct {
 }
 
 // @model
-// @db s_dept_leves
+// @db s_dept_levels
 type DeptLevel struct {
 	model.Record
 	DeptId    uint32 `db:"dept_id"`

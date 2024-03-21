@@ -1830,6 +1830,12 @@ const docTemplate = `{
                 "active": {
                     "type": "boolean"
                 },
+                "children": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/admin.deptRes"
+                    }
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -1947,8 +1953,7 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "name",
-                "ownerId",
-                "parentId"
+                "ownerId"
             ],
             "properties": {
                 "id": {
@@ -1967,7 +1972,6 @@ const docTemplate = `{
                 },
                 "parentId": {
                     "type": "integer",
-                    "minimum": 100000,
                     "example": 100000
                 }
             }

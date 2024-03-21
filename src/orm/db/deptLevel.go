@@ -15,7 +15,7 @@ type deptLevel struct {
 
 // Tname implements db.Table.
 func (*deptLevel) Tname() sbd.Table {
-	return "s_dept_leves"
+	return "s_dept_levels"
 }
 
 var _ db.Table = (*deptLevel)(nil)
